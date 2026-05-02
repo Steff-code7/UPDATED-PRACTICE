@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Order | Yas Milktea House</title>
+    <link rel="icon" type="image/png" href="images/footer_logo.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="..." crossorigin="anonymous">
+    <link rel="stylesheet" href="https://www.shapedivider.app">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Momo+Trust+Display&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body class="confirm-order-page menu-page">
+    <a id="top"></a>
+
+    <header class="navbar">
+        <div class="logo">
+            <a href="customerHomePage.html"><img src="images/yas_logo.png" alt="YAS logo"></a>
+        </div>
+        <nav class="nav-links">
+            <a href="customerHomePage.html">home</a>
+            <a href="customerAboutUs.html">about</a>
+            <a href="#footer">contact</a>
+        </nav>
+        <div class="CUSTOMER-NAV-ACTIONS">
+            <a class="CUSTOMER-CART-BUTTON" href="addToCart.html" aria-label="Open cart">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+            <div class="CUSTOMER-USER-BUTTON">
+                <span class="CUSTOMER-USER-INFO">
+                    <span class="CUSTOMER-USER-ICON">
+                        <i class="fa-regular fa-user"></i>
+                    </span>
+                    <span class="CUSTOMER-USER-LABEL">user</span>
+                </span>
+                <a class="CUSTOMER-USER-ARROW-LINK" href="#" aria-label="Open user menu" id="userMenuToggle">
+                    <i class="fa-solid fa-chevron-down CUSTOMER-USER-CHEVRON"></i>
+                </a>
+                <div class="CUSTOMER-USER-DROPDOWN" id="userDropdown">
+                    <a href="index.html">Log Out</a>
+                </div>
+            </div>
+        </div>
+        <div class="menu-toggle">&#9776;</div>
+    </header>
+
+    <main class="CONFIRM-ORDER-WRAP">
+        <section class="CONFIRM-ORDER-CARD">
+            <div class="CONFIRM-ORDER-GRID">
+                <div class="ORDER-SUMMARY">
+                    <h2>ORDER SUMMARY</h2>
+                    <p class="ORDER-COUNT" id="order-count">0 Items</p>
+
+                    <!-- Cart items will be dynamically inserted here -->
+                    <div id="order-items-container"></div>
+
+                    <div class="ORDER-TOTALS">
+                        <div class="ORDER-TOTAL-ROW">
+                            <span>Subtotal</span>
+                            <strong id="confirm-item-subtotal">₱0</strong>
+                        </div>
+                        <div class="ORDER-TOTAL-ROW">
+                            <span>Delivery Fee</span>
+                            <strong id="confirm-item-delivery-fee">₱0</strong>
+                        </div>
+                        <div class="ORDER-TOTAL-ROW GRAND-TOTAL">
+                            <span>Total</span>
+                            <strong id="confirm-item-total">₱0</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="PAYMENT-METHODS">
+                    <h2>PAYMENT METHOD</h2>
+
+                    <form class="PAYMENT-FORM">
+                        <label class="PAYMENT-OPTION">
+                            <input type="radio" name="payment_method" value="cash_on_delivery" checked>
+                            <span class="PAYMENT-OPTION-CIRCLE"></span>
+                            <span class="PAYMENT-OPTION-LABEL">Cash on Delivery</span>
+                        </label>
+
+                        <label class="PAYMENT-OPTION">
+                            <input type="radio" name="payment_method" value="online_payment">
+                            <span class="PAYMENT-OPTION-CIRCLE"></span>
+                            <span class="PAYMENT-OPTION-LABEL">Online Payment</span>
+                        </label>
+
+                        <a href="OrderSuccessful.html" class="PLACE-ORDER-BUTTON">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            PLACE ORDER
+                        </a>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>

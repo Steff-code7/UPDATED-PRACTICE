@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Items | Yas Milktea House</title>
+    <link rel="icon" type="image/png" href="images/footer_logo.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="..." crossorigin="anonymous">
+    <link rel="stylesheet" href="https://www.shapedivider.app">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Momo+Trust+Display&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body class="menu-page">
+    <a id="top"></a>
+
+
+
+
+<!-- ========================= NAVBAR ========================= -->
+    <header class="navbar">
+        <div class="logo">
+            <a href="index.html"><img src="images/yas_logo.png" alt="YAS logo"></a>
+        </div>
+        <nav class="nav-links">
+            <a href="index.html">home</a>
+            <a href="aboutUs.html">about</a>
+            <a href="#footer">contact</a>
+        </nav>
+        <a class="order-btn" href="loginSignUp.html">ORDER NOW</a>
+        <div class="menu-toggle">&#9776;</div>
+    </header>
+
+
+
+
+<!-- ======================= ITEM PAGE ======================= -->
+    <section class="ITEMS-SECTION">
+        <div class="ITEM-CONTAINER">
+            <!-- ======================= ITEM IMAGE ======================= -->
+            <div class="ITEM-PIC"></div>
+
+
+
+
+<!-- ====================== ITEM DETAILS ====================== -->
+            <div class="ITEMS-CONTENTS">
+                <div class="ITEM-TEXTS">
+                    <!-- ======================= ITEM TITLE ======================= -->
+                    <div class="item-title-row">
+                        <h1 id="item-title">Menu Item</h1>
+                        <span class="item-category" id="item-category"></span>
+                    </div>
+
+
+
+
+<!-- ======================= ITEM STATUS ====================== -->
+                    <p class="ITEM-STOCK"><i>In stock</i></p>
+                    <div class="ITEM-LINE"></div>
+
+
+
+
+<!-- ===================== LOCATION ===================== -->
+                    <div class="option-group">
+                        <p>Location:</p>
+                        <div class="segmented-control">
+                            <input type="radio" name="location" id="dine" checked data-price="0">
+                            <label for="dine">Dine In</label>
+
+
+
+
+<input type="radio" name="location" id="togo" data-price="0">
+                            <label for="togo">To Go</label>
+
+
+
+
+<input type="radio" name="location" id="delivery" data-price="25">
+                            <label for="delivery">Delivery</label>
+                        </div>
+                    </div>
+
+
+
+
+<!-- ====================== ITEM OPTIONS ====================== -->
+                    <div id="item-options"></div>
+
+
+
+
+<!-- ===================== QUANTITY ===================== -->
+                    <div class="option-group">
+                        <p>Quantity:</p>
+                        <div class="quantity-control">
+                            <button type="button" class="qty-btn" id="minus">-</button>
+                            <span class="qty-value" id="qty">1</span>
+                            <button type="button" class="qty-btn" id="plus">+</button>
+                        </div>
+                    </div>
+
+
+
+
+<!-- ======================= TOTAL ====================== -->
+                    <p class="total-text">Total: &#8369;<span id="total">90</span></p>
+
+
+
+
+<div class="ITEM-LINE"></div>
+
+
+
+
+<!-- ====================== ITEM ACTIONS ====================== -->
+                    <div class="ITEM-ACTIONS">
+                        <a href="menu.html" class="BACK-MENU-BUTTON">
+                            <img src="images/arrow-left-solid.png" alt="Back to menu icon" class="BTN-ICON">
+                            BACK TO MENU
+                        </a>
+
+
+
+
+<a href="loginSignUp.html" class="ADD-CART-BUTTON">
+                            <i class="fa-solid fa-basket-shopping"></i> ADD TO CART
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+<!-- ======================== FOOTER ========================= -->
+    <footer id="footer">
+        <div class="FOOTER-CONTAINER">
+            <!-- ======================= FOOTER LOGO ======================= -->
+            <div class="FOOTER-IMG-CONTAINER">
+                <img src="images/footer_logo.png" alt="YAS footer logo">
+            </div>
+
+
+
+
+<!-- ====================== FOOTER DETAILS ===================== -->
+            <div class="FOOTER-TEXTS">
+                <p>
+                    Born to serve sweet vibes and tasty drinks.<br>
+                    Your local spot for milk teas and savory snacks.<br>
+                    Fresh flavors, good company, and a touch of fun in every cup.
+                </p>
+
+
+
+
+<!-- ====================== FOOTER ICONS ====================== -->
+                <div class="FOOTER-ICONS">
+                    <div>
+                        <a href="https://maps.app.goo.gl/Uss4LnWw9EJKj2gQ9" target="_blank">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="tel:+639073954150">
+                            <i class="fa-solid fa-phone"></i>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="https://www.facebook.com/yas.elizalde.7" target="_blank">
+                            <i class="fa-brands fa-square-facebook"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+<div class="FOOTER-COPYRIGHT">
+            <p>&copy; 2020 Yas Milktea House</p>
+        </div>
+    </footer>
+
+
+
+
+<!-- ==================== BACK TO TOP ======================== -->
+    <div class="BACK-TO-TOP" id="back-to-top" role="button" tabindex="0" aria-label="Back to top" title="Go to top">
+        <i class="fa-solid fa-circle-chevron-up" style="color: #ff5eb3;"></i>
+    </div>
+
+
+
+
+<!-- ===================== PAGE SCRIPT ======================= -->
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

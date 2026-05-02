@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Customers | Yas Milktea House</title>
+  <link rel="icon" type="image/png" href="images/footer_logo.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="..." crossorigin="anonymous">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+</head>
+<body class="admin-dashboard-page">
+  <main class="ADMIN-PAGE">
+    <section class="ADMIN-APP">
+      <aside class="ADMIN-SIDEBAR">
+        <div class="ADMIN-BRAND">
+          <div class="ADMIN-BRAND-LOGO">
+            <img src="images/yas_logo.png" alt="YAS Milktea House logo">
+          </div>
+          <div class="ADMIN-BRAND-TEXT">
+            <h1>YAS Milktea House</h1>
+            <p>ADMIN</p>
+          </div>
+        </div>
+
+
+        <nav class="ADMIN-NAV">
+          <a href="adminDashboard.html" class="ADMIN-NAV-LINK">
+            <i class="fa-solid fa-table-cells-large"></i>
+            <span>Dashboard</span>
+          </a>
+          <a href="adminProducts.html" class="ADMIN-NAV-LINK">
+            <i class="fa-solid fa-box-archive"></i>
+            <span>Products</span>
+          </a>
+          <a href="adminOrders.html" class="ADMIN-NAV-LINK">
+            <i class="fa-solid fa-clipboard-check"></i>
+            <span>Orders</span>
+          </a>
+          <a href="adminCustomers.html" class="ADMIN-NAV-LINK active">
+            <i class="fa-solid fa-users"></i>
+            <span>Customers</span>
+          </a>
+          <a href="adminPayments.html" class="ADMIN-NAV-LINK">
+            <i class="fa-solid fa-wallet"></i>
+            <span>Payments</span>
+          </a>
+          <a href="adminPromos.html" class="ADMIN-NAV-LINK">
+            <i class="fa-solid fa-ticket"></i>
+            <span>Promos</span>
+          </a>
+          <a href="adminRewards.html" class="ADMIN-NAV-LINK">
+            <i class="fa-solid fa-gift"></i>
+            <span>Rewards</span>
+          </a>
+        </nav>
+
+
+        <div class="ADMIN-SIDEBAR-FOOTER">
+          <a href="loginSignUp.html" class="ADMIN-NAV-LINK ADMIN-LOGOUT">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Logout</span>
+          </a>
+        </div>
+      </aside>
+
+
+      <div class="ADMIN-MAIN">
+        <header class="ADMIN-TOPBAR">
+          <button type="button" class="ADMIN-MENU-BUTTON" aria-label="Toggle menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+
+
+          <div class="ADMIN-TOPBAR-ACTIONS">
+            <button type="button" class="ADMIN-ICON-BUTTON" aria-label="Notifications">
+              <i class="fa-regular fa-bell"></i>
+            </button>
+
+
+            <div class="ADMIN-USER">
+              <div class="ADMIN-USER-AVATAR">
+                <i class="fa-regular fa-user"></i>
+              </div>
+              <span>Admin User</span>
+              <button type="button" class="ADMIN-DROPDOWN-BUTTON" aria-label="Open admin menu">
+                <i class="fa-solid fa-chevron-down"></i>
+              </button>
+            </div>
+          </div>
+        </header>
+
+
+        <section class="ADMIN-CONTENT ADMIN-CUSTOMERS-CONTENT">
+          <div class="ADMIN-INTRO">
+            <h2>Customers</h2>
+          </div>
+
+
+          <div class="ADMIN-CUSTOMERS-TOOLS">
+            <label class="ADMIN-SEARCH">
+              <input id="admin-customer-search" type="search" placeholder="Search customers...">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </label>
+
+
+            <label class="ADMIN-FILTER">
+              <select id="admin-customer-status">
+                <option>All Status</option>
+              </select>
+            </label>
+          </div>
+
+
+          <section class="ADMIN-TABLE-CARD">
+            <div class="ADMIN-TABLE-WRAP">
+              <table class="ADMIN-TABLE ADMIN-CUSTOMERS-TABLE">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Total Orders</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-customers-body"></tbody>
+              </table>
+            </div>
+          </section>
+
+
+          <div class="ADMIN-PAGINATION" id="admin-customers-pagination"></div>
+        </section>
+      </div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

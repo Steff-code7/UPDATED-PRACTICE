@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart - Yas Milktea House</title>
+    <link rel="icon" type="image/png" href="images/footer_logo.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="..." crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        /* ===== CART PAGE STYLES ===== */
+        body.cart-page {
+            background-color: #0d0d0d;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .cart-wrapper {
+            max-width: 960px;
+            margin: 100px auto 60px;
+            padding: 0 20px;
+        }
+
+        .cart-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #ff5eb3;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* ===== CART TABLE ===== */
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(255, 77, 166, 0.1);
+        }
+
+        .cart-table thead tr {
+            background-color: #2a2a2a;
+        }
+
+        .cart-table thead th {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 600;
+            color: #ff72bc;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cart-table thead th.col-qty,
+        .cart-table thead th.col-total,
+        .cart-table thead th.col-action {
+            text-align: center;
+        }
+
+        .cart-table tbody tr {
+            border-top: 1px solid #2a2a2a;
+        }
+
+        .cart-table tbody td {
+            padding: 16px;
+            vertical-align: middle;
+            font-size: 13px;
+            color: #f3d8e8;
+        }
+
+        .cart-table tbody td.col-qty,
+        .cart-table tbody td.col-total,
+        .cart-table tbody td.col-action {
+            text-align: center;
+        }
+
+        /* ===== ITEM CELL ===== */
+        .cart-item-img {
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 2px solid #ff4da6;
+        }
+
+        /* ===== DETAILS CELL ===== */
+        .cart-item-name {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 4px;
+            color: #ffffff;
+        }
+
+        .cart-item-category {
+            font-size: 11px;
+            color: #ffd7ea;
+            font-style: italic;
+            margin-bottom: 6px;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .cart-item-sub {
+            font-size: 12px;
+            color: #f3d8e8;
+            line-height: 1.5;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        /* ===== QTY CONTROLS ===== */
+        .qty-control {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .qty-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #ff4da6;
+            background: #0d0d0d;
+            color: #ff4da6;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .qty-btn:hover {
+            background: #ff4da6;
+            color: #000;
+        }
+
+        .qty-value {
+            width: 40px;
+            height: 28px;
+            border: 1px solid #ff4da6;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 13px;
+            font-family: 'Poppins', sans-serif;
+            padding: 0 4px;
+            background: #0d0d0d;
+            color: #ffffff;
+        }
+
+        /* ===== DELETE BUTTON ===== */
+        .delete-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #f3d8e8;
+            font-size: 18px;
+            transition: color 0.2s;
+        }
+
+        .delete-btn:hover {
+            color: #ff4da6;
+        }
+
+        /* ===== CART BOTTOM ROW ===== */
+        .cart-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 24px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        /* ===== CONTINUE SHOPPING ===== */
+        .continue-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: 2px solid #ff4da6;
+            background: transparent;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #ff4da6;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+            align-self: flex-end;
+        }
+
+        .continue-btn:hover {
+            background: #ff4da6;
+            color: #000;
+        }
+
+        /* ===== ORDER SUMMARY ===== */
+        .order-summary {
+            min-width: 260px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: #f3d8e8;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .summary-row.total-row {
+            font-weight: 700;
+            font-size: 16px;
+            border-top: 2px solid #ff4da6;
+            padding-top: 8px;
+            margin-top: 4px;
+            color: #ffffff;
+        }
+
+        .checkout-btn {
+            margin-top: 12px;
+            width: 100%;
+            padding: 14px;
+            background: #ff4da6;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-transform: uppercase;
+        }
+
+        .checkout-btn:hover {
+            background: #ff0088;
+        }
+
+        /* ===== EMPTY CART STATE ===== */
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+            color: #f3d8e8;
+        }
+
+        .empty-cart i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            color: #ff72bc;
+        }
+
+        .empty-cart p {
+            font-size: 15px;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .empty-cart .add-items-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 18px;
+            padding: 12px 26px;
+            border-radius: 8px;
+            background: #ff72bc;
+            color: #0d0d0d;
+            font-size: 14px;
+            font-weight: 800;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .empty-cart .add-items-btn:hover {
+            background: #ff4da6;
+            transform: translateY(-1px);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+            .cart-table thead th.col-total,
+            .cart-table tbody td.col-total {
+                display: none;
+            }
+
+            .cart-bottom {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .order-summary {
+                min-width: unset;
+            }
+        }
+    </style>
+</head>
+<body class="cart-page">
+
+<!-- ========================= NAVBAR ========================= -->
+    <header class="navbar">
+        <div class="logo">
+            <a href="customerHomePage.html"><img src="images/yas_logo.png" alt="YAS logo"></a>
+        </div>
+        <nav class="nav-links">
+            <a href="customerHomePage.html">home</a>
+            <a href="customerAboutUs.html">about</a>
+            <a href="customerHomePage.html#footer">contact</a>
+        </nav>
+        <div class="CUSTOMER-NAV-ACTIONS">
+            <a class="CUSTOMER-CART-BUTTON" href="addToCart.html" aria-label="Open cart">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+            <div class="CUSTOMER-USER-BUTTON">
+                <span class="CUSTOMER-USER-INFO">
+                    <span class="CUSTOMER-USER-ICON">
+                        <i class="fa-regular fa-user"></i>
+                    </span>
+                    <span class="CUSTOMER-USER-LABEL">user</span>
+                </span>
+                <a class="CUSTOMER-USER-ARROW-LINK" href="#" aria-label="Open user menu" id="userMenuToggle">
+                    <i class="fa-solid fa-chevron-down CUSTOMER-USER-CHEVRON"></i>
+                </a>
+                <div class="CUSTOMER-USER-DROPDOWN" id="userDropdown">
+                    <a href="index.html">Log Out</a>
+                </div>
+            </div>
+        </div>
+        <div class="menu-toggle">&#9776;</div>
+    </header>
+
+<!-- ========================= CART CONTENT ========================= -->
+    <main class="cart-wrapper">
+        <h2 class="cart-title">YOUR CART</h2>
+
+        <table class="cart-table" id="cartTable">
+            <thead>
+                <tr>
+                    <th class="col-item">Item</th>
+                    <th class="col-details">Details</th>
+                    <th class="col-price">Price</th>
+                    <th class="col-qty">Qty</th>
+                    <th class="col-total">Total</th>
+                    <th class="col-action">Action</th>
+                </tr>
+            </thead>
+            <tbody id="cartBody">
+                <!-- Cart items rendered by JS -->
+            </tbody>
+        </table>
+
+        <!-- Empty state (shown when cart is empty) -->
+        <div class="empty-cart" id="emptyCart" style="display:none;">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <p>Your cart is empty. Start adding some items!</p>
+            <a href="customerMenu.php" class="add-items-btn">Add Items</a>
+        </div>
+
+        <div class="cart-bottom" id="cartBottom">
+            <!-- Continue Shopping -->
+            <a href="customerMenu.php" class="continue-btn">
+                <i class="fa-solid fa-arrow-left"></i> CONTINUE SHOPPING
+            </a>
+
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="subtotalVal">&#8369;0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Delivery Fee</span>
+                    <span id="deliveryVal">&#8369;0</span>
+                </div>
+                <div class="summary-row total-row">
+                    <span>Total</span>
+                    <span id="totalVal">&#8369;0</span>
+                </div>
+                <button class="checkout-btn" onclick="proceedToCheckout()">PROCEED TO CHECKOUT</button>
+            </div>
+        </div>
+    </main>
+
+<!-- ===================== PAGE SCRIPT ======================= -->
+    <script src="script.js"></script>
+    <script>
+        // ===== CART DATA (replace with your actual cart storage logic) =====
+        // Sample cart item structure:
+        // { id, name, category, size, orderType, price, qty, image }
+
+        function getCart() {
+            return JSON.parse(localStorage.getItem('yasCart') || '[]');
+        }
+
+        function saveCart(cart) {
+            localStorage.setItem('yasCart', JSON.stringify(cart));
+        }
+
+        function renderCart() {
+            const cart = getCart();
+            const tbody = document.getElementById('cartBody');
+            const emptyCart = document.getElementById('emptyCart');
+            const cartBottom = document.getElementById('cartBottom');
+            const cartTable = document.getElementById('cartTable');
+
+            tbody.innerHTML = '';
+
+            if (cart.length === 0) {
+                cartTable.style.display = 'none';
+                emptyCart.style.display = 'block';
+                cartBottom.style.display = 'none';
+                return;
+            }
+
+            cartTable.style.display = 'table';
+            emptyCart.style.display = 'none';
+            cartBottom.style.display = 'flex';
+
+            let subtotal = 0;
+            let totalDeliveryFee = 0;
+
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.qty;
+                subtotal += itemTotal;
+                
+                // Add delivery fee if this item has one
+                if (item.deliveryFee) {
+                    totalDeliveryFee += item.deliveryFee;
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="col-item">
+                        <img src="${item.image || 'images/yas_logo.png'}" alt="${item.name}" class="cart-item-img">
+                    </td>
+                    <td class="col-details">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-category">${item.category || ''}</div>
+                        <div class="cart-item-sub">
+                            ${item.size ? 'Size: ' + item.size : ''}
+                            ${item.size && item.location ? '<br>' : ''}
+                            ${item.location ? 'Location: ' + item.location : ''}
+                            ${(item.size || item.location) && item.sugarLevel ? '<br>' : ''}
+                            ${item.sugarLevel ? 'Sugar Level: ' + item.sugarLevel : ''}
+                            ${((item.size || item.location || item.sugarLevel) && item.addons) ? '<br>' : ''}
+                            ${item.addons ? 'Add-ons: ' + item.addons : ''}
+                        </div>
+                    </td>
+                    <td class="col-price">&#8369;${item.price}</td>
+                    <td class="col-qty">
+                        <div class="qty-control">
+                            <button class="qty-btn" onclick="changeQty(${index}, -1)">&#8722;</button>
+                            <input class="qty-value" type="number" value="${item.qty}" min="1" onchange="setQty(${index}, this.value)">
+                            <button class="qty-btn" onclick="changeQty(${index}, 1)">&#43;</button>
+                        </div>
+                    </td>
+                    <td class="col-total">&#8369;${itemTotal}</td>
+                    <td class="col-action">
+                        <button class="delete-btn" onclick="removeItem(${index})" aria-label="Remove item">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            const grandTotal = subtotal + totalDeliveryFee;
+
+            document.getElementById('subtotalVal').textContent = '₱' + subtotal;
+            document.getElementById('deliveryVal').textContent = '₱' + totalDeliveryFee;
+            document.getElementById('totalVal').textContent = '₱' + grandTotal;
+        }
+
+        function changeQty(index, delta) {
+            const cart = getCart();
+            cart[index].qty = Math.max(1, cart[index].qty + delta);
+            saveCart(cart);
+            renderCart();
+        }
+
+        function setQty(index, value) {
+            const cart = getCart();
+            cart[index].qty = Math.max(1, parseInt(value) || 1);
+            saveCart(cart);
+            renderCart();
+        }
+
+        function removeItem(index) {
+            const cart = getCart();
+            cart.splice(index, 1);
+            saveCart(cart);
+            renderCart();
+        }
+
+        function proceedToCheckout() {
+            const cart = getCart();
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
+            }
+            // Cart data is already in localStorage, confirmOrder.html will read it
+            window.location.href = 'confirmOrder.html';
+        }
+
+        // Initial render
+        renderCart();
+    </script>
+</body>
+</html>
