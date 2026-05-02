@@ -96,6 +96,29 @@
         <section class="ADMIN-CONTENT ADMIN-PROMOS-CONTENT">
           <div class="ADMIN-INTRO">
             <h2>Promos</h2>
+            <p>Publish new promo posts, update codes, and keep the customer page fresh.</p>
+          </div>
+
+
+          <div class="ADMIN-PROMO-REVIEW">
+            <article class="ADMIN-PROMO-BLOG-CARD">
+              <span class="ADMIN-PROMO-BLOG-BADGE">LIVE</span>
+              <img src="https://via.placeholder.com/420x280/1a0d14/ff4da6?text=Promo+Preview" alt="Buy 1 Get 1">
+              <div>
+                <h3>Buy 1 Get 1 Milktea</h3>
+                <p>Buy one milktea and get another one for free. Perfect for friends and family.</p>
+                <small>Code: YASBOGO • Valid until May 31, 2025</small>
+              </div>
+            </article>
+            <article class="ADMIN-PROMO-BLOG-CARD">
+              <span class="ADMIN-PROMO-BLOG-BADGE">NEW</span>
+              <img src="https://via.placeholder.com/420x280/1a0d14/ff4da6?text=Promo+Preview" alt="Weekend Treat">
+              <div>
+                <h3>Weekend Treat</h3>
+                <p>Customers enjoy 15% off on all drinks every Saturday and Sunday.</p>
+                <small>Code: WEEKENDYAS • Valid every Sat & Sun</small>
+              </div>
+            </article>
           </div>
 
 
@@ -118,6 +141,44 @@
               <span>Add Promo</span>
             </button>
           </div>
+
+
+          <section class="ADMIN-PROMO-FORM-CARD">
+            <div class="ADMIN-PROMO-FORM-HEADER">
+              <h3>Add New Promo Post</h3>
+              <p>Enter the promo title, code, and details to publish a new customer-facing promo.</p>
+            </div>
+            <form class="ADMIN-PROMO-FORM">
+              <div class="ADMIN-FIELD">
+                <label class="ADMIN-FORM-LABEL">Promo Title</label>
+                <input type="text" placeholder="e.g. Snack Bundle" />
+              </div>
+              <div class="ADMIN-FIELD">
+                <label class="ADMIN-FORM-LABEL">Promo Code</label>
+                <input type="text" placeholder="e.g. SNACKTIME" />
+              </div>
+              <div class="ADMIN-FIELD">
+                <label class="ADMIN-FORM-LABEL">Details</label>
+                <textarea rows="3" placeholder="Describe the deal and how customers can redeem it."></textarea>
+              </div>
+              <div class="ADMIN-FIELD">
+                <label class="ADMIN-FORM-LABEL">Valid Until</label>
+                <input type="date" />
+              </div>
+              <div class="ADMIN-FIELD">
+                <label class="ADMIN-FORM-LABEL">Status</label>
+                <select>
+                  <option>Active</option>
+                  <option>Scheduled</option>
+                  <option>Inactive</option>
+                </select>
+              </div>
+              <div class="ADMIN-MODAL-ACTIONS">
+                <button type="button" class="ADMIN-MODAL-SECONDARY">Cancel</button>
+                <button type="button" class="ADMIN-MODAL-PRIMARY">Add Promo</button>
+              </div>
+            </form>
+          </section>
 
 
           <section class="ADMIN-TABLE-CARD">
