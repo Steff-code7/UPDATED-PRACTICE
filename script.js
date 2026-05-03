@@ -90,6 +90,70 @@ document.addEventListener("click", (event) => {
 
 
 
+// ===================== ADMIN USER DROPDOWN MENU ======================
+  (function initAdminUserDropdown() {
+    const adminUser = qs(".ADMIN-USER");
+    const adminMenuToggle = qs(".ADMIN-DROPDOWN-BUTTON", adminUser);
+    const adminDropdown = qs(".ADMIN-USER-DROPDOWN", adminUser);
+
+
+    if (!adminUser || !adminMenuToggle || !adminDropdown) return;
+
+
+    const toggleDropdown = (event) => {
+      if (adminDropdown.contains(event.target)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      adminDropdown.classList.toggle("show");
+      adminMenuToggle.classList.toggle("open");
+    };
+
+
+    adminUser.addEventListener("click", toggleDropdown);
+
+
+    document.addEventListener("click", (event) => {
+      if (!adminUser.contains(event.target)) {
+        adminDropdown.classList.remove("show");
+        adminMenuToggle.classList.remove("open");
+      }
+    });
+  })();
+
+
+
+
+// ===================== ADMIN DASHBOARD STATS ======================
+  (function initAdminDashboardStats() {
+    const customerCount = qs("#admin-dashboard-customer-count");
+
+
+    if (!customerCount) return;
+
+
+    fetch("api/get_dashboard_stats.php")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Unable to load dashboard stats.");
+        }
+
+        return response.json();
+      })
+      .then((result) => {
+        if (!result.success) {
+          throw new Error(result.message || "Dashboard stats unavailable.");
+        }
+
+        customerCount.textContent = result.customer_count;
+      })
+      .catch(() => {
+        customerCount.textContent = "--";
+      });
+  })();
+
+
+
+
 // ===================== BACK TO TOP BTN ======================
   (function initBackToTop() {
     const backToTop = qs("#back-to-top");

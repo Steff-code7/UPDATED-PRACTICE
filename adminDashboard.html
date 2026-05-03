@@ -94,6 +94,10 @@
               <button type="button" class="ADMIN-DROPDOWN-BUTTON" aria-label="Open admin menu">
                 <i class="fa-solid fa-chevron-down"></i>
               </button>
+              <div class="ADMIN-USER-DROPDOWN">
+                <button type="button">Account</button>
+                <a href="loginSignUp.html">Log Out</a>
+              </div>
             </div>
           </div>
         </header>
@@ -128,7 +132,7 @@
             <article class="ADMIN-STAT-CARD">
               <i class="fa-regular fa-user ADMIN-STAT-ICON"></i>
               <h3>Customers</h3>
-              <strong>80</strong>
+              <strong id="admin-dashboard-customer-count">...</strong>
               <p>Total Customers</p>
             </article>
 
@@ -198,5 +202,6 @@
       </div>
     </section>
   </main>
+  <script src="script.js"></script>
 </body>
 </html>

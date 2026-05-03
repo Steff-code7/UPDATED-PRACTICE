@@ -2339,7 +2339,7 @@ footer {
 .admin-dashboard-page {
     min-height: 100vh;
     background: #ececec;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 .ADMIN-PAGE {
@@ -2475,12 +2475,33 @@ footer {
 }
 
 .ADMIN-USER {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 10px;
+    padding: 6px 10px 6px 6px;
+    border-radius: 8px;
     color: #1c1c1c;
     font-size: 0.92rem;
     font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
+}
+
+.ADMIN-USER:hover,
+.ADMIN-USER:focus-within {
+    background-color: #ff4da6;
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+.ADMIN-USER::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 100%;
+    height: 12px;
 }
 
 .ADMIN-USER-AVATAR {
@@ -2491,6 +2512,12 @@ footer {
     border: 1px solid #7f7f7f;
     border-radius: 50%;
     color: #4b4b4b;
+}
+
+.ADMIN-USER:hover .ADMIN-USER-AVATAR,
+.ADMIN-USER:focus-within .ADMIN-USER-AVATAR {
+    border-color: rgba(255, 255, 255, 0.8);
+    color: #fff;
 }
 
 .ADMIN-DROPDOWN-BUTTON {
@@ -2504,6 +2531,81 @@ footer {
     color: #666;
     font-size: 0.72rem;
     cursor: pointer;
+}
+
+.ADMIN-USER:hover .ADMIN-DROPDOWN-BUTTON,
+.ADMIN-USER:focus-within .ADMIN-DROPDOWN-BUTTON {
+    color: #fff;
+}
+
+.ADMIN-DROPDOWN-BUTTON i {
+    transition: transform 0.25s ease;
+}
+
+.ADMIN-DROPDOWN-BUTTON.open i {
+    transform: rotate(180deg);
+}
+
+.ADMIN-USER:hover .ADMIN-DROPDOWN-BUTTON i,
+.ADMIN-USER:focus-within .ADMIN-DROPDOWN-BUTTON i {
+    transform: rotate(180deg);
+}
+
+.ADMIN-USER-DROPDOWN {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    z-index: 1000;
+    min-width: 150px;
+    overflow: hidden;
+    border: 2px solid #ff4da6;
+    border-radius: 8px;
+    background: #1a1a1a;
+    box-shadow: 0 4px 12px rgba(255, 77, 166, 0.2);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+
+.ADMIN-USER-DROPDOWN.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.ADMIN-USER:hover .ADMIN-USER-DROPDOWN,
+.ADMIN-USER:focus-within .ADMIN-USER-DROPDOWN {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.ADMIN-USER-DROPDOWN a,
+.ADMIN-USER-DROPDOWN button {
+    display: block;
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    background: transparent;
+    background-color: white;
+    color: #000000;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.ADMIN-USER-DROPDOWN a:hover,
+.ADMIN-USER-DROPDOWN button:hover,
+.ADMIN-USER-DROPDOWN a:focus-visible,
+.ADMIN-USER-DROPDOWN button:focus-visible {
+    background: #ff4da6;
+    color: #fff;
+    outline: none;
 }
 
 /* ===================== CONTENT ===================== */
@@ -4718,6 +4820,7 @@ footer {
     border-radius: 18px;
     font-weight: 600;
     transition: background 0.2s ease, color 0.2s ease;
+    text-decoration: none;
 }
 
 .ACCOUNT-SIDEBAR-NAV a.active,
