@@ -48,14 +48,14 @@
         <div class="menu-toggle">&#9776;</div>
     </header>
 
-    <section class="promo-hero">
-        <div class="promo-hero-content">
+    <section id="promotions-hero" class="about">
+        <div class="ABOUT-US-TEXT">
             <h1>PROMOTIONS.</h1>
         </div>
 
-        <div class="promo-hero-image">
-            <img src="images/about_us_banner.jpg" alt="YAS Milktea promotions banner" class="promo-hero-bg">
-            <div class="overlay"></div>
+        <div class="ABOUT-HERO-CONTAINER">
+            <img src="images/about_us_banner.jpg" alt="YAS Milktea promotions banner" class="YASBIGPIC" id="ABOUT-HERO-IMG">
+            <div class="overlay" id="ABOUT-OVERLAY"></div>
         </div>
 
         <div class="GLOBAL-PAGE-OVERLAY"></div>
@@ -66,33 +66,35 @@
             </svg>
         </div>
 
-        <div class="custom-shape-divider-bottom-1764244576" id="PROMO-BOTTOM">
+        <div class="custom-shape-divider-bottom-1764244576" id="ABOUT-BOTTOM">
             <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
                 <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" class="shape-fill"></path>
             </svg>
         </div>
     </section>
 
-    <section class="promo-intro">
-        <h2>Great drinks. Greater deals.</h2>
-        <p>Check out our latest promos and offers made just for you!</p>
-    </section>
-
-    <section class="promo-toolbar">
-        <div class="promo-filter" id="promo-filter" role="button" tabindex="0" aria-expanded="false">
-            <span id="promo-filter-label">All Categories</span>
-            <i class="fa-solid fa-chevron-down"></i>
-            <div class="promo-filter-menu" aria-label="Promo categories">
-                <button type="button" class="active" data-category="all">All Categories</button>
-                <button type="button" data-category="drinks">Drinks</button>
-                <button type="button" data-category="snacks">Snacks</button>
-                <button type="button" data-category="rewards">Rewards</button>
-            </div>
+    <section class="ABOUT-CONTENT-SECTION" id="promo-intro">
+        <div class="ABOUT-CONTENT-TEXTS">
+            <h2 class="PROMO-INTRO-HEADING">Great drinks. Greater deals.</h2>
+            <p class="PROMO-INTRO-SUB">Check out our latest promos and offers made just for you!</p>
+            <div class="underline3" aria-hidden="true"></div>
+            <section class="promo-toolbar">
+                <div class="promo-filter" id="promo-filter" role="button" tabindex="0" aria-expanded="false">
+                    <span id="promo-filter-label">All Categories</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                    <div class="promo-filter-menu" aria-label="Promo categories">
+                        <button type="button" class="active" data-category="all">All Categories</button>
+                        <button type="button" data-category="drinks">Drinks</button>
+                        <button type="button" data-category="snacks">Snacks</button>
+                        <button type="button" data-category="rewards">Rewards</button>
+                    </div>
+                </div>
+                <label class="promo-search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input id="promo-search" type="search" placeholder="Search promos, deals, or keywords...">
+                </label>
+            </section>
         </div>
-        <label class="promo-search">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input id="promo-search" type="search" placeholder="Search promos, deals, or keywords...">
-        </label>
     </section>
 
     <section class="promo-cards">
@@ -178,7 +180,7 @@
     <section class="MENU-EMPTY-STATE promo-empty-state" id="promo-empty-state" aria-live="polite" hidden>
         <div class="MENU-EMPTY-CONTENT">
             <h2>Nothing matched your search.</h2>
-            <p>Try a different promo name, code, or category to see what Yas Milktea House has available.</p>
+            <p>Try a different flavor or browse all categories to see what Yas Milktea House has available.</p>
         </div>
     </section>
 

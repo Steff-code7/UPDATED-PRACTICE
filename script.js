@@ -254,10 +254,15 @@ window.addEventListener("scroll", updateNavbarState, { passive: true });
           .split(/\s+/)
           .filter(Boolean);
         const categoryMatches = activeCategory === "all" || categories.includes(activeCategory);
-        const text = `${card.textContent} ${card.dataset.keywords || ""}`.toLowerCase();
-        const queryMatches = !query || text.includes(query);
-        const isVisible = categoryMatches && queryMatches;
 
+        const titleEl = qs("h2", card);
+        const title = (titleEl?.textContent || "").trim().toLowerCase();
+        const keywords = (card.dataset.keywords || "").toLowerCase();
+        const body = (card.textContent || "").trim().toLowerCase();
+        const haystack = `${title} ${keywords} ${body}`;
+        const queryMatches = !query || haystack.includes(query);
+
+        const isVisible = categoryMatches && queryMatches;
         card.hidden = !isVisible;
         if (isVisible) visibleCount += 1;
       });
@@ -269,6 +274,7 @@ window.addEventListener("scroll", updateNavbarState, { passive: true });
 
     filter.addEventListener("click", (event) => {
       if (event.target.closest(".promo-filter-menu button")) return;
+      event.stopPropagation();
       toggleFilter();
     });
 

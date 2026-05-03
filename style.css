@@ -248,6 +248,7 @@ body {
     overflow: hidden;
     line-height: 0;
     filter: drop-shadow(0px -12px 28px rgba(0, 0, 0, 0.864));
+    z-index: 2;
 }
 
 .custom-shape-divider-top-1764244138 {
@@ -846,80 +847,57 @@ body {
     color: #fff;
 }
 
-.promo-hero {
-    position: relative;
-    height: 100vh;
-    overflow: hidden;
+/* Promotions uses the same hero markup as About (.about, #ABOUT-OVERLAY, #ABOUT-BOTTOM); tune stacking only */
+.promotions-page .ABOUT-HERO-CONTAINER {
+    z-index: 0;
 }
 
-.promo-hero-image {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    overflow: hidden;
-}
-
-.promo-hero-bg {
-    position: relative;
-    top: -150px;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center 35%;
-    display: block;
-}
-
-.promotions-page .promo-hero .overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 90%;
+.promotions-page .about .GLOBAL-PAGE-OVERLAY,
+.promotions-page .about .GLOBAL-PAGE-OVERLAY-BOTTOM {
     z-index: 1;
-    background: #32011c70;
 }
 
-#PROMO-BOTTOM {
-    bottom: 250px;
+.promotions-page .about .custom-shape-divider-top-1764244138,
+.promotions-page .about .custom-shape-divider-bottom-1764244576 {
+    z-index: 3;
 }
 
-.promo-hero-content {
-    position: absolute;
-    top: 28%;
-    left: 50%;
-    z-index: 10;
+/* Promotions intro: same stacking as About; toolbar lives inside like #MENU-INTRO1 (no 250px min-height gap) */
+.promotions-page #promo-intro {
+    min-height: auto;
+    padding-bottom: 32px;
+}
+
+.promotions-page #promo-intro .ABOUT-CONTENT-TEXTS {
+    min-height: auto;
+}
+
+.promotions-page #promo-intro .underline3 {
+    margin: 14px auto 12px;
+}
+
+.promotions-page #promo-intro .promo-toolbar {
+    max-width: none;
     width: 100%;
-    padding: 20px;
-    color: white;
-    text-align: center;
-    transform: translateX(-50%);
-}
-
-.promo-hero h1 {
     margin: 0;
-    font-family: "Poppins", sans-serif;
-    font-size: 4rem;
-    line-height: 1.1;
-    font-weight: 900;
-    color: #fff;
-    text-transform: uppercase;
+    padding: 4px 0 0;
 }
 
-.promo-intro {
-    max-width: 900px;
-    margin: 28px auto 0;
-    padding: 0 24px;
-    text-align: center;
+.promotions-page #promo-intro .promo-toolbar::before {
+    display: none;
 }
 
-.promo-intro h2 {
+.promotions-page #promo-intro .PROMO-INTRO-HEADING {
     margin: 0 0 6px;
+    padding-top: 20px;
+    font-family: "Poppins", sans-serif;
     font-size: clamp(1.55rem, 3vw, 2rem);
     line-height: 1.15;
     font-weight: 900;
+    color: #fff;
 }
 
-.promo-intro p {
+.promotions-page #promo-intro .PROMO-INTRO-SUB {
     margin: 0;
     color: rgba(255, 255, 255, 0.88);
     font-size: 1rem;
@@ -927,13 +905,29 @@ body {
 }
 
 .promo-toolbar {
+    position: relative;
+    z-index: 25;
+    isolation: isolate;
     display: flex;
     align-items: center;
     justify-content: flex-start;
     gap: 56px;
     max-width: 1100px;
     margin: 0 auto;
-    padding: 40px 24px 0;
+    padding: 24px 24px 0;
+    background: transparent;
+}
+
+.promotions-page .promo-toolbar::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    background: #0d0d0d;
+    z-index: -1;
 }
 
 .promo-filter {
@@ -1042,6 +1036,10 @@ body {
     max-width: 1100px;
     margin: 36px auto 0;
     padding: 0 24px 36px;
+}
+
+.promo-card[hidden] {
+    display: none !important;
 }
 
 .promo-card {
@@ -3239,7 +3237,11 @@ footer {
     }
 
     .promo-toolbar {
-        padding: 28px 20px 0;
+        padding: 20px 20px 0;
+    }
+
+    .promotions-page #promo-intro .promo-toolbar {
+        padding: 4px 0 0;
     }
 
     .promo-cards {
@@ -3305,10 +3307,6 @@ footer {
 
 /* ==================== SMALL LAPTOPS ==================== */
 @media (max-width: 992px) {
-    .promo-hero {
-        height: 100vh;
-    }
-
     .promo-toolbar {
         flex-direction: column;
         align-items: stretch;
@@ -3329,20 +3327,20 @@ footer {
         padding-left: 48px;
     }
 
-    .promo-hero {
-        height: 100vh;
-    }
-
-    .promo-hero-content {
+    .promotions-page .ABOUT-US-TEXT {
         padding-inline: 22px;
     }
 
-    .promo-hero h1 {
+    .promotions-page .ABOUT-US-TEXT h1 {
         font-size: clamp(2.8rem, 11vw, 4rem);
     }
 
     .promo-toolbar {
-        padding-top: 28px;
+        padding-top: 20px;
+    }
+
+    .promotions-page #promo-intro .promo-toolbar {
+        padding: 6px 0 0;
     }
 
     .promo-filter,
