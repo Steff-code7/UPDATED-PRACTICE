@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account | Yas Milktea House</title>
+    <link rel="icon" type="image/png" href="images/footer_logo.png">
+    <link rel="stylesheet" href="style.css?v=promo-fix-3">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="..." crossorigin="anonymous">
+    <link rel="stylesheet" href="https://www.shapedivider.app">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Momo+Trust+Display&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body class="customer-account-page">
+    <a id="top"></a>
+    <header class="navbar">
+        <div class="logo">
+            <a href="customerHomePage.html"><img src="images/yas_logo.png" alt="YAS logo"></a>
+        </div>
+        <nav class="nav-links">
+            <a href="customerHomePage.html">home</a>
+            <a href="customerAboutUs.html">about</a>
+            <a href="customerMenu.php">menu</a>
+        </nav>
+        <div class="CUSTOMER-NAV-ACTIONS">
+            <a class="CUSTOMER-CART-BUTTON" href="addToCart.html" aria-label="Open cart">
+                <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+            <div class="CUSTOMER-USER-BUTTON">
+                <span class="CUSTOMER-USER-INFO">
+                    <span class="CUSTOMER-USER-ICON">
+                        <i class="fa-regular fa-user"></i>
+                    </span>
+                    <span class="CUSTOMER-USER-LABEL">user</span>
+                </span>
+                <a class="CUSTOMER-USER-ARROW-LINK" href="#" aria-label="Open user menu" id="userMenuToggle">
+                    <i class="fa-solid fa-chevron-down CUSTOMER-USER-CHEVRON"></i>
+                </a>
+                <div class="CUSTOMER-USER-DROPDOWN" id="userDropdown">
+                    <a href="customerAccount.html">Account</a>
+                    <a href="index.html">Log Out</a>
+                </div>
+            </div>
+        </div>
+        <div class="menu-toggle">&#9776;</div>
+    </header>
+
+    <main class="ACCOUNT-PAGE">
+        <div class="ACCOUNT-GRID">
+            <aside class="ACCOUNT-SIDEBAR">
+                <div class="ACCOUNT-SIDEBAR-HEADER">
+                    <h2>Overview</h2>
+                    <p>Manage your profile, orders, and saved details from one place.</p>
+                </div>
+                <nav class="ACCOUNT-SIDEBAR-NAV" aria-label="Account navigation">
+                    <a class="active" href="#overview">Overview</a>
+                    <a href="#profile">My Profile</a>
+                    <a href="#details">Personal Details</a>
+                    <a href="#orders">Order History</a>
+                    <a href="#addresses">Addresses</a>
+                    <a href="#payments">Payment Methods</a>
+                    <a href="index.html">Log Out</a>
+                </nav>
+                <div class="ACCOUNT-SIDEBAR-HELP">
+                    <span>Need help?</span>
+                    <p>We're here for you!</p>
+                    <a class="btn outline" href="#footer">CONTACT SUPPORT</a>
+                </div>
+            </aside>
+
+            <section class="ACCOUNT-MAIN">
+                <section class="ACCOUNT-HERO" id="overview">
+                    <div class="ACCOUNT-HERO-IMAGE">
+                        <img src="images/promobogo.png" alt="Account profile image">
+                    </div>
+                    <div class="ACCOUNT-HERO-CONTENT">
+                        <h1>Hi, Yas Lover! <span>👋</span></h1>
+                        <p>Welcome back! Here's your account overview.</p>
+                        <div class="ACCOUNT-STATS">
+                            <div>
+                                <span>Member Since</span>
+                                <strong>May 10, 2024</strong>
+                            </div>
+                            <div>
+                                <span>Total Orders</span>
+                                <strong>12 Orders</strong>
+                            </div>
+                            <div>
+                                <span>Total Spent</span>
+                                <strong>₱1,350.00</strong>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="ACCOUNT-CARDS" id="details">
+                    <article class="ACCOUNT-DETAIL-CARD">
+                        <div class="ACCOUNT-CARD-HEADER">
+                            <h3>Personal Details</h3>
+                            <a class="btn outline" href="#details">EDIT DETAILS</a>
+                        </div>
+                        <div class="ACCOUNT-CARD-BODY">
+                            <div><span>Full Name</span><strong>Yas Lover</strong></div>
+                            <div><span>Email Address</span><strong>yaslover@email.com</strong></div>
+                            <div><span>Contact Number</span><strong>0912 345 6789</strong></div>
+                            <div><span>Date of Birth</span><strong>May 10, 2002</strong></div>
+                        </div>
+                    </article>
+
+                    <article class="ACCOUNT-DETAIL-CARD">
+                        <div class="ACCOUNT-CARD-HEADER">
+                            <h3>Address</h3>
+                            <a class="btn outline" href="#addresses">EDIT ADDRESS</a>
+                        </div>
+                        <div class="ACCOUNT-CARD-BODY">
+                            <div><span>Home Address</span><strong>123 Milktea Street, Sweet City, Bubble Town, 1234</strong></div>
+                            <div><span>Landmark</span><strong>Near Yas Milktea House Main Branch</strong></div>
+                            <div><span>Delivery Instructions</span><strong>Please call or text before delivery.</strong></div>
+                        </div>
+                    </article>
+                </section>
+
+                <section class="ACCOUNT-ORDERS" id="orders">
+                    <div class="ACCOUNT-ORDERS-HEADER">
+                        <h3>Order History</h3>
+                        <a class="btn outline" href="#orders">VIEW ALL ORDERS</a>
+                    </div>
+                    <div class="ACCOUNT-ORDER-TABLE">
+                        <div class="ACCOUNT-ORDER-ROW ACCOUNT-ORDER-HEAD">
+                            <span>ORDER ID</span>
+                            <span>DATE</span>
+                            <span>ITEMS</span>
+                            <span>TOTAL</span>
+                            <span>STATUS</span>
+                        </div>
+                        <div class="ACCOUNT-ORDER-ROW">
+                            <span>#YAS20240510</span>
+                            <span>May 10, 2024</span>
+                            <span>Okinawa Milktea, Takoyaki</span>
+                            <span>₱160.00</span>
+                            <span class="ACCOUNT-STATUS delivered">Delivered</span>
+                        </div>
+                        <div class="ACCOUNT-ORDER-ROW">
+                            <span>#YAS20240508</span>
+                            <span>May 8, 2024</span>
+                            <span>Wintermelon Milktea, Fries</span>
+                            <span>₱140.00</span>
+                            <span class="ACCOUNT-STATUS delivered">Delivered</span>
+                        </div>
+                        <div class="ACCOUNT-ORDER-ROW">
+                            <span>#YAS20240505</span>
+                            <span>May 5, 2024</span>
+                            <span>Strawberry Milktea, Wings</span>
+                            <span>₱180.00</span>
+                            <span class="ACCOUNT-STATUS delivered">Delivered</span>
+                        </div>
+                        <div class="ACCOUNT-ORDER-ROW">
+                            <span>#YAS20240501</span>
+                            <span>May 1, 2024</span>
+                            <span>Taro Milktea, Burger</span>
+                            <span>₱170.00</span>
+                            <span class="ACCOUNT-STATUS completed">Completed</span>
+                        </div>
+                    </div>
+                </section>
+            </section>
+        </div>
+    </main>
+
+    <footer id="footer">
+        <div class="FOOTER-CONTAINER">
+            <div class="FOOTER-IMG-CONTAINER">
+                <img src="images/footer_logo.png" alt="YAS footer logo">
+            </div>
+            <div class="FOOTER-TEXTS">
+                <p>
+                    Born to serve sweet vibes and tasty drinks.<br>
+                    Your local spot for milk teas and savory snacks.<br>
+                    Fresh flavors, good company, and a touch of fun in every cup.
+                </p>
+                <div class="FOOTER-ICONS">
+                    <div>
+                        <a href="https://maps.app.goo.gl/Uss4LnWw9EJKj2gQ9" target="_blank">
+                            <i class="fa-solid fa-location-dot"></i>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="tel:+639073954150">
+                            <i class="fa-solid fa-phone"></i>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="https://www.facebook.com/yas.elizalde.7" target="_blank">
+                            <i class="fa-brands fa-square-facebook"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="FOOTER-COPYRIGHT">
+            <p>&copy; 2020 Yas Milktea House</p>
+        </div>
+    </footer>
+
+    <div class="BACK-TO-TOP" id="back-to-top" role="button" tabindex="0" aria-label="Back to top" title="Go to top">
+        <i class="fa-solid fa-circle-chevron-up" style="color: #ff5eb3;"></i>
+    </div>
+
+    <script src="script.js?v=promo-fix-3"></script>
+</body>
+</html>

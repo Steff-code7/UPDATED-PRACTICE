@@ -4664,5 +4664,324 @@ footer {
     }
 }
 
+/* ===================== CUSTOMER ACCOUNT PAGE ===================== */
+.customer-account-page {
+    background: #0d0d0d;
+    color: #fff;
+}
+
+.ACCOUNT-GRID {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 32px;
+    max-width: 1360px;
+    margin: 120px auto 60px;
+    padding: 0 24px;
+}
+
+.ACCOUNT-SIDEBAR {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.ACCOUNT-SIDEBAR-HEADER {
+    padding: 28px 24px;
+    background: rgba(255, 77, 166, 0.08);
+    border: 1px solid rgba(255, 77, 166, 0.18);
+    border-radius: 24px;
+}
+
+.ACCOUNT-SIDEBAR-HEADER h2 {
+    margin: 0 0 12px;
+    font-size: 1.75rem;
+    letter-spacing: 0.03em;
+}
+
+.ACCOUNT-SIDEBAR-HEADER p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+}
+
+.ACCOUNT-SIDEBAR-NAV {
+    display: grid;
+    gap: 10px;
+}
+
+.ACCOUNT-SIDEBAR-NAV a {
+    display: block;
+    padding: 14px 18px;
+    background: #131313;
+    color: #f3d8e8;
+    border: 1px solid rgba(255, 77, 166, 0.16);
+    border-radius: 18px;
+    font-weight: 600;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.ACCOUNT-SIDEBAR-NAV a.active,
+.ACCOUNT-SIDEBAR-NAV a:hover {
+    background: #ff4da6;
+    color: #000;
+}
+
+.ACCOUNT-SIDEBAR-HELP {
+    padding: 24px;
+    background: #131313;
+    border: 1px solid rgba(255, 77, 166, 0.16);
+    border-radius: 24px;
+    display: grid;
+    gap: 12px;
+}
+
+.ACCOUNT-SIDEBAR-HELP span {
+    display: block;
+    font-size: 0.95rem;
+    color: #fff;
+    letter-spacing: 0.05em;
+}
+
+.ACCOUNT-SIDEBAR-HELP p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.78);
+    line-height: 1.6;
+}
+
+.ACCOUNT-MAIN {
+    display: grid;
+    gap: 24px;
+}
+
+.ACCOUNT-HERO {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: 24px;
+    align-items: center;
+    padding: 32px;
+    background: rgba(255, 77, 166, 0.08);
+    border: 1px solid rgba(255, 77, 166, 0.18);
+    border-radius: 32px;
+}
+
+.ACCOUNT-HERO-IMAGE {
+    display: grid;
+    place-items: center;
+    width: 190px;
+    height: 190px;
+    background: linear-gradient(180deg, rgba(255, 77, 166, 0.16) 0%, rgba(13, 13, 13, 0.4) 100%);
+    border: 1px solid rgba(255, 77, 166, 0.16);
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.ACCOUNT-HERO-IMAGE img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ACCOUNT-HERO-CONTENT h1 {
+    margin: 0 0 12px;
+    font-size: clamp(2.2rem, 3vw, 3rem);
+}
+
+.ACCOUNT-HERO-CONTENT h1 span {
+    display: inline-block;
+}
+
+.ACCOUNT-HERO-CONTENT p {
+    margin: 0 0 24px;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 560px;
+}
+
+.ACCOUNT-STATS {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.ACCOUNT-STATS div {
+    padding: 18px 20px;
+    background: #131313;
+    border: 1px solid rgba(255, 77, 166, 0.16);
+    border-radius: 22px;
+}
+
+.ACCOUNT-STATS span {
+    display: block;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.ACCOUNT-STATS strong {
+    display: block;
+    font-size: 1.05rem;
+}
+
+.ACCOUNT-CARDS {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.ACCOUNT-DETAIL-CARD {
+    padding: 28px;
+    background: #131313;
+    border: 1px solid rgba(255, 77, 166, 0.16);
+    border-radius: 28px;
+    display: grid;
+    gap: 22px;
+}
+
+.ACCOUNT-CARD-HEADER {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.ACCOUNT-CARD-HEADER h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+}
+
+.ACCOUNT-CARD-BODY {
+    display: grid;
+    gap: 16px;
+}
+
+.ACCOUNT-CARD-BODY div span {
+    display: block;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.ACCOUNT-CARD-BODY div strong {
+    display: block;
+    color: #fff;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.ACCOUNT-ORDERS {
+    padding: 28px;
+    background: #131313;
+    border: 1px solid rgba(255, 77, 166, 0.16);
+    border-radius: 28px;
+    display: grid;
+    gap: 20px;
+}
+
+.ACCOUNT-ORDERS-HEADER {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.ACCOUNT-ORDERS-HEADER h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+}
+
+.ACCOUNT-ORDER-TABLE {
+    display: grid;
+    gap: 10px;
+}
+
+.ACCOUNT-ORDER-ROW {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 2.2fr 1fr 1fr;
+    gap: 12px;
+    align-items: center;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 77, 166, 0.1);
+    border-radius: 18px;
+}
+
+.ACCOUNT-ORDER-HEAD {
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.ACCOUNT-ORDER-ROW span {
+    font-size: 0.92rem;
+    color: #fff;
+}
+
+.ACCOUNT-STATUS {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 90px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.ACCOUNT-STATUS.delivered {
+    background: rgba(0, 185, 132, 0.18);
+    color: #b9ffdd;
+}
+
+.ACCOUNT-STATUS.completed {
+    background: rgba(255, 77, 166, 0.18);
+    color: #ffb8df;
+}
+
+@media (max-width: 1100px) {
+    .ACCOUNT-GRID {
+        grid-template-columns: 1fr;
+        margin-top: 100px;
+    }
+
+    .ACCOUNT-HERO {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .ACCOUNT-HERO-IMAGE {
+        margin: 0 auto;
+    }
+
+    .ACCOUNT-STATS {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    .ACCOUNT-GRID {
+        padding: 0 16px;
+        gap: 18px;
+    }
+
+    .ACCOUNT-SIDEBAR-NAV,
+    .ACCOUNT-CARDS,
+    .ACCOUNT-ORDER-ROW {
+        gap: 12px;
+    }
+
+    .ACCOUNT-ORDER-ROW {
+        grid-template-columns: 1fr;
+        padding: 14px 16px;
+    }
+}
+
 
 

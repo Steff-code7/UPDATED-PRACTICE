@@ -52,6 +52,21 @@ document.addEventListener("click", (event) => {
     if (!userMenuToggle || !userDropdown) return;
 
 
+    const insertAccountLink = () => {
+      if (qs('a[href="customerAccount.html"]', userDropdown)) return;
+      const logoutLink = qs('a[href="index.html"]', userDropdown);
+      const accountLink = document.createElement("a");
+      accountLink.href = "customerAccount.html";
+      accountLink.textContent = "Account";
+      if (logoutLink) {
+        userDropdown.insertBefore(accountLink, logoutLink);
+      } else {
+        userDropdown.appendChild(accountLink);
+      }
+    };
+
+    insertAccountLink();
+
     const toggleDropdown = (event) => {
       event.preventDefault();
       event.stopPropagation();
