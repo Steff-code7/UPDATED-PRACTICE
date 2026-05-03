@@ -54,7 +54,7 @@ while ($row = $products->fetch_assoc()) {
         <nav class="nav-links">
             <a href="customerHomePage.html">home</a>
             <a href="customerAboutUs.html">about</a>
-            <a href="#footer">contact</a>
+            <a href="customerMenu.php">menu</a>
         </nav>
         <div class="CUSTOMER-NAV-ACTIONS">
             <a class="CUSTOMER-CART-BUTTON" href="addToCart.html" aria-label="Open cart">
