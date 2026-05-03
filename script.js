@@ -162,6 +162,146 @@ window.addEventListener("scroll", updateNavbarState, { passive: true });
 
 
 
+// ===================== CUSTOMER PROMO ROUTE ======================
+  (function initCustomerPromoRoute() {
+    const body = document.body;
+    const path = window.location.pathname.toLowerCase();
+
+    if (!body.classList.contains("home-page") || !path.endsWith("/customerhomepage.html")) return;
+
+    qsa(".PROMO-BUTTON").forEach((button) => {
+      button.setAttribute("href", "customerPromotions.html");
+    });
+  })();
+
+
+
+
+  // ===================== PROMO UPDATE CTA ======================
+  (function initPromoUpdateCTA() {
+    const updatesButton = qs("#get-updates-btn");
+    if (!updatesButton) return;
+
+    const showPromoToast = (message) => {
+      let toast = qs("#promo-toast");
+
+      if (!toast) {
+        toast = document.createElement("div");
+        toast.id = "promo-toast";
+        toast.className = "promo-toast";
+        toast.setAttribute("role", "status");
+        toast.setAttribute("aria-live", "polite");
+        document.body.appendChild(toast);
+      }
+
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.clearTimeout(showPromoToast.timer);
+      showPromoToast.timer = window.setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2800);
+    };
+
+    updatesButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      const mode = updatesButton.dataset.mode?.trim().toLowerCase();
+
+      if (mode === "guest") {
+        window.location.href = "loginSignUp.html";
+        return;
+      }
+
+      if (mode === "customer") {
+        showPromoToast("Promo notifications are almost ready. You are on the updates list.");
+        return;
+      }
+
+      window.location.href = "loginSignUp.html";
+    });
+  })();
+
+
+
+// ===================== PROMO SEARCH & FILTER ======================
+  (function initPromoDirectory() {
+    const filter = qs("#promo-filter");
+    const filterLabel = qs("#promo-filter-label");
+    const filterButtons = qsa(".promo-filter-menu button");
+    const searchInput = qs("#promo-search");
+    const promoCards = qsa(".promo-card");
+    const emptyState = qs("#promo-empty-state");
+
+    if (!filter || !filterLabel || !searchInput || !promoCards.length) return;
+
+    let activeCategory = "all";
+
+    const closeFilter = () => {
+      filter.classList.remove("open");
+      filter.setAttribute("aria-expanded", "false");
+    };
+
+    const toggleFilter = () => {
+      const isOpen = filter.classList.toggle("open");
+      filter.setAttribute("aria-expanded", String(isOpen));
+    };
+
+    const updateCards = () => {
+      const query = searchInput.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      promoCards.forEach((card) => {
+        const categoryMatches = activeCategory === "all" || card.dataset.category === activeCategory;
+        const text = `${card.textContent} ${card.dataset.keywords || ""}`.toLowerCase();
+        const queryMatches = !query || text.includes(query);
+        const isVisible = categoryMatches && queryMatches;
+
+        card.hidden = !isVisible;
+        if (isVisible) visibleCount += 1;
+      });
+
+      if (emptyState) {
+        emptyState.hidden = visibleCount !== 0;
+      }
+    };
+
+    filter.addEventListener("click", (event) => {
+      if (event.target.closest(".promo-filter-menu button")) return;
+      toggleFilter();
+    });
+
+    filter.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        toggleFilter();
+      }
+
+      if (event.key === "Escape") {
+        closeFilter();
+      }
+    });
+
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.stopPropagation();
+        activeCategory = button.dataset.category || "all";
+        filterLabel.textContent = button.textContent;
+        filterButtons.forEach((item) => item.classList.toggle("active", item === button));
+        closeFilter();
+        updateCards();
+      });
+    });
+
+    searchInput.addEventListener("input", updateCards);
+
+    document.addEventListener("click", (event) => {
+      if (!filter.contains(event.target)) closeFilter();
+    });
+
+    updateCards();
+  })();
+
+
+
 // ===================== MENU PAGE LOGIC ======================
   (function initMenuPage() {
     // ====================== MENU SELECTORS ======================
