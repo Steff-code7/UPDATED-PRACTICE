@@ -49,25 +49,33 @@
     </header>
 
     <section class="promo-hero">
-        <img src="images/promobanner.png" alt="YAS milktea drinks" class="promo-hero-bg">
-        <div class="overlay"></div>
         <div class="promo-hero-content">
-            <span class="promo-hero-label">PROMOTIONS.</span>
-            <h1>Great drinks. Greater deals.</h1>
-            <p>Check out our latest promos and offers made just for you!</p>
+            <h1>PROMOTIONS.</h1>
         </div>
+
+        <div class="promo-hero-image">
+            <img src="images/about_us_banner.jpg" alt="YAS Milktea promotions banner" class="promo-hero-bg">
+            <div class="overlay"></div>
+        </div>
+
         <div class="GLOBAL-PAGE-OVERLAY"></div>
-        <div class="GLOBAL-PAGE-OVERLAY-BOTTOM"></div>
+
         <div class="custom-shape-divider-top-1764244138">
             <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
                 <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" class="shape-fill"></path>
             </svg>
         </div>
-        <div class="custom-shape-divider-bottom-1764244576">
+
+        <div class="custom-shape-divider-bottom-1764244576" id="PROMO-BOTTOM">
             <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
                 <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" class="shape-fill"></path>
             </svg>
         </div>
+    </section>
+
+    <section class="promo-intro">
+        <h2>Great drinks. Greater deals.</h2>
+        <p>Check out our latest promos and offers made just for you!</p>
     </section>
 
     <section class="promo-toolbar">
@@ -88,7 +96,7 @@
     </section>
 
     <section class="promo-cards">
-        <article class="promo-card" data-category="drinks" data-keywords="limited time buy 1 get 1 milktea yasbogo drinks">
+        <article class="promo-card" data-categories="drinks" data-keywords="limited time buy 1 get 1 milktea yasbogo drinks">
             <span class="promo-card-tag">LIMITED TIME</span>
             <img src="images/promobogo.png" alt="Buy 1 Get 1 Milktea promo">
             <div class="promo-card-body">
@@ -101,7 +109,7 @@
             </div>
         </article>
 
-        <article class="promo-card" data-category="snacks" data-keywords="bundle deal snack bundle snacktime milktea snacks">
+        <article class="promo-card" data-categories="drinks snacks" data-keywords="bundle deal snack bundle snacktime milktea snacks drinks">
             <span class="promo-card-tag">BUNDLE DEAL</span>
             <img src="images/promosnacktime.png" alt="Snack bundle promo">
             <div class="promo-card-body">
@@ -114,7 +122,7 @@
             </div>
         </article>
 
-        <article class="promo-card" data-category="drinks" data-keywords="weekend special weekend treat weekendyas drinks saturday sunday">
+        <article class="promo-card" data-categories="drinks" data-keywords="weekend special weekend treat weekendyas drinks saturday sunday">
             <span class="promo-card-tag">WEEKEND SPECIAL</span>
             <img src="images/promoweekendyas.png" alt="Weekend drink treat promo">
             <div class="promo-card-body">
@@ -127,7 +135,7 @@
             </div>
         </article>
 
-        <article class="promo-card" data-category="rewards" data-keywords="group promo group feast yasfam rewards minimum purchase">
+        <article class="promo-card" data-categories="snacks" data-keywords="group promo group feast yasfam snacks minimum purchase">
             <span class="promo-card-tag">GROUP PROMO</span>
             <img src="images/promoyasfam.png" alt="Group feast promo">
             <div class="promo-card-body">
@@ -140,7 +148,7 @@
             </div>
         </article>
 
-        <article class="promo-card" data-category="drinks" data-keywords="new flavor alert newyas drinks fruit tea">
+        <article class="promo-card" data-categories="drinks" data-keywords="new flavor alert newyas drinks fruit tea">
             <span class="promo-card-tag">NEW!</span>
             <img src="images/promonewyas.png" alt="New flavor drinks promo">
             <div class="promo-card-body">
@@ -153,7 +161,7 @@
             </div>
         </article>
 
-        <article class="promo-card" data-category="rewards" data-keywords="loyalty deal loyalty reward loyalyas reward discount">
+        <article class="promo-card" data-categories="rewards" data-keywords="loyalty deal loyalty reward loyalyas rewards discount">
             <span class="promo-card-tag">LOYALTY DEAL</span>
             <img src="images/promoloyalyas.png" alt="Loyalty reward promo">
             <div class="promo-card-body">
@@ -170,7 +178,7 @@
     <section class="MENU-EMPTY-STATE promo-empty-state" id="promo-empty-state" aria-live="polite" hidden>
         <div class="MENU-EMPTY-CONTENT">
             <h2>Nothing matched your search.</h2>
-            <p>Try a different flavor or browse all categories to see what Yas Milktea House has available.</p>
+            <p>Try a different promo name, code, or category to see what Yas Milktea House has available.</p>
         </div>
     </section>
 

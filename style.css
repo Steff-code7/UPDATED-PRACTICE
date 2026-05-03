@@ -344,24 +344,28 @@ body {
     height: 70px;
 }
 
-.home-page .logo {
+.home-page .logo,
+.promotions-page .logo {
     width: 170px;
     flex: 0 0 170px;
 }
 
-.home-page .logo a {
+.home-page .logo a,
+.promotions-page .logo a {
     display: inline-flex;
     align-items: center;
 }
 
-.home-page .logo img {
+.home-page .logo img,
+.promotions-page .logo img {
     height: 112px;
     transform: translateY(30px);
     transform-origin: top left;
     transition: height 0.35s ease, transform 0.35s ease;
 }
 
-.home-page .navbar.scrolled .logo img {
+.home-page .navbar.scrolled .logo img,
+.promotions-page .navbar.scrolled .logo img {
     height: 70px;
     transform: translateY(0);
 }
@@ -373,16 +377,11 @@ body {
     display: flex;
 }
 
-.home-page .nav-links {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-47%);
-}
-
+.home-page .nav-links,
 .promotions-page .nav-links {
     position: absolute;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-47%);
 }
 
 .customer-items-page .nav-links,
@@ -849,121 +848,82 @@ body {
 
 .promo-hero {
     position: relative;
-    min-height: 360px;
-    height: 360px;
-    margin-top: 90px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.promo-hero-image {
+    position: relative;
+    width: 100%;
+    height: 100vh;
     overflow: hidden;
 }
 
 .promo-hero-bg {
-    position: absolute;
-    inset: 0;
+    position: relative;
+    top: -150px;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
-    z-index: 0;
-}
-
-.promo-hero-overlay {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background:
-        radial-gradient(circle at top left, rgba(255, 77, 166, 0.24), transparent 32%),
-        linear-gradient(180deg, rgba(255, 77, 166, 0.24) 0%, rgba(255, 77, 166, 0.14) 18%, rgba(13, 13, 13, 0.14) 45%, rgba(13, 13, 13, 0.28) 100%);
+    object-position: center 35%;
+    display: block;
 }
 
 .promotions-page .promo-hero .overlay {
     position: absolute;
-    inset: 0;
-    z-index: 1;
-    background:
-        linear-gradient(90deg, rgba(255, 77, 166, 0.72) 0%, rgba(255, 77, 166, 0.35) 37%, rgba(13, 13, 13, 0.38) 100%),
-        linear-gradient(180deg, rgba(13, 13, 13, 0.1), rgba(13, 13, 13, 0.16));
-}
-
-.promotions-page .promo-hero .GLOBAL-PAGE-OVERLAY,
-.promotions-page .promo-hero .GLOBAL-PAGE-OVERLAY-BOTTOM {
-    display: none;
-}
-
-.promotions-page .promo-hero .custom-shape-divider-top-1764244138,
-.promotions-page .promo-hero .custom-shape-divider-bottom-1764244576 {
-    display: block;
-    z-index: 3;
-    pointer-events: none;
-}
-
-.promotions-page .promo-hero .custom-shape-divider-top-1764244138 {
     top: 0;
-    transform: rotate(180deg);
+    left: 0;
+    width: 100%;
+    height: 90%;
+    z-index: 1;
+    background: #32011c70;
 }
 
-.promotions-page .promo-hero .custom-shape-divider-bottom-1764244576 {
-    bottom: 0;
-}
-
-.promotions-page .promo-hero .custom-shape-divider-top-1764244138 svg,
-.promotions-page .promo-hero .custom-shape-divider-bottom-1764244576 svg {
-    width: calc(160% + 1.3px);
-    height: 62px;
-    left: -10%;
-    margin-top: 0;
-}
-
-.promotions-page .promo-hero .custom-shape-divider-bottom-1764244576 svg {
-    transform: rotate(359deg);
+#PROMO-BOTTOM {
+    bottom: 250px;
 }
 
 .promo-hero-content {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    width: min(100%, 1100px);
-    margin: 0 auto;
-    padding: 36px 24px 18px clamp(40px, 8vw, 110px);
+    position: absolute;
+    top: 28%;
+    left: 50%;
+    z-index: 10;
+    width: 100%;
+    padding: 20px;
     color: white;
-    text-align: left;
-    flex-direction: column;
-}
-
-.promo-hero-label {
-    display: inline-block;
-    font-family: "Poppins", sans-serif;
-    font-size: clamp(2.6rem, 5vw, 4.6rem);
-    line-height: 0.95;
-    letter-spacing: 0;
-    text-transform: uppercase;
-    color: #fff;
-    margin-bottom: 16px;
-    font-weight: 900;
-    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.28);
+    text-align: center;
+    transform: translateX(-50%);
 }
 
 .promo-hero h1 {
-    margin: 0 0 8px;
+    margin: 0;
     font-family: "Poppins", sans-serif;
-    font-size: clamp(1.25rem, 2vw, 1.9rem);
-    line-height: 1.2;
-    font-weight: 500;
+    font-size: 4rem;
+    line-height: 1.1;
+    font-weight: 900;
     color: #fff;
-    text-transform: none;
+    text-transform: uppercase;
 }
 
-.promo-hero p {
+.promo-intro {
+    max-width: 900px;
+    margin: 28px auto 0;
+    padding: 0 24px;
+    text-align: center;
+}
+
+.promo-intro h2 {
+    margin: 0 0 6px;
+    font-size: clamp(1.55rem, 3vw, 2rem);
+    line-height: 1.15;
+    font-weight: 900;
+}
+
+.promo-intro p {
     margin: 0;
-    max-width: 390px;
-    font-family: "Poppins", sans-serif;
-    font-size: clamp(0.95rem, 1.25vw, 1.2rem);
-    font-weight: 400;
-    color: rgba(255, 255, 255, 0.94);
-    line-height: 1.35;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 1rem;
+    line-height: 1.45;
 }
 
 .promo-toolbar {
@@ -3346,8 +3306,7 @@ footer {
 /* ==================== SMALL LAPTOPS ==================== */
 @media (max-width: 992px) {
     .promo-hero {
-        height: 330px;
-        min-height: 330px;
+        height: 100vh;
     }
 
     .promo-toolbar {
@@ -3370,21 +3329,16 @@ footer {
         padding-left: 48px;
     }
 
-    .promo-hero h1 {
-        font-size: clamp(1.1rem, 4vw, 1.4rem);
-    }
-
     .promo-hero {
-        height: 300px;
-        min-height: 300px;
+        height: 100vh;
     }
 
     .promo-hero-content {
         padding-inline: 22px;
     }
 
-    .promo-hero-label {
-        font-size: clamp(2.25rem, 11vw, 3.6rem);
+    .promo-hero h1 {
+        font-size: clamp(2.8rem, 11vw, 4rem);
     }
 
     .promo-toolbar {

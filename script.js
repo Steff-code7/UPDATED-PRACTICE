@@ -142,7 +142,7 @@ window.addEventListener("scroll", updateVisibility, { passive: true });
 
 
 
-if (!body.classList.contains("home-page") || !navbar) return;
+if ((!body.classList.contains("home-page") && !body.classList.contains("promotions-page")) || !navbar) return;
 
 
 
@@ -250,7 +250,10 @@ window.addEventListener("scroll", updateNavbarState, { passive: true });
       let visibleCount = 0;
 
       promoCards.forEach((card) => {
-        const categoryMatches = activeCategory === "all" || card.dataset.category === activeCategory;
+        const categories = (card.dataset.categories || card.dataset.category || "")
+          .split(/\s+/)
+          .filter(Boolean);
+        const categoryMatches = activeCategory === "all" || categories.includes(activeCategory);
         const text = `${card.textContent} ${card.dataset.keywords || ""}`.toLowerCase();
         const queryMatches = !query || text.includes(query);
         const isVisible = categoryMatches && queryMatches;
