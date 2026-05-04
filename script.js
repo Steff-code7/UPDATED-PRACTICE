@@ -10,31 +10,35 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!userIcon || !userLabel) return;
 
     const syncUserData = async () => {
-      let profilePic = localStorage.getItem('userProfilePicture');
-      let username = localStorage.getItem('userName');
-
-      // On account page, always fetch from server to ensure current data
-      const isAccountPage = window.location.pathname.includes('customerAccount.php');
-      
-      if (isAccountPage || profilePic === null || username === null) {
-        try {
-          const response = await fetch('api/get_account_data.php');
-          const data = await response.json();
-          if (data.success && data.user) {
-            profilePic = data.user.profile_picture || null;
-            username = data.user.username;
-            localStorage.setItem('userName', username);
-            if (profilePic && !profilePic.includes('yas_logo.png')) {
-              localStorage.setItem('userProfilePicture', profilePic);
-            } else {
-              localStorage.removeItem('userProfilePicture');
-            }
+      // Always fetch fresh data from server to prevent showing cached/old data
+      try {
+        const response = await fetch('api/get_account_data.php');
+        const data = await response.json();
+        if (data.success && data.user) {
+          const profilePic = data.user.profile_picture || null;
+          const username = data.user.username;
+          
+          // Update localStorage with fresh data
+          localStorage.setItem('userName', username);
+          if (profilePic && !profilePic.includes('yas_logo.png')) {
+            localStorage.setItem('userProfilePicture', profilePic);
+          } else {
+            localStorage.removeItem('userProfilePicture');
           }
-        } catch (error) {
-          console.log('Could not fetch user data:', error);
+          
+          // Update UI immediately
+          updateProfileUI(profilePic, username);
         }
+      } catch (error) {
+        console.log('Could not fetch user data:', error);
+        // Fallback to localStorage if server fails
+        const profilePic = localStorage.getItem('userProfilePicture');
+        const username = localStorage.getItem('userName');
+        updateProfileUI(profilePic, username);
       }
+    };
 
+    const updateProfileUI = (profilePic, username) => {
       // Update profile picture
       let icon = userIcon.querySelector('img');
       if (profilePic && !profilePic.includes('default')) {
@@ -66,6 +70,21 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
 
+    // Clear any stale cached data on page load
+    const clearStaleCache = () => {
+      const cachedUserId = localStorage.getItem('userId');
+      const cachedUsername = localStorage.getItem('userName');
+      
+      // If cache exists but doesn't match current session, clear it
+      if (cachedUsername) {
+        console.log('Clearing potentially stale user cache');
+        localStorage.removeItem('userProfilePicture');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userId');
+      }
+    };
+
+    clearStaleCache();
     syncUserData();
 
     // Listen for storage changes across tabs/windows
@@ -127,6 +146,31 @@ document.addEventListener("click", (event) => {
       oldLinks.forEach(link => link.href = "customerAccount.php");
     };
 
+    // Add session validation for account links
+    const validateAccountAccess = async (event) => {
+      const accountLink = event.target.closest('a[href="customerAccount.php"]');
+      if (!accountLink) return;
+      
+      event.preventDefault();
+      
+      try {
+        const response = await fetch('api/check_session.php');
+        const data = await response.json();
+        
+        if (data.success) {
+          // Session is valid, proceed to account page
+          window.location.href = 'customerAccount.php';
+        } else {
+          // Session is invalid, redirect to login
+          window.location.href = data.redirect || 'loginSignUp.html';
+        }
+      } catch (error) {
+        console.error('Session validation failed:', error);
+        // Fallback to direct navigation
+        window.location.href = 'customerAccount.php';
+      }
+    };
+
     replaceLegacyAccountLinks();
 
     const toggleDropdown = (event) => {
@@ -138,6 +182,9 @@ document.addEventListener("click", (event) => {
 
 
     userMenuToggle.addEventListener("click", toggleDropdown);
+    
+    // Add click listener for account links with session validation
+    userDropdown.addEventListener("click", validateAccountAccess);
 
 
     // Close dropdown when clicking outside
