@@ -3,11 +3,10 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 04, 2026 at 06:25 AM
+-- Generation Time: May 04, 2026 at 09:03 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
-SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -28,7 +27,6 @@ SET time_zone = "+00:00";
 -- Table structure for table `categories`
 --
 
-DROP TABLE IF EXISTS `categories`;
 CREATE TABLE `categories` (
   `category_id` int(10) UNSIGNED NOT NULL,
   `category_name` varchar(100) NOT NULL,
@@ -57,7 +55,6 @@ INSERT INTO `categories` (`category_id`, `category_name`, `category_slug`) VALUE
 -- Table structure for table `orders`
 --
 
-DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
   `order_id` int(10) UNSIGNED NOT NULL,
   `user_id` int(10) UNSIGNED NOT NULL,
@@ -67,24 +64,12 @@ CREATE TABLE `orders` (
   `status` enum('pending','preparing','completed','cancelled') NOT NULL DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `orders`
---
-
-INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `order_type`, `total_amount`, `status`) VALUES
-(8, 2, '0000-00-00 00:00:00', 'dine-in', 90.00, 'pending'),
-(9, 2, '0000-00-00 00:00:00', 'delivery', 115.00, 'pending'),
-(10, 2, '0000-00-00 00:00:00', 'dine-in', 95.00, 'pending'),
-(11, 2, '0000-00-00 00:00:00', 'delivery', 175.00, 'pending'),
-(12, 2, '0000-00-00 00:00:00', 'dine-in', 95.00, 'pending');
-
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `order_items`
 --
 
-DROP TABLE IF EXISTS `order_items`;
 CREATE TABLE `order_items` (
   `order_item_id` int(10) UNSIGNED NOT NULL,
   `order_id` int(10) UNSIGNED NOT NULL,
@@ -100,24 +85,12 @@ CREATE TABLE `order_items` (
   `price` decimal(10,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `order_items`
---
-
-INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `location`, `size`, `sugar_level`, `addons`, `flavor`, `pieces_per_box`, `serving`, `quantity`, `price`) VALUES
-(1, 8, 1, '', '16oz', '25%', NULL, NULL, NULL, NULL, 1, 90.00),
-(2, 9, 1, '', '16oz', '25%', NULL, NULL, NULL, NULL, 1, 90.00),
-(3, 10, 38, '', 'Solo', NULL, NULL, NULL, NULL, NULL, 1, 95.00),
-(4, 11, 32, '', '10 Pieces', NULL, NULL, NULL, NULL, NULL, 1, 150.00),
-(5, 12, 13, '', '16oz', '25%', NULL, NULL, NULL, NULL, 1, 95.00);
-
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `payments`
 --
 
-DROP TABLE IF EXISTS `payments`;
 CREATE TABLE `payments` (
   `payment_id` int(10) UNSIGNED NOT NULL,
   `order_id` int(10) UNSIGNED NOT NULL,
@@ -127,24 +100,12 @@ CREATE TABLE `payments` (
   `payment_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `payments`
---
-
-INSERT INTO `payments` (`payment_id`, `order_id`, `amount`, `method`, `status`, `payment_date`) VALUES
-(1, 8, 90.00, 'cash_on_delivery', 'pending', '2026-05-01 20:36:38'),
-(2, 9, 115.00, 'cash_on_delivery', 'pending', '2026-05-01 20:38:26'),
-(3, 10, 95.00, 'cash_on_delivery', 'pending', '2026-05-01 20:39:00'),
-(4, 11, 175.00, 'cash_on_delivery', 'pending', '2026-05-01 20:39:49'),
-(5, 12, 95.00, 'cash_on_delivery', 'pending', '2026-05-01 20:47:34');
-
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `products`
 --
 
-DROP TABLE IF EXISTS `products`;
 CREATE TABLE `products` (
   `product_id` int(10) UNSIGNED NOT NULL,
   `category_id` int(10) UNSIGNED NOT NULL,
@@ -213,7 +174,6 @@ INSERT INTO `products` (`product_id`, `category_id`, `product_name`, `price_16`,
 -- Table structure for table `rewards`
 --
 
-DROP TABLE IF EXISTS `rewards`;
 CREATE TABLE `rewards` (
   `reward_id` int(10) UNSIGNED NOT NULL,
   `reward_name` varchar(150) NOT NULL,
@@ -227,7 +187,6 @@ CREATE TABLE `rewards` (
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `user_id` int(10) UNSIGNED NOT NULL,
   `username` varchar(100) NOT NULL,
@@ -243,10 +202,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `email`, `password_hash`, `role`, `status`, `created_at`) VALUES
-(2, 'StephanieCustomer', 'sbaltazar.1012@umak.edu.ph', '$2y$10$g7jsY3A7u3vxLorW5rC03OZqKkaJkzBrMKV4DOyzh1nQKXEGHJU/2', 'customer', 'active', '2026-05-01 08:20:59'),
-(18, 'CUSTOMER', 'Kirigato.07@gmail.com', '$2y$10$IRnpy5WiuwL7oyYnbyNLjOMWi4El16swRZG/E2.TWj4YYSs5TL8tK', 'customer', 'active', '2026-05-01 09:17:25'),
 (21, 'Stef', 'marekeyks101@gmail.com', '$2y$10$46yj/F93p7Gf3eJ0gEtOG.bYAkSg62LkejbqvkwW.4/4BpSXeLA6O', 'admin', 'active', '2026-05-01 19:36:27'),
-(22, 'StefAhkjsa', 'sidney.baltazarduh@gmail.com', '$2y$10$yO06lnn3lI8yM.lt6fGsXuj6mXvk.JWj3hxgGjwrzkWyDaniNMrSO', 'customer', 'active', '2026-05-02 04:26:40');
+(22, 'StefAhkjsa', 'sidney.baltazarduh@gmail.com', '$2y$10$yO06lnn3lI8yM.lt6fGsXuj6mXvk.JWj3hxgGjwrzkWyDaniNMrSO', 'customer', 'active', '2026-05-02 04:26:40'),
+(26, 'someone', 'Kirigato.07@gmail.com', '$2y$10$ECOsuBdi4QUeb2WvZ94R/.3v3Lx/nGQijc32apxwgxofgqotMQkhG', 'customer', 'active', '2026-05-04 06:55:01');
 
 --
 -- Indexes for dumped tables
@@ -343,7 +301,7 @@ ALTER TABLE `rewards`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- Constraints for dumped tables
@@ -366,14 +324,13 @@ ALTER TABLE `order_items`
 -- Constraints for table `payments`
 --
 ALTER TABLE `payments`
-  ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`);
+  ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `products`
 --
 ALTER TABLE `products`
   ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
