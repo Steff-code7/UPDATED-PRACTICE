@@ -1,34 +1,46 @@
 <?php
 declare(strict_types=1);
 
-use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\PHPMailer;
+$autoloadPath = __DIR__ . '/../vendor/autoload.php';
+if (file_exists($autoloadPath)) {
+    try {
+        require_once $autoloadPath;
+    } catch (\Throwable $e) {
+        // PHPMailer not available, continue without it
+    }
+}
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
-function createMailer(string $businessName): PHPMailer
+function createMailer(string $businessName)
 {
-    $mail = new PHPMailer(true);
-    $mail->isSMTP();
-    $mail->Host = 'smtp.gmail.com';
-    $mail->SMTPAuth = true;
+    try {
+        if (!class_exists('PHPMailer\\PHPMailer\\PHPMailer')) {
+            return null;
+        }
 
-    // Replace these with your real Gmail/business email and app password.
-    $mail->Username = 'sbaltazar.1012@umak.edu.ph';
-    $mail->Password = 'cedrqxjhnusvdswe';
+        $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
 
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port = 587;
-    $mail->SMTPOptions = [
-        'ssl' => [
-            'verify_peer' => false,
-            'verify_peer_name' => false,
-            'allow_self_signed' => true,
-        ],
-    ];
+        // Replace these with your real Gmail/business email and app password.
+        $mail->Username = 'sbaltazar.1012@umak.edu.ph';
+        $mail->Password = 'cedrqxjhnusvdswe';
 
-    $mail->setFrom($mail->Username, $businessName);
-    return $mail;
+        $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+        $mail->SMTPOptions = [
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true,
+            ],
+        ];
+
+        $mail->setFrom($mail->Username, $businessName);
+        return $mail;
+    } catch (\Throwable $e) {
+        return null;
+    }
 }
 
 function sendWelcomeEmail(string $customerName, string $emailAddress): bool
@@ -38,6 +50,11 @@ function sendWelcomeEmail(string $customerName, string $emailAddress): bool
 
     try {
         $mail = createMailer($businessName);
+        if (!$mail) {
+            // PHPMailer not available, skip email sending
+            return false;
+        }
+
         $mail->addAddress($emailAddress, $customerName);
 
         $safeName = htmlspecialchars($customerName, ENT_QUOTES, 'UTF-8');
@@ -72,7 +89,7 @@ function sendWelcomeEmail(string $customerName, string $emailAddress): bool
 
         $mail->send();
         return true;
-    } catch (Exception $exception) {
+    } catch (\Throwable $exception) {
         error_log('Welcome email failed: ' . $exception->getMessage());
         return false;
     }
@@ -84,6 +101,9 @@ function sendAdminRoleEmail(string $customerName, string $emailAddress): bool
 
     try {
         $mail = createMailer($businessName);
+        if (!$mail) {
+            throw new \Exception('PHPMailer is not available.');
+        }
         $mail->addAddress($emailAddress, $customerName);
 
         $safeName = htmlspecialchars($customerName, ENT_QUOTES, 'UTF-8');
@@ -107,7 +127,7 @@ function sendAdminRoleEmail(string $customerName, string $emailAddress): bool
 
         $mail->send();
         return true;
-    } catch (Exception $exception) {
+    } catch (\Throwable $exception) {
         error_log('Admin role email failed: ' . $exception->getMessage());
         return false;
     }

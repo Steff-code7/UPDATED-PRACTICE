@@ -18,7 +18,7 @@ try {
 
     // Find user by username OR email
     $stmt = $pdo->prepare("
-        SELECT * FROM Users
+        SELECT * FROM users
         WHERE (username = :identifier OR email = :identifier)
         AND status = 'active'
         LIMIT 1

@@ -32,7 +32,7 @@ try {
     }
 
     // Check if email already exists
-    $stmt = $pdo->prepare("SELECT user_id FROM Users WHERE email = :email");
+    $stmt = $pdo->prepare("SELECT user_id FROM users WHERE email = :email");
     $stmt->execute(['email' => $email]);
     if ($stmt->fetch()) {
         http_response_code(409);
@@ -41,7 +41,7 @@ try {
     }
 
     // Check if username already exists
-    $stmt = $pdo->prepare("SELECT user_id FROM Users WHERE username = :username");
+    $stmt = $pdo->prepare("SELECT user_id FROM users WHERE username = :username");
     $stmt->execute(['username' => $username]);
     if ($stmt->fetch()) {
         http_response_code(409);
@@ -53,8 +53,8 @@ try {
     $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
     $stmt = $pdo->prepare("
-        INSERT INTO Users (username, email, password_hash, role, status, profile_picture)
-        VALUES (:username, :email, :password_hash, 'customer', 'active', 'images/yas_logo.png')
+        INSERT INTO users (username, email, password_hash, role, status)
+        VALUES (:username, :email, :password_hash, 'customer', 'active')
     ");
     $stmt->execute([
         'username'      => $username,
@@ -62,7 +62,14 @@ try {
         'password_hash' => $passwordHash
     ]);
 
-    sendWelcomeEmail($username, $email);
+
+    try {
+        if (function_exists('sendWelcomeEmail')) {
+            sendWelcomeEmail($username, $email);
+        }
+    } catch (Exception $e) {
+        error_log('Signup email failed: ' . $e->getMessage());
+    }
 
     echo json_encode(['message' => 'Account created successfully! You can now log in.']);
 
