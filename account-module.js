@@ -18,42 +18,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         localStorage.setItem('userName', navUsername.textContent);
     }
 
-    // ==================== MODULE SWITCHING ====================
-    const moduleLinks = document.querySelectorAll('.module-link');
-    const modules = document.querySelectorAll('.ACCOUNT-MODULE');
-
-    moduleLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const moduleId = link.dataset.module;
-            
-            // Update active link
-            moduleLinks.forEach(l => l.classList.remove('active'));
-            link.classList.add('active');
-
-            // Update active module
-            modules.forEach(m => m.style.display = 'none');
-            const activeModule = document.getElementById(`${moduleId}-module`);
-            if (activeModule) {
-                activeModule.style.display = 'block';
-
-                // Load data for specific modules
-                if (moduleId === 'order-history') {
-                    loadOrderHistory();
-                } else if (moduleId === 'addresses') {
-                    loadAddresses();
-                }
-            }
-
-            // Scroll to top
-            document.querySelector('.ACCOUNT-MAIN').scrollTop = 0;
-        });
-    });
-
-    // ==================== PROFILE PICTURE UPLOAD ====================
     const profilePictureInput = document.getElementById('profilePictureInput');
     const navProfilePic = document.getElementById('navProfilePic');
     const overviewProfilePic = document.getElementById('overviewProfilePic');
+
+    const isOrdersPage = document.body.classList.contains('account-orders-page');
+    const isAddressesPage = document.body.classList.contains('account-addresses-page');
+
+    if (isOrdersPage) {
+        loadOrderHistory();
+    }
+
+    if (isAddressesPage) {
+        loadAddresses();
+    }
+
+    // ==================== PROFILE PICTURE UPLOAD ====================
 
     if (profilePictureInput) {
         profilePictureInput.addEventListener('change', async (e) => {
@@ -316,205 +296,213 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ==================== ADDRESSES ====================
-    let currentAddressId = null;
+    if (isAddressesPage) {
+        let currentAddressId = null;
 
-    const addressModal = document.getElementById('addressModal');
-    const addressForm = document.getElementById('addressForm');
-    const addAddressBtn = document.getElementById('addAddressBtn');
-    const closeAddressModal = document.getElementById('closeAddressModal');
-    const deleteAddressBtn = document.getElementById('deleteAddressBtn');
+        const addressModal = document.getElementById('addressModal');
+        const addressForm = document.getElementById('addressForm');
+        const addAddressBtn = document.getElementById('addAddressBtn');
+        const closeAddressModal = document.getElementById('closeAddressModal');
+        const deleteAddressBtn = document.getElementById('deleteAddressBtn');
 
-    addAddressBtn.addEventListener('click', () => {
-        currentAddressId = null;
-        document.getElementById('addressModalTitle').textContent = 'Add New Address';
-        addressForm.reset();
-        document.getElementById('addressId').value = '';
-        deleteAddressBtn.style.display = 'none';
-        addressModal.style.display = 'block';
-    });
+        if (addAddressBtn && addressForm && addressModal && closeAddressModal && deleteAddressBtn) {
+            addAddressBtn.addEventListener('click', () => {
+                currentAddressId = null;
+                document.getElementById('addressModalTitle').textContent = 'Add New Address';
+                addressForm.reset();
+                document.getElementById('addressId').value = '';
+                deleteAddressBtn.style.display = 'none';
+                addressModal.style.display = 'block';
+            });
 
-    closeAddressModal.addEventListener('click', () => {
-        addressModal.style.display = 'none';
-    });
+            closeAddressModal.addEventListener('click', () => {
+                addressModal.style.display = 'none';
+            });
 
-    addressModal.addEventListener('click', (e) => {
-        if (e.target === addressModal) {
-            addressModal.style.display = 'none';
+            addressModal.addEventListener('click', (e) => {
+                if (e.target === addressModal) {
+                    addressModal.style.display = 'none';
+                }
+            });
+
+            addressForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const addressId = document.getElementById('addressId').value;
+                const action = addressId ? 'update' : 'add';
+
+                const payload = {
+                    action: action,
+                    address_id: addressId,
+                    address_type: document.getElementById('addressType').value,
+                    address_line: document.getElementById('addressLine').value,
+                    landmark: document.getElementById('landmark').value,
+                    delivery_instructions: document.getElementById('deliveryInstructions').value,
+                    is_primary: document.getElementById('isPrimary').checked ? 1 : 0
+                };
+
+                try {
+                    const response = await fetch('api/manage_addresses.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        alert('Address ' + (action === 'add' ? 'added' : 'updated') + ' successfully!');
+                        addressModal.style.display = 'none';
+                        loadAddresses();
+                        // If set as primary, update overview
+                        if (document.getElementById('isPrimary').checked) {
+                            const overviewAddress = document.getElementById('overviewAddress');
+                            const overviewLandmark = document.getElementById('overviewLandmark');
+                            const overviewInstructions = document.getElementById('overviewInstructions');
+                            if (overviewAddress) overviewAddress.textContent = document.getElementById('addressLine').value;
+                            if (overviewLandmark) overviewLandmark.textContent = document.getElementById('landmark').value || 'Not set';
+                            if (overviewInstructions) overviewInstructions.textContent = document.getElementById('deliveryInstructions').value || 'None';
+                        }
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                } catch (error) {
+                    alert('Error: ' + error.message);
+                }
+            });
+
+            deleteAddressBtn.addEventListener('click', async () => {
+                if (!confirm('Are you sure you want to delete this address?')) return;
+
+                try {
+                    const response = await fetch('api/manage_addresses.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'delete',
+                            address_id: document.getElementById('addressId').value
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        alert('Address deleted successfully!');
+                        addressModal.style.display = 'none';
+                        loadAddresses();
+                    } else {
+                        alert('Error: ' + data.message);
+                    }
+                } catch (error) {
+                    alert('Error: ' + error.message);
+                }
+            });
         }
-    });
 
-    addressForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+        async function loadAddresses() {
+            const container = document.getElementById('addressesList');
 
-        const addressId = document.getElementById('addressId').value;
-        const action = addressId ? 'update' : 'add';
+            try {
+                const response = await fetch('api/manage_addresses.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'get_all' })
+                });
 
-        const payload = {
-            action: action,
-            address_id: addressId,
-            address_type: document.getElementById('addressType').value,
-            address_line: document.getElementById('addressLine').value,
-            landmark: document.getElementById('landmark').value,
-            delivery_instructions: document.getElementById('deliveryInstructions').value,
-            is_primary: document.getElementById('isPrimary').checked ? 1 : 0
+                const data = await response.json();
+
+                if (!data.success) {
+                    container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>Error loading addresses</p></div>';
+                    return;
+                }
+
+                if (data.addresses.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>No addresses added yet. Click "Add New Address" to get started!</p></div>';
+                    return;
+                }
+
+                let html = '';
+                data.addresses.forEach(address => {
+                    const isPrimaryBtn = address.is_primary ? '' : `<button type="button" class="btn outline small" onclick="setAsPrimary(${address.address_id})">SET AS PRIMARY</button>`;
+                    
+                    html += `
+                        <article class="ACCOUNT-DETAIL-CARD">
+                            <div class="ACCOUNT-CARD-HEADER">
+                                <h4>${address.address_type.charAt(0).toUpperCase() + address.address_type.slice(1)}${address.is_primary ? ' <span style="color: #ff5eb3;">(Primary)</span>' : ''}</h4>
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="btn outline small" onclick="editAddress(${address.address_id})">EDIT</button>
+                                    ${isPrimaryBtn}
+                                </div>
+                            </div>
+                            <div class="ACCOUNT-CARD-BODY">
+                                <div><span>Address</span><strong>${address.address_line}</strong></div>
+                                <div><span>Landmark</span><strong>${address.landmark || 'Not set'}</strong></div>
+                                <div><span>Instructions</span><strong>${address.delivery_instructions || 'None'}</strong></div>
+                            </div>
+                        </article>
+                    `;
+                });
+
+                container.innerHTML = html;
+
+            } catch (error) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>Error loading addresses: ' + error.message + '</p></div>';
+            }
+        }
+
+        window.editAddress = async (addressId) => {
+            try {
+                const response = await fetch('api/manage_addresses.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'get_all' })
+                });
+
+                const data = await response.json();
+                const address = data.addresses.find(a => a.address_id == addressId);
+
+                if (address) {
+                    document.getElementById('addressModalTitle').textContent = 'Edit Address';
+                    document.getElementById('addressId').value = address.address_id;
+                    document.getElementById('addressType').value = address.address_type;
+                    document.getElementById('addressLine').value = address.address_line;
+                    document.getElementById('landmark').value = address.landmark || '';
+                    document.getElementById('deliveryInstructions').value = address.delivery_instructions || '';
+                    document.getElementById('isPrimary').checked = address.is_primary;
+                    deleteAddressBtn.style.display = 'block';
+                    addressModal.style.display = 'block';
+                }
+            } catch (error) {
+                alert('Error loading address: ' + error.message);
+            }
         };
 
-        try {
-            const response = await fetch('api/manage_addresses.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
+        window.setAsPrimary = async (addressId) => {
+            try {
+                const response = await fetch('api/manage_addresses.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'set_primary',
+                        address_id: addressId
+                    })
+                });
 
-            const data = await response.json();
+                const data = await response.json();
 
-            if (data.success) {
-                alert('Address ' + (action === 'add' ? 'added' : 'updated') + ' successfully!');
-                addressModal.style.display = 'none';
-                loadAddresses();
-                // If set as primary, update overview
-                if (document.getElementById('isPrimary').checked) {
-                    document.getElementById('overviewAddress').textContent = document.getElementById('addressLine').value;
-                    document.getElementById('overviewLandmark').textContent = document.getElementById('landmark').value || 'Not set';
-                    document.getElementById('overviewInstructions').textContent = document.getElementById('deliveryInstructions').value || 'None';
+                if (data.success) {
+                    alert('Primary address updated!');
+                    loadAddresses();
+                } else {
+                    alert('Error: ' + data.message);
                 }
-            } else {
-                alert('Error: ' + data.message);
+            } catch (error) {
+                alert('Error: ' + error.message);
             }
-        } catch (error) {
-            alert('Error: ' + error.message);
-        }
-    });
+        };
 
-    deleteAddressBtn.addEventListener('click', async () => {
-        if (!confirm('Are you sure you want to delete this address?')) return;
-
-        try {
-            const response = await fetch('api/manage_addresses.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'delete',
-                    address_id: document.getElementById('addressId').value
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                alert('Address deleted successfully!');
-                addressModal.style.display = 'none';
-                loadAddresses();
-            } else {
-                alert('Error: ' + data.message);
-            }
-        } catch (error) {
-            alert('Error: ' + error.message);
-        }
-    });
-
-    async function loadAddresses() {
-        const container = document.getElementById('addressesList');
-
-        try {
-            const response = await fetch('api/manage_addresses.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'get_all' })
-            });
-
-            const data = await response.json();
-
-            if (!data.success) {
-                container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>Error loading addresses</p></div>';
-                return;
-            }
-
-            if (data.addresses.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>No addresses added yet. Click "Add New Address" to get started!</p></div>';
-                return;
-            }
-
-            let html = '';
-            data.addresses.forEach(address => {
-                const isPrimary = address.is_primary ? 'PRIMARY' : 'SET AS PRIMARY';
-                const isPrimaryBtn = address.is_primary ? '' : `<button type="button" class="btn outline small" onclick="setAsPrimary(${address.address_id})">SET AS PRIMARY</button>`;
-                
-                html += `
-                    <article class="ACCOUNT-DETAIL-CARD">
-                        <div class="ACCOUNT-CARD-HEADER">
-                            <h4>${address.address_type.charAt(0).toUpperCase() + address.address_type.slice(1)}${address.is_primary ? ' <span style="color: #ff5eb3;">(Primary)</span>' : ''}</h4>
-                            <div style="display: flex; gap: 10px;">
-                                <button class="btn outline small" onclick="editAddress(${address.address_id})">EDIT</button>
-                                ${isPrimaryBtn}
-                            </div>
-                        </div>
-                        <div class="ACCOUNT-CARD-BODY">
-                            <div><span>Address</span><strong>${address.address_line}</strong></div>
-                            <div><span>Landmark</span><strong>${address.landmark || 'Not set'}</strong></div>
-                            <div><span>Instructions</span><strong>${address.delivery_instructions || 'None'}</strong></div>
-                        </div>
-                    </article>
-                `;
-            });
-
-            container.innerHTML = html;
-
-        } catch (error) {
-            container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>Error loading addresses: ' + error.message + '</p></div>';
-        }
+        loadAddresses();
     }
-
-    window.editAddress = async (addressId) => {
-        try {
-            const response = await fetch('api/manage_addresses.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'get_all' })
-            });
-
-            const data = await response.json();
-            const address = data.addresses.find(a => a.address_id == addressId);
-
-            if (address) {
-                document.getElementById('addressModalTitle').textContent = 'Edit Address';
-                document.getElementById('addressId').value = address.address_id;
-                document.getElementById('addressType').value = address.address_type;
-                document.getElementById('addressLine').value = address.address_line;
-                document.getElementById('landmark').value = address.landmark || '';
-                document.getElementById('deliveryInstructions').value = address.delivery_instructions || '';
-                document.getElementById('isPrimary').checked = address.is_primary;
-                deleteAddressBtn.style.display = 'block';
-                addressModal.style.display = 'block';
-            }
-        } catch (error) {
-            alert('Error loading address: ' + error.message);
-        }
-    };
-
-    window.setAsPrimary = async (addressId) => {
-        try {
-            const response = await fetch('api/manage_addresses.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'set_primary',
-                    address_id: addressId
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                alert('Primary address updated!');
-                loadAddresses();
-            } else {
-                alert('Error: ' + data.message);
-            }
-        } catch (error) {
-            alert('Error: ' + error.message);
-        }
-    };
 
     // ==================== CONTACT SUPPORT ====================
     const contactSupportBtn = document.getElementById('contactSupportBtn');

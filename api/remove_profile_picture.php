@@ -39,7 +39,7 @@ try {
     echo json_encode([
         'success' => true,
         'message' => 'Profile picture removed',
-        'profile_picture' => 'images/default-avatar.png'
+        'profile_picture' => 'images/yas_logo.png'
     ]);
 
 } catch (Exception $e) {
