@@ -3269,10 +3269,6 @@ updateTotal();
     const addToCartBtn = qs(".ADD-CART-BUTTON", itemSection);
     if (addToCartBtn) {
       const normalizeCartText = (value) => String(value || "").trim().toLowerCase();
-      const normalizeLocationForCart = (value) => {
-        const location = normalizeCartText(value);
-        return location.includes("delivery") ? "delivery" : "dine-in-to-go";
-      };
       const normalizeAddonsForCart = (value) => {
         const addonsText = normalizeCartText(value);
         if (!addonsText || addonsText === "none" || addonsText === "n/a") return "none";
@@ -3288,13 +3284,12 @@ updateTotal();
         [
           normalizeCartText(item.name),
           normalizeCartText(item.size),
-          normalizeLocationForCart(item.location),
+          normalizeCartText(item.location),
           normalizeCartText(item.sugarLevel),
           normalizeAddonsForCart(item.addons),
           normalizeCartText(item.flavor),
           normalizeCartText(item.piecesPerBox),
           normalizeCartText(item.serving),
-          String(Number(item.qty) || 1),
         ].join("::");
 
       addToCartBtn.addEventListener("click", (event) => {
@@ -3321,7 +3316,7 @@ updateTotal();
         const addons = getCheckedAddonLabels();
         
         const cartItem = {
-          id: Date.now(), // Unique ID for the cart item
+          id: Date.now(),
           name: productConfig.title,
           category: productConfig.categoryLabel,
           image: productConfig.getImage() || defaultImage,
@@ -3342,7 +3337,13 @@ updateTotal();
         );
         
         if (matchingItemIndex !== -1) {
-          alert('This item with the same details is already in your cart.');
+          cart[matchingItemIndex] = {
+            ...cart[matchingItemIndex],
+            ...cartItem,
+            id: cart[matchingItemIndex].id,
+            qty: cartItem.qty,
+          };
+          alert('Cart item quantity updated!');
         } else {
           cart.unshift(cartItem);
           alert('Item added to cart!');
