@@ -379,7 +379,7 @@ while ($row = $products->fetch_assoc()) {
 
 
 <!-- ===================== SNACKS HEADER ===================== -->
-    <section class="MENU-GROUP-HEADER" data-group-header="snacks">
+    <section class="MENU-GROUP-HEADER" id="SNACKS-LINE-UP" data-group-header="snacks">
         <div class="MENU-GROUP-CONTENT">
             <p>Freshly Served</p>
             <h2>SNACKS</h2>

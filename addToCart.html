@@ -405,6 +405,22 @@
             localStorage.setItem('yasCart', JSON.stringify(cart));
         }
 
+        function parseAddonEntries(addonsValue) {
+            const addonsText = String(addonsValue || '').trim();
+            if (!addonsText || addonsText.toLowerCase() === 'none') return [];
+
+            return addonsText
+                .split(',')
+                .map(addon => addon.trim())
+                .filter(Boolean)
+                .map(addon => {
+                    const pricedAddon = addon.match(/^(.*?)(?:\s*\((?:₱|php|p)?\s*([\d.]+)\))?$/i);
+                    const addonName = (pricedAddon?.[1] || addon).trim();
+                    const addonPrice = Number(pricedAddon?.[2] || 0);
+                    return { name: addonName, price: addonPrice };
+                });
+        }
+
         function renderCart() {
             const cart = getCart();
             const tbody = document.getElementById('cartBody');
@@ -429,7 +445,13 @@
             let totalDeliveryFee = 0;
 
             cart.forEach((item, index) => {
-                const itemTotal = item.price * item.qty;
+                const addonsTotal = parseAddonEntries(item.addons).reduce(
+                    (sum, addon) => sum + Number(addon.price || 0),
+                    0
+                );
+                const basePrice = Number(item.price || 0);
+                const qty = Math.max(1, Number(item.qty || 1));
+                const itemTotal = (basePrice + addonsTotal) * qty;
                 subtotal += itemTotal;
                 
                 // Add delivery fee if this item has one
@@ -455,11 +477,11 @@
                             ${item.addons ? 'Add-ons: ' + item.addons : ''}
                         </div>
                     </td>
-                    <td class="col-price">&#8369;${item.price}</td>
+                    <td class="col-price">&#8369;${basePrice}</td>
                     <td class="col-qty">
                         <div class="qty-control">
                             <button class="qty-btn" onclick="changeQty(${index}, -1)">&#8722;</button>
-                            <input class="qty-value" type="number" value="${item.qty}" min="1" onchange="setQty(${index}, this.value)">
+                            <input class="qty-value" type="number" value="${qty}" min="1" onchange="setQty(${index}, this.value)">
                             <button class="qty-btn" onclick="changeQty(${index}, 1)">&#43;</button>
                         </div>
                     </td>

@@ -3223,12 +3223,22 @@ const nextImage = productConfig.getImage();
     };
 
 
-    const getCheckedAddonLabels = () =>
+    const getCheckedAddonEntries = () =>
       qsa("[data-addon-input]:checked", itemSection).map((input) => {
         const addonCard = input.closest(".addon-card");
         const addonName = addonCard ? qs(".addon-name", addonCard) : null;
-        return addonName ? addonName.textContent.trim() : input.value;
+        return {
+          name: addonName ? addonName.textContent.trim() : input.value,
+          price: Number(input.dataset.price || 0),
+        };
       });
+
+
+    const getCheckedAddonLabels = () => getCheckedAddonEntries().map((addon) => addon.name);
+
+
+    const formatAddonEntries = (addonEntries) =>
+      addonEntries.map((addon) => `${addon.name} (₱${addon.price})`).join(", ");
 
 
     const resolveSizeLabel = () => {
@@ -3250,7 +3260,7 @@ const nextImage = productConfig.getImage();
         qs("input[name='location']:checked", itemSection)?.dataset.price || 0
       );
       const sugarLevel = getSelectedLabel("drink-sugar") || "N/A";
-      const addons = getCheckedAddonLabels();
+      const addonEntries = getCheckedAddonEntries();
       const checkoutParams = new URLSearchParams({
         item: productConfig.title,
         category: productConfig.categoryLabel,
@@ -3266,7 +3276,7 @@ const nextImage = productConfig.getImage();
         serving: getSelectedLabel("wings-serving") || "N/A",
         location: locationLabel,
         sugar: sugarLevel,
-        addons: addons.length ? addons.join(", ") : "None",
+        addons: addonEntries.length ? formatAddonEntries(addonEntries) : "None",
         deliveryFee: String(deliveryFee),
       });
 
@@ -3373,7 +3383,7 @@ updateTotal();
         const locationInput = qs("input[name='location']:checked", itemSection);
         const deliveryFee = Number(locationInput?.dataset.price || 0);
         const sugarLevel = getSelectedLabel("drink-sugar") || "N/A";
-        const addons = getCheckedAddonLabels();
+        const addonEntries = getCheckedAddonEntries();
         
         const cartItem = {
           id: Date.now(),
@@ -3386,7 +3396,7 @@ updateTotal();
           location: locationLabel,
           deliveryFee: deliveryFee,
           sugarLevel: sugarLevel !== "N/A" ? sugarLevel : "",
-          addons: addons.length ? addons.join(", ") : "None",
+          addons: addonEntries.length ? formatAddonEntries(addonEntries) : "None",
           flavor: getSelectedLabel("takoyaki-flavor") || getSelectedLabel("shawarma-flavor") || "",
           piecesPerBox: getSelectedLabel("takoyaki-box") || "",
           serving: getSelectedLabel("wings-serving") || ""
@@ -3441,9 +3451,14 @@ updateTotal();
     if (!orderSummary) return;
 
 
-    // Check if coming from cart or direct checkout
+    // Checkout source rules:
+    // - If URL has item params, this is direct checkout from customerItems.html
+    //   and should NOT include cart items.
+    // - If URL has no item params, this is checkout from cart page.
     const params = new URLSearchParams(window.location.search);
     const hasUrlParams = params.has("item");
+    const storedCart = JSON.parse(localStorage.getItem('yasCart') || '[]');
+    const hasStoredCart = Array.isArray(storedCart) && storedCart.length > 0;
     
     let cart = [];
     let deliveryFee = 0;
@@ -3480,17 +3495,17 @@ updateTotal();
         piecesPerBox: piecesPerBox !== "N/A" ? piecesPerBox : "",
         serving: serving !== "N/A" ? serving : ""
       }];
-    } else {
-      // Multiple items from cart
-      cart = JSON.parse(localStorage.getItem('yasCart') || '[]');
-      
-      // Calculate total delivery fee from all items
+    } else if (hasStoredCart) {
+      cart = storedCart;
+
       deliveryFee = 0;
       cart.forEach(item => {
         if (item.deliveryFee) {
-          deliveryFee += item.deliveryFee;
+          deliveryFee += Number(item.deliveryFee || 0);
         }
       });
+    } else {
+      cart = [];
     }
 
 
@@ -3502,10 +3517,33 @@ updateTotal();
     const totalEl = qs("#confirm-item-total");
 
 
+    const parseAddonEntries = (addonsValue) => {
+      const addonsText = String(addonsValue || "").trim();
+      if (!addonsText || addonsText.toLowerCase() === "none") return [];
+
+      return addonsText
+        .split(",")
+        .map((addon) => addon.trim())
+        .filter(Boolean)
+        .map((addon) => {
+          const pricedAddon = addon.match(/^(.*?)(?:\s*\((?:₱|php|p)?\s*([\d.]+)\))?$/i);
+          const addonName = (pricedAddon?.[1] || addon).trim();
+          const addonPrice = Number(pricedAddon?.[2] || 0);
+          return { name: addonName, price: addonPrice };
+        });
+    };
+
+
     // Calculate totals
     let subtotal = 0;
     cart.forEach(item => {
-      subtotal += item.price * item.qty;
+      const qty = Math.max(1, Number(item.qty || 1));
+      const basePrice = Number(item.price || 0);
+      const addonsTotal = parseAddonEntries(item.addons).reduce(
+        (sum, addon) => sum + Number(addon.price || 0),
+        0
+      );
+      subtotal += (basePrice + addonsTotal) * qty;
     });
     const total = subtotal + deliveryFee;
 
@@ -3519,55 +3557,35 @@ updateTotal();
     // Render cart items
     if (orderItemsContainer) {
       orderItemsContainer.innerHTML = '';
-      
+
       cart.forEach(item => {
         const orderItemDiv = document.createElement('div');
         orderItemDiv.className = 'ORDER-ITEM';
-        
-        // Build detail lines based on category
-        let detailLines = [];
-        
-        const categoryLinesMap = {
-          'Takoyaki': [
-            item.flavor ? `Flavor: ${item.flavor}` : '',
-            item.location ? `Location: ${item.location}` : '',
-            item.piecesPerBox ? `Pieces Per Box: ${item.piecesPerBox}` : '',
-            item.addons && item.addons !== 'None' ? `Add-ons: ${item.addons}` : '',
-          ],
-          'Shawarma': [
-            item.flavor ? `Flavor: ${item.flavor}` : '',
-            item.location ? `Location: ${item.location}` : '',
-          ],
-          'Chicken Wings + Fries': [
-            item.serving ? `Serving: ${item.serving}` : '',
-            item.location ? `Location: ${item.location}` : '',
-            item.addons && item.addons !== 'None' ? `Add-ons: ${item.addons}` : '',
-          ],
-          'Burger': [
-            item.location ? `Location: ${item.location}` : '',
-          ],
-          'Fries': [
-            item.size ? `Size: ${item.size}` : '',
-            item.location ? `Location: ${item.location}` : '',
-          ],
-        };
-
-
-        if (categoryLinesMap[item.category]) {
-          detailLines = categoryLinesMap[item.category].filter(line => line);
-        } else {
-          // Default for drinks
-          detailLines = [
-            item.size ? `Size: ${item.size}` : '',
-            item.location ? `Location: ${item.location}` : '',
-            item.sugarLevel ? `Sugar Level: ${item.sugarLevel}` : '',
-            item.addons && item.addons !== 'None' ? `Add-ons: ${item.addons}` : '',
-          ].filter(line => line);
-        }
-
-
-        const detailHTML = detailLines.map(line => `<p>${line}</p>`).join('');
-        const itemTotal = item.price * item.qty;
+        const itemSizePrice = Number(item.price || 0);
+        const itemSize = item.size || "N/A";
+        const itemLocation = item.location || "N/A";
+        const itemSugarLevel = item.sugarLevel || "N/A";
+        const sugarFee = "";
+        const addonEntries = parseAddonEntries(item.addons);
+        const addonsTotal = addonEntries.reduce((sum, addon) => sum + Number(addon.price || 0), 0);
+        const itemTotal = (itemSizePrice + addonsTotal) * Number(item.qty || 1);
+        const addonRows = addonEntries.length
+          ? addonEntries
+              .map(
+                (addon) => `
+                  <div class="ORDER-ITEM-BREAKDOWN-ROW ORDER-ITEM-BREAKDOWN-ADDON">
+                    <span>${addon.name}</span>
+                    <span>${toPeso(addon.price)}</span>
+                  </div>
+                `
+              )
+              .join("")
+          : `
+              <div class="ORDER-ITEM-BREAKDOWN-ROW ORDER-ITEM-BREAKDOWN-ADDON">
+                <span>None</span>
+                <span>${toPeso(0)}</span>
+              </div>
+            `;
 
 
         orderItemDiv.innerHTML = `
@@ -3580,11 +3598,35 @@ updateTotal();
               <span class="ORDER-ITEM-CATEGORY">${item.category || ''}</span>
             </div>
             <div class="ORDER-ITEM-META">
-              ${detailHTML}
-              <p>Quantity: ${item.qty}</p>
+              <div class="ORDER-ITEM-BREAKDOWN-ROW">
+                <span>Size: ${itemSize}</span>
+                <span>${toPeso(itemSizePrice)}</span>
+              </div>
+              <div class="ORDER-ITEM-BREAKDOWN-ROW">
+                <span>Location: ${itemLocation}</span>
+                <span></span>
+              </div>
+              <div class="ORDER-ITEM-BREAKDOWN-ROW">
+                <span>Sugar Level: ${itemSugarLevel}</span>
+                <span>${sugarFee}</span>
+              </div>
+              <div class="ORDER-ITEM-BREAKDOWN-LABEL">Add-on:</div>
+              ${addonRows}
+              <div class="ORDER-ITEM-BREAKDOWN-ROW">
+                <span>Total:</span>
+                <span>${toPeso(addonsTotal)}</span>
+              </div>
+              <div class="ORDER-ITEM-BREAKDOWN-ROW">
+                <span>Quantity:</span>
+                <span>${item.qty}x</span>
+              </div>
+              <div class="ORDER-ITEM-BREAKDOWN-ROW ORDER-ITEM-BREAKDOWN-TOTAL">
+                <span>Total</span>
+                <span>${toPeso(itemTotal)}</span>
+              </div>
             </div>
           </div>
-          <strong class="ORDER-ITEM-PRICE">${toPeso(itemTotal)}</strong>
+          <strong class="ORDER-ITEM-PRICE"></strong>
         `;
         
         orderItemsContainer.appendChild(orderItemDiv);

@@ -4384,7 +4384,7 @@ footer {
 
 .ORDER-ITEM {
     display: grid;
-    grid-template-columns: 96px 1fr auto;
+    grid-template-columns: 96px 1fr;
     align-items: center;
     gap: 18px;
     padding: 18px 0 28px;
@@ -4433,6 +4433,37 @@ footer {
     display: grid;
     gap: 4px;
     margin-top: 16px;
+    width: 100%;
+}
+
+.ORDER-ITEM-BREAKDOWN-ROW {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    color: #111;
+    font-family: "Courier New", monospace;
+    font-size: 1.1rem;
+    width: 100%;
+}
+
+.ORDER-ITEM-BREAKDOWN-LABEL {
+    margin-top: 2px;
+    color: #111;
+    font-family: "Courier New", monospace;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.ORDER-ITEM-BREAKDOWN-ADDON {
+    padding-left: 28px;
+}
+
+.ORDER-ITEM-BREAKDOWN-TOTAL {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 0;
+    font-weight: 700;
 }
 
 .ORDER-ITEM-DETAILS p {
