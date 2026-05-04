@@ -3,10 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 02, 2026 at 04:08 PM
+-- Generation Time: May 04, 2026 at 06:25 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
+SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -27,6 +28,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `categories`
 --
 
+DROP TABLE IF EXISTS `categories`;
 CREATE TABLE `categories` (
   `category_id` int(10) UNSIGNED NOT NULL,
   `category_name` varchar(100) NOT NULL,
@@ -38,7 +40,7 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`category_id`, `category_name`, `category_slug`) VALUES
-(1, 'Classic MilkteaSOMETHING', 'classic-milktea'),
+(1, 'Classic Milktea', 'classic-milktea'),
 (2, 'Premium Milktea', 'premium-milktea'),
 (3, 'Cream Cheese Series', 'cream-cheese'),
 (4, 'Fruit Milk', 'fruit-milk'),
@@ -55,6 +57,7 @@ INSERT INTO `categories` (`category_id`, `category_name`, `category_slug`) VALUE
 -- Table structure for table `orders`
 --
 
+DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
   `order_id` int(10) UNSIGNED NOT NULL,
   `user_id` int(10) UNSIGNED NOT NULL,
@@ -81,6 +84,7 @@ INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `order_type`, `total_
 -- Table structure for table `order_items`
 --
 
+DROP TABLE IF EXISTS `order_items`;
 CREATE TABLE `order_items` (
   `order_item_id` int(10) UNSIGNED NOT NULL,
   `order_id` int(10) UNSIGNED NOT NULL,
@@ -113,6 +117,7 @@ INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `location`
 -- Table structure for table `payments`
 --
 
+DROP TABLE IF EXISTS `payments`;
 CREATE TABLE `payments` (
   `payment_id` int(10) UNSIGNED NOT NULL,
   `order_id` int(10) UNSIGNED NOT NULL,
@@ -139,6 +144,7 @@ INSERT INTO `payments` (`payment_id`, `order_id`, `amount`, `method`, `status`, 
 -- Table structure for table `products`
 --
 
+DROP TABLE IF EXISTS `products`;
 CREATE TABLE `products` (
   `product_id` int(10) UNSIGNED NOT NULL,
   `category_id` int(10) UNSIGNED NOT NULL,
@@ -207,6 +213,7 @@ INSERT INTO `products` (`product_id`, `category_id`, `product_name`, `price_16`,
 -- Table structure for table `rewards`
 --
 
+DROP TABLE IF EXISTS `rewards`;
 CREATE TABLE `rewards` (
   `reward_id` int(10) UNSIGNED NOT NULL,
   `reward_name` varchar(150) NOT NULL,
@@ -220,6 +227,7 @@ CREATE TABLE `rewards` (
 -- Table structure for table `users`
 --
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `user_id` int(10) UNSIGNED NOT NULL,
   `username` varchar(100) NOT NULL,
@@ -365,6 +373,7 @@ ALTER TABLE `payments`
 --
 ALTER TABLE `products`
   ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`category_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

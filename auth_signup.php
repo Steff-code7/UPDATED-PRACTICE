@@ -3,6 +3,7 @@ header('Content-Type: application/json');
 session_start();
 
 require_once 'api/db.php';
+require_once 'api/send_welcome_email.php';
 
 try {
     $data = json_decode(file_get_contents('php://input'), true);
@@ -60,6 +61,8 @@ try {
         'email'         => $email,
         'password_hash' => $passwordHash
     ]);
+
+    sendWelcomeEmail($username, $email);
 
     echo json_encode(['message' => 'Account created successfully! You can now log in.']);
 
