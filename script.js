@@ -13,8 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
       let profilePic = localStorage.getItem('userProfilePicture');
       let username = localStorage.getItem('userName');
 
-      // If not in localStorage, fetch from server
-      if (profilePic === null || username === null) {
+      // On account page, always fetch from server to ensure current data
+      const isAccountPage = window.location.pathname.includes('customerAccount.php');
+      
+      if (isAccountPage || profilePic === null || username === null) {
         try {
           const response = await fetch('api/get_account_data.php');
           const data = await response.json();
@@ -22,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
             profilePic = data.user.profile_picture || null;
             username = data.user.username;
             localStorage.setItem('userName', username);
-            if (profilePic && !profilePic.includes('default')) {
+            if (profilePic && !profilePic.includes('yas_logo.png')) {
               localStorage.setItem('userProfilePicture', profilePic);
             } else {
               localStorage.removeItem('userProfilePicture');

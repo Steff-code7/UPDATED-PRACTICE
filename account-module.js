@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (profilePicPreview && profilePicPreview.src) {
         // Store current profile picture in localStorage on page load
         const currentProfilePic = profilePicPreview.src;
-        if (currentProfilePic && !currentProfilePic.includes('default-avatar.png')) {
+        if (currentProfilePic && !currentProfilePic.includes('default-avatar.png') && !currentProfilePic.includes('yas_logo.png')) {
             localStorage.setItem('userProfilePicture', currentProfilePic);
         } else {
             localStorage.removeItem('userProfilePicture');
@@ -52,7 +52,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // ==================== PROFILE PICTURE UPLOAD ====================
     const profilePictureInput = document.getElementById('profilePictureInput');
-    const profilePicPreview = document.getElementById('profilePicPreview');
     const navProfilePic = document.getElementById('navProfilePic');
     const overviewProfilePic = document.getElementById('overviewProfilePic');
 
@@ -522,14 +521,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (contactSupportBtn) {
         contactSupportBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            
-            const options = confirm('How would you like to contact us?\n\nOK = Call us\nCancel = Visit Facebook');
-            
-            if (options) {
-                window.location.href = 'tel:+639073954150';
-            } else {
-                window.open('https://www.facebook.com/yas.elizalde.7', '_blank');
-            }
+            window.open('https://www.facebook.com/yas.elizalde.7', '_blank');
         });
     }
 

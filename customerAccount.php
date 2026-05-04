@@ -340,9 +340,9 @@ try {
                     </div>
 
                     <!-- Add/Edit Address Modal -->
-                    <div id="addressModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; padding: 20px; overflow-y: auto;">
-                        <div style="background: white; max-width: 500px; margin: 50px auto; border-radius: 10px; padding: 30px;">
-                            <h3 style="margin-top: 0;" id="addressModalTitle">Add New Address</h3>
+                    <div id="addressModal" class="address-modal-overlay">
+                        <div class="address-modal-inner">
+                            <h3 id="addressModalTitle">Add New Address</h3>
                             <form id="addressForm">
                                 <input type="hidden" id="addressId" name="address_id" value="">
                                 <div class="form-group">

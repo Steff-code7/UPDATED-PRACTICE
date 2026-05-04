@@ -5205,6 +5205,78 @@ footer {
     min-height: 100px;
 }
 
+#addressModal.address-modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.address-modal-inner {
+    background: #121212;
+    color: #f5f5f5;
+    max-width: 500px;
+    margin: 50px auto;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.75);
+    border: 1px solid rgba(255, 77, 166, 0.2);
+}
+
+.address-modal-inner h3 {
+    margin-top: 0;
+    color: #fff;
+}
+
+.address-modal-inner .btn.primary,
+.address-modal-inner .btn.outline,
+.address-modal-inner .btn.danger {
+    min-width: 120px;
+}
+
+.address-modal-inner .btn.primary {
+    background: #ff4da6;
+    color: #000;
+}
+
+.address-modal-inner .btn.outline {
+    background: transparent;
+    border-color: #ff4da6;
+    color: #fff;
+}
+
+.address-modal-inner .btn.danger {
+    background: #d32f2f;
+    color: #fff;
+    border: none;
+}
+
+.address-modal-inner .form-group label[style] {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+}
+
+.address-modal-inner .form-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: #ff4da6;
+    margin: 0;
+}
+
+.address-modal-inner .form-group label[style] span {
+    font-size: 0.95rem;
+    color: #fff;
+}
+
+
 /* ===================== BUTTON STYLES ===================== */
 .btn {
     display: inline-flex;
