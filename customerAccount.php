@@ -6,7 +6,7 @@ require_once 'api/db.php';
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header('Location: index.html');
+    header('Location: loginSignUp.html');
     exit;
 }
 
@@ -24,7 +24,7 @@ try {
     $user = $stmt->fetch();
 
     if (!$user) {
-        header('Location: index.html');
+        header('Location: loginSignUp.html');
         exit;
     }
 
@@ -62,7 +62,7 @@ try {
     $memberSince = date('F j, Y', strtotime($user['created_at']));
     
 } catch (Exception $e) {
-    header('Location: index.html');
+    header('Location: loginSignUp.html');
     exit;
 }
 ?>
@@ -231,11 +231,14 @@ try {
                         </div>
                         <div class="ACCOUNT-CARD-BODY" style="text-align: center;">
                             <img id="profilePicPreview" src="<?php echo htmlspecialchars($profilePicture); ?>" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 15px;">
-                            <div style="display: flex; gap: 10px; justify-content: center;">
+                            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
                                 <label class="btn outline" style="cursor: pointer; margin: 0;">
                                     UPLOAD NEW PICTURE
                                     <input type="file" id="profilePictureInput" accept="image/*" style="display: none;">
                                 </label>
+                                <button type="button" id="removeProfilePicBtn" class="btn outline" style="margin: 0;">
+                                    REMOVE PICTURE
+                                </button>
                             </div>
                             <small style="display: block; margin-top: 10px; color: #666;">JPG, PNG, GIF, or WebP (Max 5MB)</small>
                         </div>

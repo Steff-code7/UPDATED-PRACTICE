@@ -3,8 +3,76 @@ document.addEventListener("DOMContentLoaded", () => {
   const qs = (sel, ctx = document) => (ctx && ctx.querySelector ? ctx.querySelector(sel) : null);
   const qsa = (sel, ctx = document) => (ctx && ctx.querySelectorAll ? Array.from(ctx.querySelectorAll(sel)) : []);
 
+  // ===================== PROFILE PICTURE & USERNAME SYNC =====================
+  (function syncProfileAndUsername() {
+    const userIcon = qs(".CUSTOMER-USER-ICON");
+    const userLabel = qs(".CUSTOMER-USER-LABEL");
+    if (!userIcon || !userLabel) return;
 
+    const syncUserData = async () => {
+      let profilePic = localStorage.getItem('userProfilePicture');
+      let username = localStorage.getItem('userName');
 
+      // If not in localStorage, fetch from server
+      if (profilePic === null || username === null) {
+        try {
+          const response = await fetch('api/get_account_data.php');
+          const data = await response.json();
+          if (data.success && data.user) {
+            profilePic = data.user.profile_picture || null;
+            username = data.user.username;
+            localStorage.setItem('userName', username);
+            if (profilePic && !profilePic.includes('default')) {
+              localStorage.setItem('userProfilePicture', profilePic);
+            } else {
+              localStorage.removeItem('userProfilePicture');
+            }
+          }
+        } catch (error) {
+          console.log('Could not fetch user data:', error);
+        }
+      }
+
+      // Update profile picture
+      let icon = userIcon.querySelector('img');
+      if (profilePic && !profilePic.includes('default')) {
+        if (!icon) {
+          icon = document.createElement('img');
+          icon.alt = 'Profile';
+          icon.style.cssText = 'width: 24px; height: 24px; border-radius: 50%; object-fit: cover;';
+          userIcon.innerHTML = '';
+          userIcon.appendChild(icon);
+        }
+        icon.src = profilePic;
+      } else {
+        if (icon) {
+          userIcon.innerHTML = '';
+        }
+        if (!userIcon.querySelector('i')) {
+          const faIcon = document.createElement('i');
+          faIcon.className = 'fa-regular fa-user';
+          userIcon.innerHTML = '';
+          userIcon.appendChild(faIcon);
+        }
+      }
+
+      // Update username
+      if (username) {
+        userLabel.textContent = username;
+      } else {
+        userLabel.textContent = 'user';
+      }
+    };
+
+    syncUserData();
+
+    // Listen for storage changes across tabs/windows
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'userProfilePicture' || e.key === 'userName') {
+        syncUserData();
+      }
+    });
+  })();
 
 // ===================== MOBILE NAV MENU ======================
   (function initMobileToggle() {
@@ -52,20 +120,12 @@ document.addEventListener("click", (event) => {
     if (!userMenuToggle || !userDropdown) return;
 
 
-    const insertAccountLink = () => {
-      if (qs('a[href="customerAccount.html"]', userDropdown)) return;
-      const logoutLink = qs('a[href="index.html"]', userDropdown);
-      const accountLink = document.createElement("a");
-      accountLink.href = "customerAccount.html";
-      accountLink.textContent = "Account";
-      if (logoutLink) {
-        userDropdown.insertBefore(accountLink, logoutLink);
-      } else {
-        userDropdown.appendChild(accountLink);
-      }
+    const replaceLegacyAccountLinks = () => {
+      const oldLinks = userDropdown.querySelectorAll('a[href="customerAccount.html"], a[href="customerAccount.htm"]');
+      oldLinks.forEach(link => link.href = "customerAccount.php");
     };
 
-    insertAccountLink();
+    replaceLegacyAccountLinks();
 
     const toggleDropdown = (event) => {
       event.preventDefault();

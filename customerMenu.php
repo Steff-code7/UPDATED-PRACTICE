@@ -71,6 +71,7 @@ while ($row = $products->fetch_assoc()) {
                     <i class="fa-solid fa-chevron-down CUSTOMER-USER-CHEVRON"></i>
                 </a>
                 <div class="CUSTOMER-USER-DROPDOWN" id="userDropdown">
+                    <a href="customerAccount.php">Account</a>
                     <a href="index.html">Log Out</a>
                 </div>
             </div>

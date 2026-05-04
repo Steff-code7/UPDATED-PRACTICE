@@ -1,4 +1,23 @@
 document.addEventListener('DOMContentLoaded', async () => {
+    // ==================== INITIALIZE PROFILE PICTURE & USERNAME ====================
+    const profilePicPreview = document.getElementById('profilePicPreview');
+    const navUsername = document.getElementById('navUsername');
+    
+    if (profilePicPreview && profilePicPreview.src) {
+        // Store current profile picture in localStorage on page load
+        const currentProfilePic = profilePicPreview.src;
+        if (currentProfilePic && !currentProfilePic.includes('default-avatar.png')) {
+            localStorage.setItem('userProfilePicture', currentProfilePic);
+        } else {
+            localStorage.removeItem('userProfilePicture');
+        }
+    }
+    
+    if (navUsername && navUsername.textContent) {
+        // Store current username in localStorage
+        localStorage.setItem('userName', navUsername.textContent);
+    }
+
     // ==================== MODULE SWITCHING ====================
     const moduleLinks = document.querySelectorAll('.module-link');
     const modules = document.querySelectorAll('.ACCOUNT-MODULE');
@@ -56,9 +75,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (data.success) {
                     // Update all profile pictures
                     const newImagePath = data.profile_picture;
-                    profilePicPreview.src = newImagePath;
-                    navProfilePic.src = newImagePath;
-                    overviewProfilePic.src = newImagePath;
+                    if (profilePicPreview) profilePicPreview.src = newImagePath;
+                    if (navProfilePic) navProfilePic.src = newImagePath;
+                    if (overviewProfilePic) overviewProfilePic.src = newImagePath;
+                    
+                    // Store in localStorage for sync across pages
+                    localStorage.setItem('userProfilePicture', newImagePath);
                     
                     alert('Profile picture updated successfully!');
                 } else {
@@ -69,6 +91,38 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     }
+
+    // ==================== REMOVE PROFILE PICTURE ====================
+    document.addEventListener('click', async (e) => {
+        if (e.target && e.target.id === 'removeProfilePicBtn') {
+            if (!confirm('Are you sure you want to remove your profile picture?')) return;
+
+            try {
+                const response = await fetch('api/remove_profile_picture.php', {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Reset to default/placeholder
+                    const defaultPic = data.profile_picture;
+                    if (profilePicPreview) profilePicPreview.src = defaultPic;
+                    if (navProfilePic) navProfilePic.src = defaultPic;
+                    if (overviewProfilePic) overviewProfilePic.src = defaultPic;
+                    
+                    // Update localStorage
+                    localStorage.removeItem('userProfilePicture');
+                    
+                    alert('Profile picture removed successfully!');
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                alert('Error removing profile picture: ' + error.message);
+            }
+        }
+    });
 
     // ==================== USERNAME UPDATE ====================
     const usernameForm = document.getElementById('usernameForm');
@@ -90,8 +144,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const data = await response.json();
 
                 if (data.success) {
-                    alert('Username updated! You will need to log in again with your new username.');
-                    window.location.href = 'index.html';
+                    // Update localStorage and UI
+                    localStorage.setItem('userName', newUsername);
+                    
+                    // Update nav username
+                    const navUsername = document.getElementById('navUsername');
+                    if (navUsername) navUsername.textContent = newUsername;
+                    
+                    // Update overview username
+                    const overviewUsername = document.getElementById('overviewUsername');
+                    if (overviewUsername) overviewUsername.textContent = newUsername;
+                    
+                    alert('Username updated successfully! Note: You will need to use this new username when logging in again.');
                 } else {
                     alert('Error: ' + data.message);
                 }
