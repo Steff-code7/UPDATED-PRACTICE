@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
+    console.log('DOM Content Loaded - Starting account module initialization');
+    
     // ==================== INITIALIZE PROFILE PICTURE & USERNAME ====================
     const profilePicPreview = document.getElementById('profilePicPreview');
     const navUsername = document.getElementById('navUsername');
@@ -22,15 +24,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     const navProfilePic = document.getElementById('navProfilePic');
     const overviewProfilePic = document.getElementById('overviewProfilePic');
 
+    console.log('Body classes:', document.body.className);
     const isOrdersPage = document.body.classList.contains('account-orders-page');
     const isAddressesPage = document.body.classList.contains('account-addresses-page');
+    console.log('Page detection:', { isOrdersPage, isAddressesPage });
 
     if (isOrdersPage) {
+        console.log('Orders page detected');
         loadOrderHistory();
     }
 
     if (isAddressesPage) {
-        loadAddresses();
+        console.log('Address page detected, calling loadAddresses...');
+        // Small delay to ensure DOM is ready
+        setTimeout(() => {
+            loadAddresses();
+        }, 100);
     }
 
     // ==================== PROFILE PICTURE UPLOAD ====================
@@ -305,23 +314,37 @@ document.addEventListener('DOMContentLoaded', async () => {
         const closeAddressModal = document.getElementById('closeAddressModal');
         const deleteAddressBtn = document.getElementById('deleteAddressBtn');
 
+        // Debug: Check if elements exist
+        console.log('Checking for address elements...');
+        console.log('Address elements:', {
+            addressModal: !!addressModal,
+            addressForm: !!addressForm,
+            addAddressBtn: !!addAddressBtn,
+            closeAddressModal: !!closeAddressModal,
+            deleteAddressBtn: !!deleteAddressBtn
+        });
+
         if (addAddressBtn && addressForm && addressModal && closeAddressModal && deleteAddressBtn) {
+            console.log('All address elements found, setting up event listeners...');
             addAddressBtn.addEventListener('click', () => {
+                console.log('Add address button clicked');
                 currentAddressId = null;
-                document.getElementById('addressModalTitle').textContent = 'Add New Address';
+                const modalTitle = document.getElementById('addressModalTitle');
+                if (modalTitle) modalTitle.textContent = 'Add New Address';
                 addressForm.reset();
-                document.getElementById('addressId').value = '';
+                const addressIdInput = document.getElementById('addressId');
+                if (addressIdInput) addressIdInput.value = '';
                 deleteAddressBtn.style.display = 'none';
-                addressModal.style.display = 'block';
+                addressModal.classList.add('show');
             });
 
             closeAddressModal.addEventListener('click', () => {
-                addressModal.style.display = 'none';
+                addressModal.classList.remove('show');
             });
 
             addressModal.addEventListener('click', (e) => {
                 if (e.target === addressModal) {
-                    addressModal.style.display = 'none';
+                    addressModal.classList.remove('show');
                 }
             });
 
@@ -352,7 +375,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     if (data.success) {
                         alert('Address ' + (action === 'add' ? 'added' : 'updated') + ' successfully!');
-                        addressModal.style.display = 'none';
+                        addressModal.classList.remove('show');
                         loadAddresses();
                         // If set as primary, update overview
                         if (document.getElementById('isPrimary').checked) {
@@ -388,7 +411,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     if (data.success) {
                         alert('Address deleted successfully!');
-                        addressModal.style.display = 'none';
+                        addressModal.classList.remove('show');
                         loadAddresses();
                     } else {
                         alert('Error: ' + data.message);
@@ -400,19 +423,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         async function loadAddresses() {
+            console.log('loadAddresses function called');
             const container = document.getElementById('addressesList');
+            console.log('Container found:', !!container);
 
             try {
+                console.log('Making API call to manage_addresses.php');
                 const response = await fetch('api/manage_addresses.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'get_all' })
                 });
+                console.log('API response status:', response.status);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
 
                 const data = await response.json();
 
                 if (!data.success) {
-                    container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>Error loading addresses</p></div>';
+                    console.error('API Error:', data.message);
+                    container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>Error loading addresses: ' + (data.message || 'Unknown error') + '</p></div>';
                     return;
                 }
 
@@ -470,7 +502,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     document.getElementById('deliveryInstructions').value = address.delivery_instructions || '';
                     document.getElementById('isPrimary').checked = address.is_primary;
                     deleteAddressBtn.style.display = 'block';
-                    addressModal.style.display = 'block';
+                    addressModal.classList.add('show');
                 }
             } catch (error) {
                 alert('Error loading address: ' + error.message);
@@ -501,8 +533,42 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         };
 
-        loadAddresses();
+    } else {
+        console.error('Some address elements are missing. Button functionality disabled.');
+        // Fallback: Add basic click handler to add address button
+        if (addAddressBtn) {
+            console.log('Setting up fallback button handler');
+            addAddressBtn.addEventListener('click', () => {
+                console.log('Fallback button clicked');
+                // Try to manually set up modal
+                const modal = document.getElementById('addressModal');
+                const form = document.getElementById('addressForm');
+                if (modal && form) {
+                    console.log('Modal and form found, showing modal');
+                    form.reset();
+                    modal.classList.add('show');
+                } else {
+                    alert('Address form elements are missing. Please refresh the page and try again.');
+                }
+            });
+        }
     }
+
+    // Also try to set up the button after a delay as a backup
+    setTimeout(() => {
+        const btn = document.getElementById('addAddressBtn');
+        const modal = document.getElementById('addressModal');
+        const form = document.getElementById('addressForm');
+        if (btn && modal && form) {
+            console.log('Backup button setup triggered');
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log('Backup button clicked');
+                form.reset();
+                modal.classList.add('show');
+            });
+        }
+    }, 500);
 
     // ==================== CONTACT SUPPORT ====================
     const contactSupportBtn = document.getElementById('contactSupportBtn');
