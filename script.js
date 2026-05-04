@@ -1070,53 +1070,63 @@ if (matchingOption) {
 
 
 
-    const adminProducts = [
-      { id: 1, name: "Matcha", category: "Classic Milktea", price16: 90, price22: 110, description: "Smooth and earthy with a comforting green tea taste.", image: "images/mt_matcha.jpg" },
-      { id: 2, name: "Okinawa", category: "Classic Milktea", price16: 90, price22: 110, description: "Caramel-like brown sugar milk tea that feels warm and cozy.", image: "images/mt_okinawa.jpg" },
-      { id: 3, name: "Red Velvet", category: "Classic Milktea", price16: 90, price22: 110, description: "Sweet, creamy, and cake-like with a hint of cocoa.", image: "images/mt_redvelvet.jpg" },
-      { id: 4, name: "Wintermelon", category: "Classic Milktea", price16: 90, price22: 110, description: "Light, sweet, and refreshing with a mellow honey vibe.", image: "images/mt_wintermelon.jpg" },
-      { id: 5, name: "Taro", category: "Classic Milktea", price16: 90, price22: 110, description: "Soft, nutty, and sweet with that classic purple flavor.", image: "images/mt_taro.jpg" },
-      { id: 6, name: "Hokkaido", category: "Classic Milktea", price16: 90, price22: 110, description: "Rich, creamy, and buttery with a deep caramel taste.", image: "images/mt_hokkaido.jpg" },
-      { id: 7, name: "Black Sugar", category: "Premium Milktea", price16: 95, price22: 120, description: "Sweet, smoky caramel flavor with a rich milk base.", image: "images/pmt_blacksugar.jpg" },
-      { id: 8, name: "Lava Latte", category: "Premium Milktea", price16: 95, price22: 120, description: "Bold coffee flavor with a creamy, milky finish.", image: "images/pmt_lavalatte.jpg" },
-      { id: 9, name: "Cookies n' Cream", category: "Premium Milktea", price16: 95, price22: 120, description: "Creamy blend with crushed cookies in every sip.", image: "images/pmt_cookiesncream.jpg" },
-      { id: 10, name: "Dark Chocolate", category: "Premium Milktea", price16: 95, price22: 120, description: "Deep, bittersweet cocoa for chocolate lovers.", image: "images/pmt_darkchoco.jpg" },
-      { id: 11, name: "Nutella", category: "Premium Milktea", price16: 95, price22: 120, description: "Smooth chocolate-hazelnut drink that feels like dessert.", image: "images/pmt_nutella.jpg" },
-      { id: 12, name: "Matcha Oreo", category: "Premium Milktea", price16: 95, price22: 120, description: "Earthy matcha mixed with crunchy, sweet Oreo goodness.", image: "images/pmt_matchaoreo.jpg" },
-      { id: 13, name: "Black Forest", category: "Premium Milktea", price16: 95, price22: 120, description: "Chocolatey drink with a hint of cherry sweetness.", image: "images/pmt_blackforest.jpg" },
-      { id: 14, name: "Choco Hazelnut", category: "Cream Cheese Series", price16: 99, price22: 130, description: "Creamy chocolate-hazelnut drink topped with silky cream cheese.", image: "images/cc_chocohazelnut.jpg" },
-      { id: 15, name: "Matcha Cream Cheese", category: "Cream Cheese Series", price16: 99, price22: 130, description: "Earthy matcha paired with a salty-sweet cream cheese topping.", image: "images/cc_matcha.jpg" },
-      { id: 16, name: "Fuji Chocolate", category: "Cream Cheese Series", price16: 95, price22: 125, description: "Smooth, premium chocolate flavor with a rich cream cheese finish.", image: "images/cc_fujichocolate.jpg" },
-      { id: 17, name: "Okinawa Cream Cheese", category: "Cream Cheese Series", price16: 95, price22: 125, description: "Brown sugar milk tea topped with creamy, fluffy cheese foam.", image: "images/cc_okinawa.jpg" },
-      { id: 18, name: "Red Velvet Royale", category: "Cream Cheese Series", price16: 95, price22: 125, description: "Sweet red velvet blend made extra luxurious with cream cheese foam.", image: "images/cc_redvelvetroyale.jpg" },
-      { id: 19, name: "Oreo Cream Cheese", category: "Cream Cheese Series", price16: 99, price22: 130, description: "Crushed Oreo in a creamy drink finished with thick cream cheese.", image: "images/cc_oreo.jpg" },
-      { id: 20, name: "Strawberry", category: "Fruit Milk", price16: 74, price22: 95, description: "Creamy milk with a fresh, juicy strawberry taste.", image: "images/fm_strawberry.jpg" },
-      { id: 21, name: "Kiwi Fruit", category: "Fruit Milk", price16: 74, price22: 95, description: "Light, tangy kiwi mixed with smooth, sweet milk.", image: "images/fm_kiwi.jpg" },
-      { id: 22, name: "Blueberry", category: "Fruit Milk", price16: 74, price22: 95, description: "Smooth and milky with a soft, berry sweetness.", image: "images/fm_blueberry.jpg" },
-      { id: 23, name: "Honey Peach", category: "Fruit Milk", price16: 74, price22: 95, description: "Soft peach flavor with a gentle honey-like sweetness.", image: "images/fm_honeypeach.jpg" },
-      { id: 24, name: "Mango", category: "Fruit Milk", price16: 74, price22: 95, description: "Rich, tropical mango flavor blended with creamy milk.", image: "images/fm_mango.jpg" },
-      { id: 25, name: "Grape Fruit", category: "Fruit Milk", price16: 74, price22: 95, description: "Sweet, fruity grape taste blended into creamy milk.", image: "images/fm_grape.jpg" },
-      { id: 26, name: "Blueberry", category: "Fruit Tea", price16: 65, price22: 90, description: "Bright, sweet blueberry flavor with a crisp tea base.", image: "images/ft_blueberry.jpg" },
-      { id: 27, name: "Lychee", category: "Fruit Tea", price16: 65, price22: 90, description: "Soft, floral lychee flavor with a refreshing finish.", image: "images/ft_lychee.jpg" },
-      { id: 28, name: "Blue Lemonade", category: "Fruit Tea", price16: 65, price22: 90, description: "Cool, citrusy blend with a splash of blue lemonade tang.", image: "images/ft_bluelemonade.jpg" },
-      { id: 29, name: "Four Seasons", category: "Fruit Tea", price16: 65, price22: 90, description: "Fruity mix of citrus and tropical flavors in one cup.", image: "images/ft_fourseasons.jpg" },
-      { id: 30, name: "Strawberry", category: "Fruit Tea", price16: 65, price22: 90, description: "Light tea mixed with fresh, juicy strawberry sweetness.", image: "images/ft_strawberry.jpg" },
-      { id: 31, name: "Green Apple", category: "Fruit Tea", price16: 65, price22: 90, description: "Crisp, tart green apple blended with smooth tea.", image: "images/ft_greenapple.jpg" },
-      { id: 32, name: "Takoyaki", category: "Takoyaki", price16: 60, price22: 120, description: "A snack favorite with crispy bites and savory toppings.", image: "images/takoyaki.jpg" },
-      { id: 33, name: "Shawarma", category: "Shawarma", price16: 60, price22: 90, description: "Warm wraps with savory fillings and bold flavor.", image: "images/shawarma-original.png" },
-      { id: 34, name: "Hickory Barbecue", category: "Chicken Wings + Fries", price16: 95, price22: 180, description: "Smoky chicken wings with fries.", image: "images/cwf-hickorybarbeque.png" },
-      { id: 35, name: "Sriracha", category: "Chicken Wings + Fries", price16: 95, price22: 180, description: "Spicy wings and fries with a bold kick.", image: "images/cwf-sriracha.png" },
-      { id: 36, name: "Yangneom (Korean Flavor)", category: "Chicken Wings + Fries", price16: 95, price22: 180, description: "Sweet and spicy Korean-style wings paired with fries.", image: "images/cwf-yangneom.png" },
-      { id: 37, name: "Honey Mustard", category: "Chicken Wings + Fries", price16: 95, price22: 180, description: "Tangy-sweet wings with fries.", image: "images/cwf-honeymustard.png" },
-      { id: 38, name: "Lemon Glazed", category: "Chicken Wings + Fries", price16: 95, price22: 180, description: "Zesty glazed wings with fries.", image: "images/cwf-lemonglazed.png" },
-      { id: 39, name: "Buffalo", category: "Chicken Wings + Fries", price16: 95, price22: 180, description: "Classic buffalo wings and fries.", image: "images/cwf-buffalo.png" },
-      { id: 40, name: "Soy Garlic", category: "Chicken Wings + Fries", price16: 95, price22: 180, description: "Garlicky glazed wings with fries.", image: "images/cwf-soygarlic.png" },
-      { id: 41, name: "Plain Burger", category: "Burger", price16: 35, price22: null, description: "A simple savory burger.", image: "images/b-plain.png" },
-      { id: 42, name: "Egg and Cheese Burger", category: "Burger", price16: 45, price22: null, description: "A richer burger combo.", image: "images/b-eggcheese.png" },
-      { id: 43, name: "Double Burger", category: "Burger", price16: 75, price22: null, description: "A bigger burger option.", image: "images/b-double.png" },
-      { id: 44, name: "Special Burger", category: "Burger", price16: 80, price22: null, description: "A loaded burger pick.", image: "images/b-special.png" },
-      { id: 45, name: "Fries", category: "Fries", price16: 30, price22: 100, description: "Crispy fries ready for snacking.", image: "images/f-medium.png" },
-    ];
+    let adminProducts = [];
+    let categories = ["All Categories"];
+
+    // Fetch products and categories from database
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('api/get_products.php');
+        const data = await response.json();
+        if (data.success) {
+          adminProducts = data.products.map(product => ({
+            id: product.product_id,
+            name: product.product_name,
+            category: product.category_name,
+            price16: parseFloat(product.price_16) || 0,
+            price22: parseFloat(product.price_22) || null,
+            description: product.description || '',
+            image: product.image || 'images/default-product.jpg'
+          }));
+          
+          // Update categories after products are loaded
+          categories = ["All Categories", ...new Set(adminProducts.map((product) => product.category))];
+          updateCategoryDropdowns();
+          
+          // Render products after loading
+          renderTable();
+        }
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('api/get_categories.php');
+        const data = await response.json();
+        if (data.success) {
+          categories = ["All Categories", ...data.data.map(cat => cat.category_name)];
+          updateCategoryDropdowns();
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    const updateCategoryDropdowns = () => {
+      categorySelect.innerHTML = categories
+        .map((category) => `<option value="${category}">${category}</option>`)
+        .join("");
+      formCategory.innerHTML = categories
+        .filter((category) => category !== "All Categories")
+        .map((category) => `<option value="${category}">${category}</option>`)
+        .join("");
+    };
+
+    // Initialize data fetching
+    fetchProducts();
+    fetchCategories();
 
 
 
@@ -1127,15 +1137,7 @@ if (matchingOption) {
 
 
 
-    const categories = ["All Categories", ...new Set(adminProducts.map((product) => product.category))];
-    categorySelect.innerHTML = categories
-      .map((category) => `<option value="${category}">${category}</option>`)
-      .join("");
-    formCategory.innerHTML = categories
-      .filter((category) => category !== "All Categories")
-      .map((category) => `<option value="${category}">${category}</option>`)
-      .join("");
-
+    
 
 
 
@@ -1304,6 +1306,18 @@ if (matchingOption) {
           openEditModal(Number(button.dataset.editId));
         });
       });
+
+      // Add delete button event listeners
+      qsa(".ADMIN-TABLE-ACTIONS button", tableBody).forEach((button) => {
+        if (!button.dataset.editId && button.querySelector('.fa-trash-can, .fa-circle-xmark')) {
+          button.addEventListener("click", (event) => {
+            const row = event.target.closest('tr');
+            const productId = row.querySelector('[data-edit-id]').dataset.editId;
+            const productName = row.querySelector('td:nth-child(2)').textContent;
+            deleteProduct(Number(productId), productName);
+          });
+        }
+      });
     };
 
 
@@ -1453,14 +1467,69 @@ if (matchingOption) {
       reader.readAsDataURL(file);
     });
 
+    const deleteProduct = async (productId, productName) => {
+      if (!confirm(`Are you sure you want to delete "${productName}"? This action cannot be undone.`)) {
+        return;
+      }
 
+      try {
+        const response = await fetch('api/delete_product.php', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ product_id: productId })
+        });
 
+        const result = await response.json();
+        
+        if (result.success) {
+          alert(`"${productName}" has been deleted successfully.`);
+          await fetchProducts(); // Refresh the products list
+        } else {
+          alert(`Error deleting product: ${result.message}`);
+        }
+      } catch (error) {
+        console.error('Error deleting product:', error);
+        alert('Failed to delete product. Please try again.');
+      }
+    };
 
-    productForm.addEventListener("submit", (event) => {
+    const saveProduct = async (productData) => {
+      const isEdit = activeEditId !== null;
+      const url = isEdit ? 'api/update_product.php' : 'api/add_product.php';
+      const method = isEdit ? 'PUT' : 'POST';
+      
+      if (isEdit) {
+        productData.product_id = activeEditId;
+      }
+
+      try {
+        const response = await fetch(url, {
+          method: method,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(productData)
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          alert(`Product ${isEdit ? 'updated' : 'added'} successfully!`);
+          await fetchProducts(); // Refresh the products list
+          closeModal();
+        } else {
+          alert(`Error ${isEdit ? 'updating' : 'adding'} product: ${result.message}`);
+        }
+      } catch (error) {
+        console.error('Error saving product:', error);
+        alert(`Failed to ${isEdit ? 'update' : 'add'} product. Please try again.`);
+      }
+    };
+
+    productForm.addEventListener("submit", async (event) => {
       event.preventDefault();
-
-
-
 
       const name = nameInput.value.trim();
       const category = formCategory.value;
@@ -1469,56 +1538,28 @@ if (matchingOption) {
       const description = descriptionInput.value.trim();
       const image = uploadedImageData || imageUrlInput.value.trim();
 
-
-
-
-      if (!name || !category || !price16) return;
-
-
-
-
-      if (activeEditId !== null) {
-        const product = adminProducts.find((item) => item.id === activeEditId);
-        if (product) {
-          product.name = name;
-          product.category = category;
-          product.price16 = price16;
-          product.price22 = price22;
-          product.description = description;
-          product.image = image || product.image;
-        }
-      } else {
-        adminProducts.unshift({
-          id: Date.now(),
-          name,
-          category,
-          price16,
-          price22,
-          description,
-          image: image || "images/footer_logo.png",
-        });
+      if (!name || !category || !price16) {
+        alert('Please fill in all required fields.');
+        return;
       }
 
+      // Find category_id from category name
+      const categoryData = await fetch('api/get_categories.php').then(res => res.json());
+      const categoryObj = categoryData.data.find(cat => cat.category_name === category);
+      const categoryId = categoryObj ? categoryObj.category_id : 0;
 
+      const productData = {
+        category_id: categoryId,
+        product_name: name,
+        description: description,
+        price_16: price16,
+        price_22: price22 || null,
+        stock: 100, // Default stock
+        image: image || 'images/default-product.jpg'
+      };
 
-
-      categorySelect.innerHTML = ["All Categories", ...new Set(adminProducts.map((product) => product.category))]
-        .map((categoryItem) => `<option value="${categoryItem}">${categoryItem}</option>`)
-        .join("");
-      formCategory.innerHTML = [...new Set(adminProducts.map((product) => product.category))]
-        .map((categoryItem) => `<option value="${categoryItem}">${categoryItem}</option>`)
-        .join("");
-
-
-
-
-      currentPage = 1;
-      closeModal();
-      renderTable();
+      await saveProduct(productData);
     });
-
-
-
 
     renderTable();
   })();
