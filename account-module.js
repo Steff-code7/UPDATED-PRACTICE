@@ -1,0 +1,472 @@
+document.addEventListener('DOMContentLoaded', async () => {
+    // ==================== MODULE SWITCHING ====================
+    const moduleLinks = document.querySelectorAll('.module-link');
+    const modules = document.querySelectorAll('.ACCOUNT-MODULE');
+
+    moduleLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const moduleId = link.dataset.module;
+            
+            // Update active link
+            moduleLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+
+            // Update active module
+            modules.forEach(m => m.style.display = 'none');
+            const activeModule = document.getElementById(`${moduleId}-module`);
+            if (activeModule) {
+                activeModule.style.display = 'block';
+
+                // Load data for specific modules
+                if (moduleId === 'order-history') {
+                    loadOrderHistory();
+                } else if (moduleId === 'addresses') {
+                    loadAddresses();
+                }
+            }
+
+            // Scroll to top
+            document.querySelector('.ACCOUNT-MAIN').scrollTop = 0;
+        });
+    });
+
+    // ==================== PROFILE PICTURE UPLOAD ====================
+    const profilePictureInput = document.getElementById('profilePictureInput');
+    const profilePicPreview = document.getElementById('profilePicPreview');
+    const navProfilePic = document.getElementById('navProfilePic');
+    const overviewProfilePic = document.getElementById('overviewProfilePic');
+
+    if (profilePictureInput) {
+        profilePictureInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('profile_picture', file);
+
+            try {
+                const response = await fetch('api/update_profile_picture.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Update all profile pictures
+                    const newImagePath = data.profile_picture;
+                    profilePicPreview.src = newImagePath;
+                    navProfilePic.src = newImagePath;
+                    overviewProfilePic.src = newImagePath;
+                    
+                    alert('Profile picture updated successfully!');
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                alert('Error uploading file: ' + error.message);
+            }
+        });
+    }
+
+    // ==================== USERNAME UPDATE ====================
+    const usernameForm = document.getElementById('usernameForm');
+    if (usernameForm) {
+        usernameForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newUsername = document.getElementById('username').value;
+
+            try {
+                const response = await fetch('api/update_account.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'update_username',
+                        username: newUsername
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Username updated! You will need to log in again with your new username.');
+                    window.location.href = 'index.html';
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+    }
+
+    // ==================== PASSWORD CHANGE ====================
+    const passwordForm = document.getElementById('passwordForm');
+    if (passwordForm) {
+        passwordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const oldPassword = document.getElementById('oldPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword !== confirmPassword) {
+                alert('New passwords do not match!');
+                return;
+            }
+
+            try {
+                const response = await fetch('api/update_account.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'change_password',
+                        old_password: oldPassword,
+                        new_password: newPassword,
+                        confirm_password: confirmPassword
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    alert('Password changed successfully!');
+                    passwordForm.reset();
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+    }
+
+    // ==================== PERSONAL DETAILS ====================
+    const personalDetailsForm = document.getElementById('personalDetailsForm');
+    if (personalDetailsForm) {
+        personalDetailsForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const contactNumber = document.getElementById('contactNumber').value;
+            const dateOfBirth = document.getElementById('dateOfBirth').value;
+
+            try {
+                // Update profile info
+                let response = await fetch('api/update_account.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'update_profile',
+                        full_name: fullName,
+                        contact_number: contactNumber,
+                        date_of_birth: dateOfBirth
+                    })
+                });
+
+                let data = await response.json();
+                if (!data.success) {
+                    alert('Error updating profile: ' + data.message);
+                    return;
+                }
+
+                // Update email if changed
+                if (email !== document.getElementById('email').defaultValue) {
+                    response = await fetch('api/update_account.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'update_email',
+                            email: email
+                        })
+                    });
+
+                    data = await response.json();
+                    if (data.success) {
+                        alert('Personal details updated! You will need to log in again with your new email if it was changed.');
+                        window.location.href = 'index.html';
+                        return;
+                    } else {
+                        alert('Error updating email: ' + data.message);
+                    }
+                }
+
+                alert('Personal details updated successfully!');
+                // Update overview section
+                document.getElementById('overviewFullName').textContent = fullName || 'Not set';
+                document.getElementById('overviewEmail').textContent = email;
+                document.getElementById('overviewContact').textContent = contactNumber || 'Not set';
+                if (dateOfBirth) {
+                    const date = new Date(dateOfBirth);
+                    document.getElementById('overviewDOB').textContent = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+                }
+
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        });
+    }
+
+    // ==================== ORDER HISTORY ====================
+    async function loadOrderHistory() {
+        const container = document.getElementById('ordersContainer');
+
+        try {
+            const response = await fetch('api/get_user_orders.php');
+            const data = await response.json();
+
+            if (!data.success) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>Error loading orders</p></div>';
+                return;
+            }
+
+            if (data.orders.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>No orders found</p></div>';
+                return;
+            }
+
+            let html = '<div class="ACCOUNT-ORDER-TABLE"><div class="ACCOUNT-ORDER-ROW ACCOUNT-ORDER-HEAD"><span>ORDER ID</span><span>DATE</span><span>ITEMS</span><span>TOTAL</span><span>STATUS</span></div>';
+
+            data.orders.forEach(order => {
+                if (!order.order_date || order.order_date === '0000-00-00 00:00:00') return;
+                
+                const statusClass = order.status.toLowerCase();
+                html += `
+                    <div class="ACCOUNT-ORDER-ROW">
+                        <span>${order.order_display_id || order.order_id}</span>
+                        <span>${order.formatted_date}</span>
+                        <span>${order.items ? order.items.substring(0, 40) + (order.items.length > 40 ? '...' : '') : 'N/A'}</span>
+                        <span>₱${parseFloat(order.total_amount).toFixed(2)}</span>
+                        <span class="ACCOUNT-STATUS ${statusClass}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+
+        } catch (error) {
+            container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>Error loading orders: ' + error.message + '</p></div>';
+        }
+    }
+
+    // ==================== ADDRESSES ====================
+    let currentAddressId = null;
+
+    const addressModal = document.getElementById('addressModal');
+    const addressForm = document.getElementById('addressForm');
+    const addAddressBtn = document.getElementById('addAddressBtn');
+    const closeAddressModal = document.getElementById('closeAddressModal');
+    const deleteAddressBtn = document.getElementById('deleteAddressBtn');
+
+    addAddressBtn.addEventListener('click', () => {
+        currentAddressId = null;
+        document.getElementById('addressModalTitle').textContent = 'Add New Address';
+        addressForm.reset();
+        document.getElementById('addressId').value = '';
+        deleteAddressBtn.style.display = 'none';
+        addressModal.style.display = 'block';
+    });
+
+    closeAddressModal.addEventListener('click', () => {
+        addressModal.style.display = 'none';
+    });
+
+    addressModal.addEventListener('click', (e) => {
+        if (e.target === addressModal) {
+            addressModal.style.display = 'none';
+        }
+    });
+
+    addressForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const addressId = document.getElementById('addressId').value;
+        const action = addressId ? 'update' : 'add';
+
+        const payload = {
+            action: action,
+            address_id: addressId,
+            address_type: document.getElementById('addressType').value,
+            address_line: document.getElementById('addressLine').value,
+            landmark: document.getElementById('landmark').value,
+            delivery_instructions: document.getElementById('deliveryInstructions').value,
+            is_primary: document.getElementById('isPrimary').checked ? 1 : 0
+        };
+
+        try {
+            const response = await fetch('api/manage_addresses.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert('Address ' + (action === 'add' ? 'added' : 'updated') + ' successfully!');
+                addressModal.style.display = 'none';
+                loadAddresses();
+                // If set as primary, update overview
+                if (document.getElementById('isPrimary').checked) {
+                    document.getElementById('overviewAddress').textContent = document.getElementById('addressLine').value;
+                    document.getElementById('overviewLandmark').textContent = document.getElementById('landmark').value || 'Not set';
+                    document.getElementById('overviewInstructions').textContent = document.getElementById('deliveryInstructions').value || 'None';
+                }
+            } else {
+                alert('Error: ' + data.message);
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    });
+
+    deleteAddressBtn.addEventListener('click', async () => {
+        if (!confirm('Are you sure you want to delete this address?')) return;
+
+        try {
+            const response = await fetch('api/manage_addresses.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'delete',
+                    address_id: document.getElementById('addressId').value
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert('Address deleted successfully!');
+                addressModal.style.display = 'none';
+                loadAddresses();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    });
+
+    async function loadAddresses() {
+        const container = document.getElementById('addressesList');
+
+        try {
+            const response = await fetch('api/manage_addresses.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'get_all' })
+            });
+
+            const data = await response.json();
+
+            if (!data.success) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>Error loading addresses</p></div>';
+                return;
+            }
+
+            if (data.addresses.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>No addresses added yet. Click "Add New Address" to get started!</p></div>';
+                return;
+            }
+
+            let html = '';
+            data.addresses.forEach(address => {
+                const isPrimary = address.is_primary ? 'PRIMARY' : 'SET AS PRIMARY';
+                const isPrimaryBtn = address.is_primary ? '' : `<button type="button" class="btn outline small" onclick="setAsPrimary(${address.address_id})">SET AS PRIMARY</button>`;
+                
+                html += `
+                    <article class="ACCOUNT-DETAIL-CARD">
+                        <div class="ACCOUNT-CARD-HEADER">
+                            <h4>${address.address_type.charAt(0).toUpperCase() + address.address_type.slice(1)}${address.is_primary ? ' <span style="color: #ff5eb3;">(Primary)</span>' : ''}</h4>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn outline small" onclick="editAddress(${address.address_id})">EDIT</button>
+                                ${isPrimaryBtn}
+                            </div>
+                        </div>
+                        <div class="ACCOUNT-CARD-BODY">
+                            <div><span>Address</span><strong>${address.address_line}</strong></div>
+                            <div><span>Landmark</span><strong>${address.landmark || 'Not set'}</strong></div>
+                            <div><span>Instructions</span><strong>${address.delivery_instructions || 'None'}</strong></div>
+                        </div>
+                    </article>
+                `;
+            });
+
+            container.innerHTML = html;
+
+        } catch (error) {
+            container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>Error loading addresses: ' + error.message + '</p></div>';
+        }
+    }
+
+    window.editAddress = async (addressId) => {
+        try {
+            const response = await fetch('api/manage_addresses.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'get_all' })
+            });
+
+            const data = await response.json();
+            const address = data.addresses.find(a => a.address_id == addressId);
+
+            if (address) {
+                document.getElementById('addressModalTitle').textContent = 'Edit Address';
+                document.getElementById('addressId').value = address.address_id;
+                document.getElementById('addressType').value = address.address_type;
+                document.getElementById('addressLine').value = address.address_line;
+                document.getElementById('landmark').value = address.landmark || '';
+                document.getElementById('deliveryInstructions').value = address.delivery_instructions || '';
+                document.getElementById('isPrimary').checked = address.is_primary;
+                deleteAddressBtn.style.display = 'block';
+                addressModal.style.display = 'block';
+            }
+        } catch (error) {
+            alert('Error loading address: ' + error.message);
+        }
+    };
+
+    window.setAsPrimary = async (addressId) => {
+        try {
+            const response = await fetch('api/manage_addresses.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'set_primary',
+                    address_id: addressId
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert('Primary address updated!');
+                loadAddresses();
+            } else {
+                alert('Error: ' + data.message);
+            }
+        } catch (error) {
+            alert('Error: ' + error.message);
+        }
+    };
+
+    // ==================== CONTACT SUPPORT ====================
+    const contactSupportBtn = document.getElementById('contactSupportBtn');
+    if (contactSupportBtn) {
+        contactSupportBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            const options = confirm('How would you like to contact us?\n\nOK = Call us\nCancel = Visit Facebook');
+            
+            if (options) {
+                window.location.href = 'tel:+639073954150';
+            } else {
+                window.open('https://www.facebook.com/yas.elizalde.7', '_blank');
+            }
+        });
+    }
+
+});
