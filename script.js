@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   // ===================== HELPER SELECTORS =====================
-  const qs = (sel, ctx = document) => ctx.querySelector(sel);
-  const qsa = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+  const qs = (sel, ctx = document) => (ctx && ctx.querySelector ? ctx.querySelector(sel) : null);
+  const qsa = (sel, ctx = document) => (ctx && ctx.querySelectorAll ? Array.from(ctx.querySelectorAll(sel)) : []);
 
 
 
@@ -283,19 +283,7 @@ window.addEventListener("scroll", updateNavbarState, { passive: true });
 
     updatesButton.addEventListener("click", (event) => {
       event.preventDefault();
-      const mode = updatesButton.dataset.mode?.trim().toLowerCase();
-
-      if (mode === "guest") {
-        window.location.href = "loginSignUp.html";
-        return;
-      }
-
-      if (mode === "customer") {
-        showPromoToast("Promo notifications are almost ready. You are on the updates list.");
-        return;
-      }
-
-      window.location.href = "loginSignUp.html";
+      showPromoToast("The updates feature is still a work in progress. Thanks for your patience!");
     });
   })();
 
