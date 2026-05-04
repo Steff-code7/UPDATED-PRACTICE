@@ -53,8 +53,8 @@ try {
     $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
     $stmt = $pdo->prepare("
-        INSERT INTO Users (username, email, password_hash, role, status)
-        VALUES (:username, :email, :password_hash, 'customer', 'active')
+        INSERT INTO Users (username, email, password_hash, role, status, profile_picture)
+        VALUES (:username, :email, :password_hash, 'customer', 'active', 'images/yas_logo.png')
     ");
     $stmt->execute([
         'username'      => $username,

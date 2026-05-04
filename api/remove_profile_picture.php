@@ -25,7 +25,7 @@ try {
     }
 
     // Delete the file if it exists and is not the default
-    if ($user['profile_picture'] && $user['profile_picture'] !== 'images/default-avatar.png') {
+    if ($user['profile_picture'] && $user['profile_picture'] !== 'images/yas_logo.png') {
         $filePath = __DIR__ . '/../' . $user['profile_picture'];
         if (file_exists($filePath)) {
             unlink($filePath);
@@ -33,7 +33,7 @@ try {
     }
 
     // Reset to default
-    $stmt = $pdo->prepare("UPDATE users SET profile_picture = 'images/default-avatar.png' WHERE user_id = :user_id");
+    $stmt = $pdo->prepare("UPDATE users SET profile_picture = 'images/yas_logo.png' WHERE user_id = :user_id");
     $stmt->execute(['user_id' => $user_id]);
 
     echo json_encode([
