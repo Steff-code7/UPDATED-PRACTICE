@@ -453,6 +453,56 @@
                 const qty = Math.max(1, Number(item.qty || 1));
                 const itemTotal = (basePrice + addonsTotal) * qty;
                 subtotal += itemTotal;
+                const category = String(item.category || '').trim().toLowerCase();
+                const itemFlavor = item.flavor || 'N/A';
+                const itemPieces = item.piecesPerBox || 'N/A';
+                const itemServing = item.serving || 'N/A';
+                const itemSize = item.size || 'N/A';
+                const itemLocation = item.location || 'N/A';
+                const itemSugar = item.sugarLevel || 'N/A';
+                const itemAddons = item.addons || 'None';
+
+                let detailLines = [];
+                if (category === 'takoyaki') {
+                    detailLines = [
+                        `Flavor: ${itemFlavor}`,
+                        `Pieces Per Box: ${itemPieces}`,
+                        `Location: ${itemLocation}`,
+                        `Add-ons: ${itemAddons}`
+                    ];
+                } else if (category === 'shawarma') {
+                    detailLines = [
+                        `Flavor: ${itemFlavor}`,
+                        `Location: ${itemLocation}`,
+                        `Add-ons: ${itemAddons}`
+                    ];
+                } else if (category === 'chicken wings + fries') {
+                    detailLines = [
+                        `Serving: ${itemServing}`,
+                        `Location: ${itemLocation}`,
+                        `Add-ons: ${itemAddons}`
+                    ];
+                } else if (category === 'burger') {
+                    detailLines = [
+                        `Burger: ${item.name || 'N/A'}`,
+                        `Location: ${itemLocation}`,
+                        `Add-ons: ${itemAddons}`
+                    ];
+                } else if (category === 'fries') {
+                    detailLines = [
+                        `Size: ${itemSize}`,
+                        `Location: ${itemLocation}`,
+                        `Add-ons: ${itemAddons}`
+                    ];
+                } else {
+                    // Drinks
+                    detailLines = [
+                        `Size: ${itemSize}`,
+                        `Location: ${itemLocation}`,
+                        `Sugar Level: ${itemSugar}`,
+                        `Add-ons: ${itemAddons}`
+                    ];
+                }
                 
                 // Add delivery fee if this item has one
                 if (item.deliveryFee) {
@@ -468,13 +518,7 @@
                         <div class="cart-item-name">${item.name}</div>
                         <div class="cart-item-category">${item.category || ''}</div>
                         <div class="cart-item-sub">
-                            ${item.size ? 'Size: ' + item.size : ''}
-                            ${item.size && item.location ? '<br>' : ''}
-                            ${item.location ? 'Location: ' + item.location : ''}
-                            ${(item.size || item.location) && item.sugarLevel ? '<br>' : ''}
-                            ${item.sugarLevel ? 'Sugar Level: ' + item.sugarLevel : ''}
-                            ${((item.size || item.location || item.sugarLevel) && item.addons) ? '<br>' : ''}
-                            ${item.addons ? 'Add-ons: ' + item.addons : ''}
+                            ${detailLines.join('<br>')}
                         </div>
                     </td>
                     <td class="col-price">&#8369;${basePrice}</td>

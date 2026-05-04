@@ -186,10 +186,25 @@ document.addEventListener("click", (event) => {
 // ===================== ADMIN DASHBOARD STATS ======================
   (function initAdminDashboardStats() {
     const customerCount = qs("#admin-dashboard-customer-count");
+    const orderCount = qs("#admin-dashboard-order-count");
+    const productCount = qs("#admin-dashboard-product-count");
+    const recentOrdersBody = qs("#admin-dashboard-recent-orders-body");
 
 
-    if (!customerCount) return;
+    if (!customerCount && !orderCount && !productCount && !recentOrdersBody) return;
 
+    const toPeso = (amount) => `₱${Number(amount || 0)}`;
+    const formatOrderId = (orderId) => `#ORD-${String(Number(orderId || 0)).padStart(4, "0")}`;
+    const normalizeStatusClass = (statusValue) => {
+      const status = String(statusValue || "pending").toLowerCase().trim();
+      if (status === "cancelled" || status === "canceled") return "canceled";
+      return status;
+    };
+    const toTitleStatus = (statusValue) => {
+      const status = String(statusValue || "pending").toLowerCase().trim();
+      if (status === "cancelled") return "Canceled";
+      return status.charAt(0).toUpperCase() + status.slice(1);
+    };
 
     fetch("api/get_dashboard_stats.php")
       .then((response) => {
@@ -204,10 +219,50 @@ document.addEventListener("click", (event) => {
           throw new Error(result.message || "Dashboard stats unavailable.");
         }
 
-        customerCount.textContent = result.customer_count;
+        if (customerCount) customerCount.textContent = result.customer_count ?? 0;
+        if (orderCount) orderCount.textContent = result.total_orders ?? 0;
+        if (productCount) productCount.textContent = result.product_count ?? 0;
+
+        if (recentOrdersBody) {
+          const recentOrders = Array.isArray(result.recent_orders) ? result.recent_orders : [];
+
+          if (!recentOrders.length) {
+            recentOrdersBody.innerHTML = `
+              <tr>
+                <td colspan="5">No recent orders yet.</td>
+              </tr>
+            `;
+            return;
+          }
+
+          recentOrdersBody.innerHTML = recentOrders
+            .map((order) => {
+              const statusClass = normalizeStatusClass(order.status);
+              const statusLabel = toTitleStatus(order.status);
+              return `
+                <tr>
+                  <td>${formatOrderId(order.order_id)}</td>
+                  <td>${order.username || "Guest"}</td>
+                  <td>${order.items || "No items"}</td>
+                  <td>${toPeso(order.total_amount)}</td>
+                  <td><span class="ADMIN-STATUS ${statusClass}">${statusLabel}</span></td>
+                </tr>
+              `;
+            })
+            .join("");
+        }
       })
       .catch(() => {
-        customerCount.textContent = "--";
+        if (customerCount) customerCount.textContent = "--";
+        if (orderCount) orderCount.textContent = "--";
+        if (productCount) productCount.textContent = "--";
+        if (recentOrdersBody) {
+          recentOrdersBody.innerHTML = `
+            <tr>
+              <td colspan="5">Unable to load recent orders.</td>
+            </tr>
+          `;
+        }
       });
   })();
 
@@ -1486,30 +1541,51 @@ if (matchingOption) {
 
     const ORDERS_PER_PAGE = 8;
     let currentPage = 1;
+    let orders = [];
 
+    const formatOrderId = (id) => `#ORD-${String(Number(id || 0)).padStart(4, "0")}`;
+    const toPeso = (amount) => `₱${Number(amount || 0).toLocaleString("en-PH", { minimumFractionDigits: 2 })}`;
+    const normalizeStatusClass = (statusValue) => {
+      const s = String(statusValue || "pending").toLowerCase().trim();
+      if (s === "cancelled" || s === "canceled") return "canceled";
+      return s;
+    };
+    const toTitleStatus = (statusValue) => {
+      const s = String(statusValue || "pending").toLowerCase().trim();
+      if (s === "cancelled") return "Canceled";
+      return s.charAt(0).toUpperCase() + s.slice(1);
+    };
 
+    const populateStatusFilter = () => {
+      const unique = ["All Status", ...new Set(orders.map((o) => toTitleStatus(o.status)))];
+      statusSelect.innerHTML = unique
+        .map((s) => `<option value="${s}">${s}</option>`)
+        .join("");
+    };
 
+    tableBody.innerHTML = `<tr><td colspan="6">Loading orders...</td></tr>`;
 
-    const orders = [
-      { id: "#ORD-1001", customer: "Juan Dela Cruz", items: "Matcha, Taro", total: 180, status: "Pending" },
-      { id: "#ORD-1002", customer: "Maria Santos", items: "Brown Sugar, Fries", total: 250, status: "Preparing" },
-      { id: "#ORD-1003", customer: "Kevin Reyes", items: "Mango Tea", total: 110, status: "Completed" },
-      { id: "#ORD-1004", customer: "Angelica Lee", items: "Burger, Wings", total: 300, status: "Canceled" },
-      { id: "#ORD-1005", customer: "John Paul", items: "Taro, Takoyaki", total: 190, status: "Pending" },
-      { id: "#ORD-1006", customer: "Alyssa Cruz", items: "Blue Lemonade, Fries", total: 155, status: "Preparing" },
-      { id: "#ORD-1007", customer: "Kris Aquino", items: "Nutella, Shawarma", total: 185, status: "Completed" },
-      { id: "#ORD-1008", customer: "Mark Reyes", items: "Matcha Oreo, Burger", total: 195, status: "Pending" },
-      { id: "#ORD-1009", customer: "Diana Lopez", items: "Hickory Barbecue, Fries", total: 210, status: "Completed" },
-      { id: "#ORD-1010", customer: "Paolo Santos", items: "Strawberry, Takoyaki", total: 170, status: "Canceled" },
-    ];
-
-
-
-
-    const statuses = ["All Status", ...new Set(orders.map((order) => order.status))];
-    statusSelect.innerHTML = statuses
-      .map((status) => `<option value="${status}">${status}</option>`)
-      .join("");
+    fetch("api/get_orders.php")
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load orders.");
+        return res.json();
+      })
+      .then((result) => {
+        if (!result.success) throw new Error(result.message || "Could not fetch orders.");
+        orders = (result.data || []).map((o) => ({
+          id: formatOrderId(o.order_id),
+          customer: o.username || "Guest",
+          items: o.items || "No items",
+          total: toPeso(o.total_amount),
+          status: toTitleStatus(o.status),
+          statusClass: normalizeStatusClass(o.status),
+        }));
+        populateStatusFilter();
+        renderTable();
+      })
+      .catch(() => {
+        tableBody.innerHTML = `<tr><td colspan="6">Unable to load orders.</td></tr>`;
+      });
 
 
 
@@ -1656,8 +1732,8 @@ if (matchingOption) {
                   <td>${order.id}</td>
                   <td>${order.customer}</td>
                   <td>${order.items}</td>
-                  <td>PHP ${order.total}</td>
-                  <td><span class="ADMIN-STATUS ${order.status.toLowerCase()}">${order.status}</span></td>
+                  <td>${order.total}</td>
+                  <td><span class="ADMIN-STATUS ${order.statusClass}">${order.status}</span></td>
                   <td>
                     <div class="ADMIN-TABLE-ACTIONS">
                       <button type="button" aria-label="View ${order.id}">
@@ -1696,11 +1772,6 @@ if (matchingOption) {
       currentPage = 1;
       renderTable();
     });
-
-
-
-
-    renderTable();
   })();
 
 
@@ -2955,16 +3026,16 @@ const shawarmaConfig = {
           wrap: true,
           options: [
             { value: "original", label: "Original", price: 70 },
-            { value: "all-meat", label: "All Meat", price: 90 },
-            { value: "cheesy-wrap", label: "Cheesy Wrap", price: 60 },
+            { value: "all-meat", label: "All Meat", price: 80 },
+            { value: "cheesy-wrap", label: "Cheesy Wrap", price: 80 },
           ],
         }),
       getBasePrice: () => {
         const flavor = getSelectedValue("shawarma-flavor") || "original";
         const prices = {
           original: 70,
-          "all-meat": 90,
-          "cheesy-wrap": 60,
+          "all-meat": 80,
+          "cheesy-wrap": 80,
         };
 
 
@@ -3533,17 +3604,21 @@ updateTotal();
         });
     };
 
-
-    // Calculate totals
-    let subtotal = 0;
-    cart.forEach(item => {
-      const qty = Math.max(1, Number(item.qty || 1));
+    const getItemQty = (item) => Math.max(1, Number(item.qty || item.quantity || 1));
+    const getItemUnitTotal = (item) => {
       const basePrice = Number(item.price || 0);
       const addonsTotal = parseAddonEntries(item.addons).reduce(
         (sum, addon) => sum + Number(addon.price || 0),
         0
       );
-      subtotal += (basePrice + addonsTotal) * qty;
+      return basePrice + addonsTotal;
+    };
+
+
+    // Calculate totals
+    let subtotal = 0;
+    cart.forEach(item => {
+      subtotal += getItemUnitTotal(item) * getItemQty(item);
     });
     const total = subtotal + deliveryFee;
 
@@ -3562,13 +3637,18 @@ updateTotal();
         const orderItemDiv = document.createElement('div');
         orderItemDiv.className = 'ORDER-ITEM';
         const itemSizePrice = Number(item.price || 0);
+        const itemCategory = String(item.category || "").trim();
         const itemSize = item.size || "N/A";
         const itemLocation = item.location || "N/A";
         const itemSugarLevel = item.sugarLevel || "N/A";
         const sugarFee = "";
+        const itemFlavor = item.flavor || "N/A";
+        const itemPieces = item.piecesPerBox || "N/A";
+        const itemServing = item.serving || "N/A";
         const addonEntries = parseAddonEntries(item.addons);
         const addonsTotal = addonEntries.reduce((sum, addon) => sum + Number(addon.price || 0), 0);
-        const itemTotal = (itemSizePrice + addonsTotal) * Number(item.qty || 1);
+        const itemQty = getItemQty(item);
+        const itemTotal = getItemUnitTotal(item) * itemQty;
         const addonRows = addonEntries.length
           ? addonEntries
               .map(
@@ -3586,18 +3666,71 @@ updateTotal();
                 <span>${toPeso(0)}</span>
               </div>
             `;
+        let optionRowsHTML = "";
+        const normalizedCategory = itemCategory.toLowerCase();
 
-
-        orderItemDiv.innerHTML = `
-          <div class="ORDER-ITEM-IMAGE">
-            <img src="${item.image || 'images/yas_logo.png'}" alt="${item.name}">
-          </div>
-          <div class="ORDER-ITEM-DETAILS">
-            <div class="ORDER-ITEM-HEADING">
-              <h3>${item.name}</h3>
-              <span class="ORDER-ITEM-CATEGORY">${item.category || ''}</span>
-            </div>
-            <div class="ORDER-ITEM-META">
+        if (normalizedCategory === "takoyaki") {
+          optionRowsHTML = `
+              <div class="ORDER-ITEM-BREAKDOWN-ROW">
+                <span>Flavor: ${itemFlavor}</span>
+                <span></span>
+              </div>
+              <div class="ORDER-ITEM-BREAKDOWN-ROW">
+                <span>Pieces Per Box: ${itemPieces}</span>
+                <span>${toPeso(itemSizePrice)}</span>
+              </div>
+              <div class="ORDER-ITEM-BREAKDOWN-ROW">
+                <span>Location: ${itemLocation}</span>
+                <span></span>
+              </div>
+          `;
+        } else if (normalizedCategory === "shawarma") {
+          optionRowsHTML = `
+              <div class="ORDER-ITEM-BREAKDOWN-ROW">
+                <span>Flavor: ${itemFlavor}</span>
+                <span>${toPeso(itemSizePrice)}</span>
+              </div>
+              <div class="ORDER-ITEM-BREAKDOWN-ROW">
+                <span>Location: ${itemLocation}</span>
+                <span></span>
+              </div>
+          `;
+        } else if (normalizedCategory === "chicken wings + fries") {
+          optionRowsHTML = `
+              <div class="ORDER-ITEM-BREAKDOWN-ROW">
+                <span>Serving: ${itemServing}</span>
+                <span>${toPeso(itemSizePrice)}</span>
+              </div>
+              <div class="ORDER-ITEM-BREAKDOWN-ROW">
+                <span>Location: ${itemLocation}</span>
+                <span></span>
+              </div>
+          `;
+        } else if (normalizedCategory === "burger") {
+          optionRowsHTML = `
+              <div class="ORDER-ITEM-BREAKDOWN-ROW">
+                <span>Burger: ${item.name || "N/A"}</span>
+                <span>${toPeso(itemSizePrice)}</span>
+              </div>
+              <div class="ORDER-ITEM-BREAKDOWN-ROW">
+                <span>Location: ${itemLocation}</span>
+                <span></span>
+              </div>
+          `;
+        } else if (normalizedCategory === "fries") {
+          optionRowsHTML = `
+              <div class="ORDER-ITEM-BREAKDOWN-ROW">
+                <span>Size: ${itemSize}</span>
+                <span>${toPeso(itemSizePrice)}</span>
+              </div>
+              <div class="ORDER-ITEM-BREAKDOWN-ROW">
+                <span>Location: ${itemLocation}</span>
+                <span></span>
+              </div>
+          `;
+        } else {
+          // Drinks
+          optionRowsHTML = `
               <div class="ORDER-ITEM-BREAKDOWN-ROW">
                 <span>Size: ${itemSize}</span>
                 <span>${toPeso(itemSizePrice)}</span>
@@ -3610,15 +3743,29 @@ updateTotal();
                 <span>Sugar Level: ${itemSugarLevel}</span>
                 <span>${sugarFee}</span>
               </div>
-              <div class="ORDER-ITEM-BREAKDOWN-LABEL">Add-on:</div>
-              ${addonRows}
+          `;
+        }
+
+
+        orderItemDiv.innerHTML = `
+          <div class="ORDER-ITEM-IMAGE">
+            <img src="${item.image || 'images/yas_logo.png'}" alt="${item.name}">
+          </div>
+          <div class="ORDER-ITEM-DETAILS">
+            <div class="ORDER-ITEM-HEADING">
+              <h3>${item.name}</h3>
+              <span class="ORDER-ITEM-CATEGORY">${item.category || ''}</span>
+            </div>
+            <div class="ORDER-ITEM-META">
+              ${optionRowsHTML}
               <div class="ORDER-ITEM-BREAKDOWN-ROW">
-                <span>Total:</span>
+                <span>Add-on:</span>
                 <span>${toPeso(addonsTotal)}</span>
               </div>
+              ${addonRows}
               <div class="ORDER-ITEM-BREAKDOWN-ROW">
                 <span>Quantity:</span>
-                <span>${item.qty}x</span>
+                <span>${itemQty}x</span>
               </div>
               <div class="ORDER-ITEM-BREAKDOWN-ROW ORDER-ITEM-BREAKDOWN-TOTAL">
                 <span>Total</span>
@@ -3638,6 +3785,78 @@ updateTotal();
     if (subtotalEl) subtotalEl.textContent = toPeso(subtotal);
     if (deliveryFeeEl) deliveryFeeEl.textContent = toPeso(deliveryFee);
     if (totalEl) totalEl.textContent = toPeso(total);
+
+    const placeOrderBtn = qs(".PLACE-ORDER-BUTTON");
+    if (placeOrderBtn) {
+      placeOrderBtn.addEventListener("click", async (event) => {
+        event.preventDefault();
+
+        if (!cart.length) {
+          alert("Your order is empty.");
+          return;
+        }
+
+        const selectedPaymentInput = document.querySelector("input[name='payment_method']:checked");
+        const paymentMethod = selectedPaymentInput?.value || "cash_on_delivery";
+        const hasDelivery = cart.some((item) => /delivery/i.test(String(item.location || "")));
+        const hasToGo = cart.some((item) => /(to\s*go|takeout)/i.test(String(item.location || "")));
+        const orderType = hasDelivery ? "delivery" : (hasToGo ? "to-go" : "dine-in");
+
+        const payloadItems = cart.map((item) => ({
+          product_id: item.product_id || item.productId || null,
+          product_name: item.name || "",
+          category: item.category || "",
+          location: item.location || "Dine In",
+          size: item.size || null,
+          sugar_level: item.sugarLevel || null,
+          addons: item.addons || "None",
+          flavor: item.flavor || null,
+          pieces_per_box: item.piecesPerBox || null,
+          serving: item.serving || null,
+          quantity: getItemQty(item),
+          price: getItemUnitTotal(item),
+        }));
+
+        try {
+          placeOrderBtn.classList.add("is-loading");
+          placeOrderBtn.style.pointerEvents = "none";
+
+          const response = await fetch("api/place_order.php", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              order_type: orderType,
+              payment_method: paymentMethod,
+              delivery_fee: deliveryFee,
+              items: payloadItems,
+            }),
+          });
+
+          const result = await response.json();
+          if (!response.ok || !result.success) {
+            throw new Error(result.message || "Failed to place order.");
+          }
+
+          const orderId = Number(result.order_id || 0);
+          if (!orderId) {
+            throw new Error("Order created but no order ID was returned.");
+          }
+
+          if (!hasUrlParams) {
+            localStorage.removeItem("yasCart");
+          }
+          localStorage.setItem("yasLastOrderId", String(orderId));
+          window.location.href = `OrderSuccessful.html?orderId=${encodeURIComponent(orderId)}`;
+        } catch (error) {
+          alert(error.message || "Failed to place order. Please try again.");
+        } finally {
+          placeOrderBtn.classList.remove("is-loading");
+          placeOrderBtn.style.pointerEvents = "";
+        }
+      });
+    }
   })();
 
 

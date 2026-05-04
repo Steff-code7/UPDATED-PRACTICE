@@ -4459,6 +4459,10 @@ footer {
     padding-left: 28px;
 }
 
+.ORDER-ITEM-BREAKDOWN-ADDON span:last-child {
+    color: #999;
+}
+
 .ORDER-ITEM-BREAKDOWN-TOTAL {
     margin-top: 10px;
     padding-top: 10px;
@@ -4467,7 +4471,7 @@ footer {
 }
 
 .ORDER-ITEM-DETAILS p {
-    color: #444;
+    color: #ffffff;
     font-family: "Nunito", sans-serif;
     font-size: 1.08rem;
 }

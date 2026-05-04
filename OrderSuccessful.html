@@ -50,5 +50,22 @@
             </section>
         </section>
     </main>
+    <script>
+      (function initOrderSuccessPage() {
+        const orderIdEl = document.getElementById('order-id-display');
+        if (!orderIdEl) return;
+
+        const params   = new URLSearchParams(window.location.search);
+        const rawId    = parseInt(params.get('order_id') || params.get('orderId') || 0, 10);
+
+        if (rawId > 0) {
+            // Pad to minimum 3 digits: #ORD-001, #ORD-012, #ORD-123, #ORD-1234
+            const padded = String(rawId).padStart(4, '0');
+            orderIdEl.textContent = '#ORD-' + padded;
+        } else {
+            orderIdEl.textContent = '#ORD-000';
+        }
+      })();
+    </script>
 </body>
 </html>

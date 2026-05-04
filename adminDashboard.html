@@ -116,7 +116,7 @@
             <article class="ADMIN-STAT-CARD">
               <i class="fa-solid fa-mug-hot ADMIN-STAT-ICON"></i>
               <h3>Products</h3>
-              <strong>25</strong>
+              <strong id="admin-dashboard-product-count">...</strong>
               <p>Total Products</p>
             </article>
 
@@ -124,7 +124,7 @@
             <article class="ADMIN-STAT-CARD">
               <i class="fa-solid fa-cart-shopping ADMIN-STAT-ICON"></i>
               <h3>Orders</h3>
-              <strong>120</strong>
+              <strong id="admin-dashboard-order-count">...</strong>
               <p>Total Orders</p>
             </article>
 
@@ -150,7 +150,7 @@
           <section class="ADMIN-TABLE-CARD">
             <div class="ADMIN-TABLE-HEADER">
               <h3>Recent Orders</h3>
-              <a href="#" class="ADMIN-VIEW-ALL">View All</a>
+              <a href="adminOrders.html" class="ADMIN-VIEW-ALL">View All</a>
             </div>
 
 
@@ -165,36 +165,7 @@
                     <th>Status</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>#ORD-1001</td>
-                    <td>Juan Dela Cruz</td>
-                    <td>Matcha, Taro</td>
-                    <td>&#8369;180</td>
-                    <td><span class="ADMIN-STATUS pending">Pending</span></td>
-                  </tr>
-                  <tr>
-                    <td>#ORD-1002</td>
-                    <td>Maria Santos</td>
-                    <td>Brown Sugar, Fries</td>
-                    <td>&#8369;250</td>
-                    <td><span class="ADMIN-STATUS preparing">Preparing</span></td>
-                  </tr>
-                  <tr>
-                    <td>#ORD-1003</td>
-                    <td>Kevin Reyes</td>
-                    <td>Mango Tea</td>
-                    <td>&#8369;110</td>
-                    <td><span class="ADMIN-STATUS completed">Completed</span></td>
-                  </tr>
-                  <tr>
-                    <td>#ORD-1004</td>
-                    <td>Angelica Lee</td>
-                    <td>Burger, Wings</td>
-                    <td>&#8369;300</td>
-                    <td><span class="ADMIN-STATUS canceled">Canceled</span></td>
-                  </tr>
-                </tbody>
+                <tbody id="admin-dashboard-recent-orders-body"></tbody>
               </table>
             </div>
           </section>

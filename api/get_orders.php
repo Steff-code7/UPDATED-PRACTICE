@@ -9,11 +9,21 @@ try {
     $user_id = isset($_GET['user_id']) ? intval($_GET['user_id']) : null;
 
     $sql = "
-        SELECT o.*, u.username, u.email,
-               COUNT(oi.order_item_id) as item_count
-        FROM Orders o
-        LEFT JOIN Users u  ON o.user_id  = u.user_id
-        LEFT JOIN Order_Items oi ON o.order_id = oi.order_id
+        SELECT o.order_id, o.total_amount, o.status, o.order_date,
+               COALESCE(u.username, 'Guest') AS username,
+               COALESCE(
+                   GROUP_CONCAT(
+                       DISTINCT p.product_name
+                       ORDER BY p.product_name ASC
+                       SEPARATOR ', '
+                   ),
+                   'No items'
+               ) AS items,
+               COUNT(DISTINCT oi.order_item_id) AS item_count
+        FROM orders o
+        LEFT JOIN users u  ON o.user_id  = u.user_id
+        LEFT JOIN order_items oi ON o.order_id = oi.order_id
+        LEFT JOIN products p ON oi.product_id = p.product_id
     ";
 
     $conditions = [];
@@ -33,7 +43,7 @@ try {
         $sql .= " WHERE " . implode(" AND ", $conditions);
     }
 
-    $sql .= " GROUP BY o.order_id ORDER BY o.order_date DESC";
+    $sql .= " GROUP BY o.order_id, o.total_amount, o.status, o.order_date, u.username ORDER BY o.order_date DESC, o.order_id DESC";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
