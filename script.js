@@ -1884,30 +1884,50 @@ if (matchingOption) {
 
     const CUSTOMERS_PER_PAGE = 8;
     let currentPage = 1;
+    let customers = [];
 
 
 
 
-    const customers = [
-      { name: "Juan Dela Cruz", email: "juan@email.com", totalOrders: 12, status: "Active" },
-      { name: "Maria Santos", email: "maria@email.com", totalOrders: 8, status: "Active" },
-      { name: "Kevin Reyes", email: "kevin@email.com", totalOrders: 15, status: "Active" },
-      { name: "Angelica Lee", email: "angel@email.com", totalOrders: 5, status: "Inactive" },
-      { name: "John Paul", email: "john@email.com", totalOrders: 9, status: "Active" },
-      { name: "Diana Lopez", email: "diana@email.com", totalOrders: 7, status: "Active" },
-      { name: "Paolo Santos", email: "paolo@email.com", totalOrders: 11, status: "Inactive" },
-      { name: "Alyssa Cruz", email: "alyssa@email.com", totalOrders: 14, status: "Active" },
-      { name: "Mark Reyes", email: "mark@email.com", totalOrders: 6, status: "Active" },
-      { name: "Sofia Lim", email: "sofia@email.com", totalOrders: 10, status: "Inactive" },
-    ];
+    // Fetch customers from the database
+    const fetchCustomers = async () => {
+      try {
+        const response = await fetch("api/get_customers.php");
+        if (!response.ok) throw new Error("Failed to fetch customers");
+        
+        const data = await response.json();
+        if (data.success && Array.isArray(data.customers)) {
+          // Map database fields to expected properties
+          customers = data.customers.map((customer) => ({
+            name: customer.full_name || "N/A",
+            email: customer.email,
+            totalOrders: parseInt(customer.total_orders) || 0,
+            status: customer.status.charAt(0).toUpperCase() + customer.status.slice(1),
+          }));
+          
+          // Update status select options
+          const statuses = ["All Status", ...new Set(customers.map((customer) => customer.status))];
+          statusSelect.innerHTML = statuses
+            .map((status) => `<option value="${status}">${status}</option>`)
+            .join("");
+          
+          renderTable();
+        }
+      } catch (error) {
+        console.error("Error fetching customers:", error);
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="5" class="ADMIN-NO-DATA">Error loading customers. Please try again.</td>
+          </tr>
+        `;
+      }
+    };
 
 
 
 
-    const statuses = ["All Status", ...new Set(customers.map((customer) => customer.status))];
-    statusSelect.innerHTML = statuses
-      .map((status) => `<option value="${status}">${status}</option>`)
-      .join("");
+    // Initial fetch
+    fetchCustomers();
 
 
 
