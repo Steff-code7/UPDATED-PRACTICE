@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 04, 2026 at 09:03 AM
+-- Generation Time: May 05, 2026 at 06:25 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -20,6 +20,24 @@ SET time_zone = "+00:00";
 --
 -- Database: `yas_milktea_house`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `addresses`
+--
+
+CREATE TABLE `addresses` (
+  `address_id` int(10) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `address_type` enum('home','office','other') DEFAULT 'home',
+  `address_line` varchar(255) NOT NULL,
+  `landmark` varchar(255) DEFAULT NULL,
+  `delivery_instructions` text DEFAULT NULL,
+  `is_primary` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -64,6 +82,13 @@ CREATE TABLE `orders` (
   `status` enum('pending','preparing','completed','cancelled') NOT NULL DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `order_type`, `total_amount`, `status`) VALUES
+(13, 29, '2026-05-05 12:22:50', 'delivery', 690.00, 'pending');
+
 -- --------------------------------------------------------
 
 --
@@ -85,6 +110,16 @@ CREATE TABLE `order_items` (
   `price` decimal(10,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `location`, `size`, `sugar_level`, `addons`, `flavor`, `pieces_per_box`, `serving`, `quantity`, `price`) VALUES
+(6, 13, 42, 'To Go', 'N/A', NULL, 'None', NULL, NULL, NULL, 1, 45.00),
+(7, 13, 33, 'Delivery', 'All Meat', NULL, 'None', 'All Meat', NULL, NULL, 1, 80.00),
+(8, 13, 10, 'Dine In', '16oz', '75%', 'Whip (₱25)', NULL, NULL, NULL, 3, 120.00),
+(9, 13, 1, 'Delivery', '22oz', '100%', 'Whip (₱25), White Pearl (₱20)', NULL, NULL, NULL, 1, 155.00);
+
 -- --------------------------------------------------------
 
 --
@@ -99,6 +134,13 @@ CREATE TABLE `payments` (
   `status` enum('paid','refunded','pending') NOT NULL DEFAULT 'pending',
   `payment_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `payments`
+--
+
+INSERT INTO `payments` (`payment_id`, `order_id`, `amount`, `method`, `status`, `payment_date`) VALUES
+(6, 13, 690.00, 'cash_on_delivery', 'pending', '2026-05-05 04:22:50');
 
 -- --------------------------------------------------------
 
@@ -194,21 +236,34 @@ CREATE TABLE `users` (
   `password_hash` varchar(255) NOT NULL,
   `role` enum('admin','customer') NOT NULL,
   `status` enum('active','inactive') NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `full_name` varchar(150) DEFAULT NULL,
+  `contact_number` varchar(20) DEFAULT NULL,
+  `date_of_birth` date DEFAULT NULL,
+  `profile_picture` varchar(255) DEFAULT 'images/yas_logo.png',
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `username`, `email`, `password_hash`, `role`, `status`, `created_at`) VALUES
-(21, 'Stef', 'marekeyks101@gmail.com', '$2y$10$46yj/F93p7Gf3eJ0gEtOG.bYAkSg62LkejbqvkwW.4/4BpSXeLA6O', 'admin', 'active', '2026-05-01 19:36:27'),
-(22, 'StefAhkjsa', 'sidney.baltazarduh@gmail.com', '$2y$10$yO06lnn3lI8yM.lt6fGsXuj6mXvk.JWj3hxgGjwrzkWyDaniNMrSO', 'customer', 'active', '2026-05-02 04:26:40'),
-(26, 'someone', 'Kirigato.07@gmail.com', '$2y$10$ECOsuBdi4QUeb2WvZ94R/.3v3Lx/nGQijc32apxwgxofgqotMQkhG', 'customer', 'active', '2026-05-04 06:55:01');
+INSERT INTO `users` (`user_id`, `username`, `email`, `password_hash`, `role`, `status`, `created_at`, `full_name`, `contact_number`, `date_of_birth`, `profile_picture`, `updated_at`) VALUES
+(21, 'Stef', 'marekeyks101@gmail.com', '$2y$10$46yj/F93p7Gf3eJ0gEtOG.bYAkSg62LkejbqvkwW.4/4BpSXeLA6O', 'admin', 'active', '2026-05-01 19:36:27', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-04 16:16:21'),
+(27, 'testuser456', 'testuser456@example.com', '$2y$10$94OqRBmJyUjqWW5I69r.leBf7jwvCRpIxzS7Z.TnVtav/LbMewEe6', 'customer', 'active', '2026-05-04 16:03:10', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-04 16:16:21'),
+(28, 'krisha_customer', 'narcisokrishaaudrey@gmail.com', '$2y$10$awo1Y7BwclbQEA0vQnJB3.ispUVF1lSKSZO1o9gkvZQWlrK8iXyNW', 'customer', 'active', '2026-05-04 16:11:03', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-04 16:16:21'),
+(29, 'Stephanie', 'Kirigato.07@gmail.com', '$2y$10$GbGHscfNMwNfvG8uVCa/xeayz4j6Txq9Ox/AR96DHed0Q4MSp7AjC', 'customer', 'active', '2026-05-04 16:43:23', NULL, NULL, NULL, 'images/profile_29_1777913079.jpg', '2026-05-04 16:44:39');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `addresses`
+--
+ALTER TABLE `addresses`
+  ADD PRIMARY KEY (`address_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `categories`
@@ -262,6 +317,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `addresses`
+--
+ALTER TABLE `addresses`
+  MODIFY `address_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
@@ -271,19 +332,19 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `order_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `order_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `payment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -301,11 +362,17 @@ ALTER TABLE `rewards`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `addresses`
+--
+ALTER TABLE `addresses`
+  ADD CONSTRAINT `addresses_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `orders`
