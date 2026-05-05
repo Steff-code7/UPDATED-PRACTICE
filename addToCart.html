@@ -374,16 +374,20 @@
             <!-- Order Summary -->
             <div class="order-summary">
                 <div class="summary-row">
-                    <span>Subtotal</span>
-                    <span id="subtotalVal">&#8369;0</span>
+                    <span>Reward Points:</span>
+                    <span id="rewardPointsVal"><em>Under Maintenance</em></span>
                 </div>
                 <div class="summary-row">
-                    <span>Delivery Fee</span>
-                    <span id="deliveryVal">&#8369;0</span>
+                    <span>Promo Voucher:</span>
+                    <span id="promoVoucherVal"><em>Under Maintenance</em></span>
+                </div>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="subtotalVal">₱0</span>
                 </div>
                 <div class="summary-row total-row">
                     <span>Total</span>
-                    <span id="totalVal">&#8369;0</span>
+                    <span id="totalVal">₱0</span>
                 </div>
                 <button class="checkout-btn" onclick="proceedToCheckout()">PROCEED TO CHECKOUT</button>
             </div>
@@ -442,7 +446,6 @@
             cartBottom.style.display = 'flex';
 
             let subtotal = 0;
-            let totalDeliveryFee = 0;
 
             cart.forEach((item, index) => {
                 const addonsTotal = parseAddonEntries(item.addons).reduce(
@@ -467,46 +470,35 @@
                     detailLines = [
                         `Flavor: ${itemFlavor}`,
                         `Pieces Per Box: ${itemPieces}`,
-                        `Location: ${itemLocation}`,
                         `Add-ons: ${itemAddons}`
                     ];
                 } else if (category === 'shawarma') {
                     detailLines = [
                         `Flavor: ${itemFlavor}`,
-                        `Location: ${itemLocation}`,
                         `Add-ons: ${itemAddons}`
                     ];
                 } else if (category === 'chicken wings + fries') {
                     detailLines = [
                         `Serving: ${itemServing}`,
-                        `Location: ${itemLocation}`,
                         `Add-ons: ${itemAddons}`
                     ];
                 } else if (category === 'burger') {
                     detailLines = [
                         `Burger: ${item.name || 'N/A'}`,
-                        `Location: ${itemLocation}`,
                         `Add-ons: ${itemAddons}`
                     ];
                 } else if (category === 'fries') {
                     detailLines = [
                         `Size: ${itemSize}`,
-                        `Location: ${itemLocation}`,
                         `Add-ons: ${itemAddons}`
                     ];
                 } else {
                     // Drinks
                     detailLines = [
                         `Size: ${itemSize}`,
-                        `Location: ${itemLocation}`,
                         `Sugar Level: ${itemSugar}`,
                         `Add-ons: ${itemAddons}`
                     ];
-                }
-                
-                // Add delivery fee if this item has one
-                if (item.deliveryFee) {
-                    totalDeliveryFee += item.deliveryFee;
                 }
 
                 const tr = document.createElement('tr');
@@ -539,10 +531,9 @@
                 tbody.appendChild(tr);
             });
 
-            const grandTotal = subtotal + totalDeliveryFee;
+            const grandTotal = subtotal;
 
             document.getElementById('subtotalVal').textContent = '₱' + subtotal;
-            document.getElementById('deliveryVal').textContent = '₱' + totalDeliveryFee;
             document.getElementById('totalVal').textContent = '₱' + grandTotal;
         }
 

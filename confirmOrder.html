@@ -65,7 +65,7 @@
                             <span>Subtotal</span>
                             <strong id="confirm-item-subtotal">₱0</strong>
                         </div>
-                        <div class="ORDER-TOTAL-ROW">
+                        <div class="ORDER-TOTAL-ROW" id="delivery-fee-row">
                             <span>Delivery Fee</span>
                             <strong id="confirm-item-delivery-fee">₱0</strong>
                         </div>
@@ -77,13 +77,32 @@
                 </div>
 
                 <div class="PAYMENT-METHODS">
+                    <h2>LOCATION</h2>
+                    <div class="PAYMENT-FORM">
+                        <label class="PAYMENT-OPTION">
+                            <input type="radio" name="order_location" value="dine_in" checked>
+                            <span class="PAYMENT-OPTION-CIRCLE"></span>
+                            <span class="PAYMENT-OPTION-LABEL">Dine In</span>
+                        </label>
+                        <label class="PAYMENT-OPTION">
+                            <input type="radio" name="order_location" value="to_go">
+                            <span class="PAYMENT-OPTION-CIRCLE"></span>
+                            <span class="PAYMENT-OPTION-LABEL">To Go</span>
+                        </label>
+                        <label class="PAYMENT-OPTION">
+                            <input type="radio" name="order_location" value="delivery">
+                            <span class="PAYMENT-OPTION-CIRCLE"></span>
+                            <span class="PAYMENT-OPTION-LABEL">Delivery</span>
+                        </label>
+                    </div>
+
                     <h2>PAYMENT METHOD</h2>
 
                     <form class="PAYMENT-FORM">
                         <label class="PAYMENT-OPTION">
                             <input type="radio" name="payment_method" value="cash_on_delivery" checked>
                             <span class="PAYMENT-OPTION-CIRCLE"></span>
-                            <span class="PAYMENT-OPTION-LABEL">Cash on Delivery</span>
+                            <span class="PAYMENT-OPTION-LABEL">Cash</span>
                         </label>
 
                         <label class="PAYMENT-OPTION">

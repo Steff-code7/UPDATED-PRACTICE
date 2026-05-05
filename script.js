@@ -3624,6 +3624,26 @@ updateTotal();
     let cart = [];
     let deliveryFee = 0;
 
+    const selectedLocationInput = () => document.querySelector("input[name='order_location']:checked");
+    const getSelectedLocation = () => selectedLocationInput()?.value || "dine_in";
+    const getSelectedLocationLabel = () => {
+      const location = getSelectedLocation();
+      if (location === "delivery") return "Delivery";
+      if (location === "to_go") return "To Go";
+      return "Dine In";
+    };
+    const getOrderDeliveryFee = () => (getSelectedLocation() === "delivery" ? 25 : 0);
+    const updateOrderTotals = () => {
+      deliveryFee = getOrderDeliveryFee();
+      const total = subtotal + deliveryFee;
+      const deliveryFeeRow = qs("#delivery-fee-row");
+      if (deliveryFeeRow) {
+        deliveryFeeRow.style.display = getSelectedLocation() === "delivery" ? "flex" : "none";
+      }
+      if (deliveryFeeEl) deliveryFeeEl.textContent = toPeso(deliveryFee);
+      if (totalEl) totalEl.textContent = toPeso(total);
+    };
+
 
     if (hasUrlParams) {
       // Single item checkout from items page
@@ -3636,10 +3656,8 @@ updateTotal();
       const flavor = (params.get("flavor") || "N/A").trim();
       const piecesPerBox = (params.get("piecesPerBox") || "N/A").trim();
       const serving = (params.get("serving") || "N/A").trim();
-      const location = (params.get("location") || "Delivery").trim();
       const sugar = (params.get("sugar") || "100%").trim();
       const addons = (params.get("addons") || "None").trim();
-      deliveryFee = Number(params.get("deliveryFee") || 0);
 
 
       cart = [{
@@ -3649,7 +3667,7 @@ updateTotal();
         price: itemPrice,
         qty: quantity,
         size: size,
-        location: location,
+        location: "",
         sugarLevel: sugar !== "N/A" ? sugar : "",
         addons: addons,
         flavor: flavor !== "N/A" ? flavor : "",
@@ -3658,13 +3676,7 @@ updateTotal();
       }];
     } else if (hasStoredCart) {
       cart = storedCart;
-
       deliveryFee = 0;
-      cart.forEach(item => {
-        if (item.deliveryFee) {
-          deliveryFee += Number(item.deliveryFee || 0);
-        }
-      });
     } else {
       cart = [];
     }
@@ -3676,6 +3688,7 @@ updateTotal();
     const subtotalEl = qs("#confirm-item-subtotal");
     const deliveryFeeEl = qs("#confirm-item-delivery-fee");
     const totalEl = qs("#confirm-item-total");
+    const locationInputs = qsa("input[name='order_location']");
 
 
     const parseAddonEntries = (addonsValue) => {
@@ -3729,7 +3742,7 @@ updateTotal();
         const itemSizePrice = Number(item.price || 0);
         const itemCategory = String(item.category || "").trim();
         const itemSize = item.size || "N/A";
-        const itemLocation = item.location || "N/A";
+        const itemLocation = getSelectedLocationLabel();
         const itemSugarLevel = item.sugarLevel || "N/A";
         const sugarFee = "";
         const itemFlavor = item.flavor || "N/A";
@@ -3769,20 +3782,12 @@ updateTotal();
                 <span>Pieces Per Box: ${itemPieces}</span>
                 <span>${toPeso(itemSizePrice)}</span>
               </div>
-              <div class="ORDER-ITEM-BREAKDOWN-ROW">
-                <span>Location: ${itemLocation}</span>
-                <span></span>
-              </div>
           `;
         } else if (normalizedCategory === "shawarma") {
           optionRowsHTML = `
               <div class="ORDER-ITEM-BREAKDOWN-ROW">
                 <span>Flavor: ${itemFlavor}</span>
                 <span>${toPeso(itemSizePrice)}</span>
-              </div>
-              <div class="ORDER-ITEM-BREAKDOWN-ROW">
-                <span>Location: ${itemLocation}</span>
-                <span></span>
               </div>
           `;
         } else if (normalizedCategory === "chicken wings + fries") {
@@ -3791,20 +3796,12 @@ updateTotal();
                 <span>Serving: ${itemServing}</span>
                 <span>${toPeso(itemSizePrice)}</span>
               </div>
-              <div class="ORDER-ITEM-BREAKDOWN-ROW">
-                <span>Location: ${itemLocation}</span>
-                <span></span>
-              </div>
           `;
         } else if (normalizedCategory === "burger") {
           optionRowsHTML = `
               <div class="ORDER-ITEM-BREAKDOWN-ROW">
                 <span>Burger: ${item.name || "N/A"}</span>
                 <span>${toPeso(itemSizePrice)}</span>
-              </div>
-              <div class="ORDER-ITEM-BREAKDOWN-ROW">
-                <span>Location: ${itemLocation}</span>
-                <span></span>
               </div>
           `;
         } else if (normalizedCategory === "fries") {
@@ -3813,10 +3810,6 @@ updateTotal();
                 <span>Size: ${itemSize}</span>
                 <span>${toPeso(itemSizePrice)}</span>
               </div>
-              <div class="ORDER-ITEM-BREAKDOWN-ROW">
-                <span>Location: ${itemLocation}</span>
-                <span></span>
-              </div>
           `;
         } else {
           // Drinks
@@ -3824,10 +3817,6 @@ updateTotal();
               <div class="ORDER-ITEM-BREAKDOWN-ROW">
                 <span>Size: ${itemSize}</span>
                 <span>${toPeso(itemSizePrice)}</span>
-              </div>
-              <div class="ORDER-ITEM-BREAKDOWN-ROW">
-                <span>Location: ${itemLocation}</span>
-                <span></span>
               </div>
               <div class="ORDER-ITEM-BREAKDOWN-ROW">
                 <span>Sugar Level: ${itemSugarLevel}</span>
@@ -3873,8 +3862,11 @@ updateTotal();
 
     // Update totals
     if (subtotalEl) subtotalEl.textContent = toPeso(subtotal);
-    if (deliveryFeeEl) deliveryFeeEl.textContent = toPeso(deliveryFee);
-    if (totalEl) totalEl.textContent = toPeso(total);
+    updateOrderTotals();
+
+    if (locationInputs.length) {
+      locationInputs.forEach((radio) => radio.addEventListener("change", updateOrderTotals));
+    }
 
     const placeOrderBtn = qs(".PLACE-ORDER-BUTTON");
     if (placeOrderBtn) {
@@ -3888,15 +3880,15 @@ updateTotal();
 
         const selectedPaymentInput = document.querySelector("input[name='payment_method']:checked");
         const paymentMethod = selectedPaymentInput?.value || "cash_on_delivery";
-        const hasDelivery = cart.some((item) => /delivery/i.test(String(item.location || "")));
-        const hasToGo = cart.some((item) => /(to\s*go|takeout)/i.test(String(item.location || "")));
-        const orderType = hasDelivery ? "delivery" : (hasToGo ? "to-go" : "dine-in");
+        const selectedLocation = getSelectedLocation();
+        const locationLabel = getSelectedLocationLabel();
+        const orderType = selectedLocation === "delivery" ? "delivery" : selectedLocation === "to_go" ? "to-go" : "dine-in";
 
         const payloadItems = cart.map((item) => ({
           product_id: item.product_id || item.productId || null,
           product_name: item.name || "",
           category: item.category || "",
-          location: item.location || "Dine In",
+          location: locationLabel,
           size: item.size || null,
           sugar_level: item.sugarLevel || null,
           addons: item.addons || "None",
