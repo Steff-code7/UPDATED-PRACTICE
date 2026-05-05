@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 05, 2026 at 06:25 AM
+-- Generation Time: May 05, 2026 at 07:36 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -87,7 +87,8 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `order_type`, `total_amount`, `status`) VALUES
-(13, 29, '2026-05-05 12:22:50', 'delivery', 690.00, 'pending');
+(13, 29, '2026-05-05 12:22:50', 'delivery', 690.00, 'pending'),
+(14, 28, '2026-05-05 13:28:19', 'delivery', 260.00, 'pending');
 
 -- --------------------------------------------------------
 
@@ -118,7 +119,9 @@ INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `location`
 (6, 13, 42, 'To Go', 'N/A', NULL, 'None', NULL, NULL, NULL, 1, 45.00),
 (7, 13, 33, 'Delivery', 'All Meat', NULL, 'None', 'All Meat', NULL, NULL, 1, 80.00),
 (8, 13, 10, 'Dine In', '16oz', '75%', 'Whip (₱25)', NULL, NULL, NULL, 3, 120.00),
-(9, 13, 1, 'Delivery', '22oz', '100%', 'Whip (₱25), White Pearl (₱20)', NULL, NULL, NULL, 1, 155.00);
+(9, 13, 1, 'Delivery', '22oz', '100%', 'Whip (₱25), White Pearl (₱20)', NULL, NULL, NULL, 1, 155.00),
+(10, 14, 12, 'Delivery', '22oz', '25%', 'Whip (₱25)', NULL, NULL, NULL, 1, 145.00),
+(11, 14, 3, 'Delivery', '16oz', '25%', 'None', NULL, NULL, NULL, 1, 90.00);
 
 -- --------------------------------------------------------
 
@@ -140,7 +143,8 @@ CREATE TABLE `payments` (
 --
 
 INSERT INTO `payments` (`payment_id`, `order_id`, `amount`, `method`, `status`, `payment_date`) VALUES
-(6, 13, 690.00, 'cash_on_delivery', 'pending', '2026-05-05 04:22:50');
+(6, 13, 690.00, 'cash_on_delivery', 'pending', '2026-05-05 04:22:50'),
+(7, 14, 260.00, 'cash_on_delivery', 'pending', '2026-05-05 05:28:19');
 
 -- --------------------------------------------------------
 
@@ -332,19 +336,19 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `order_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `order_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `payment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `products`
