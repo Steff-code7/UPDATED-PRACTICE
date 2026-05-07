@@ -16,7 +16,7 @@ try {
         LEFT JOIN orders o ON u.user_id = o.user_id
         WHERE u.role = :role
         GROUP BY u.user_id, u.full_name, u.email, u.status
-        ORDER BY u.full_name ASC
+        ORDER BY u.created_at DESC
     ");
     
     $customersStmt->execute(['role' => 'customer']);
