@@ -437,14 +437,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 console.log('API response status:', response.status);
 
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    console.error(`HTTP error loading addresses: ${response.status}`);
+                    return;
                 }
 
                 const data = await response.json();
 
                 if (!data.success) {
                     console.error('API Error:', data.message);
-                    container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>Error loading addresses: ' + (data.message || 'Unknown error') + '</p></div>';
                     return;
                 }
 
@@ -478,7 +478,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 container.innerHTML = html;
 
             } catch (error) {
-                container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>Error loading addresses: ' + error.message + '</p></div>';
+                console.error('Error loading addresses:', error);
+                // Keep server-rendered content if available instead of clearing it.
             }
         }
 

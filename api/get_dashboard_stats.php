@@ -14,7 +14,9 @@ try {
     $customerStats = $customerStmt->fetch();
 
     $productCountStmt = $pdo->query("
-        SELECT COUNT(*) AS total_products
+        SELECT
+            SUM(status = 'active') AS active_products,
+            SUM(status = 'archive') AS archived_products
         FROM products
     ");
     $productCountStats = $productCountStmt->fetch();
@@ -52,7 +54,9 @@ try {
 
     echo json_encode([
         'success' => true,
-        'product_count' => (int) ($productCountStats['total_products'] ?? 0),
+        'product_count' => (int) ($productCountStats['active_products'] ?? 0) + (int) ($productCountStats['archived_products'] ?? 0),
+        'active_product_count' => (int) ($productCountStats['active_products'] ?? 0),
+        'archived_product_count' => (int) ($productCountStats['archived_products'] ?? 0),
         'customer_count' => (int) ($customerStats['customer_count'] ?? 0),
         'total_orders' => (int) ($orderCountStats['total_orders'] ?? 0),
         'recent_orders' => $recentOrders,

@@ -3,19 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Orders | Yas Milktea House</title>
+  <title>Admin Archive | Yas Milktea House</title>
   <link rel="icon" type="image/png" href="images/footer_logo.png">
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="..." crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 </head>
 <body class="admin-dashboard-page">
-  <!-- ====================== ADMIN SHELL ====================== -->
   <main class="ADMIN-PAGE">
     <section class="ADMIN-APP">
-      <!-- ===================== SIDEBAR ===================== -->
       <aside class="ADMIN-SIDEBAR">
         <div class="ADMIN-BRAND">
           <div class="ADMIN-BRAND-LOGO">
@@ -27,8 +25,6 @@
           </div>
         </div>
 
-
-        <!-- ===================== NAVIGATION ===================== -->
         <nav class="ADMIN-NAV">
           <a href="adminDashboard.html" class="ADMIN-NAV-LINK">
             <i class="fa-solid fa-table-cells-large"></i>
@@ -38,11 +34,11 @@
             <i class="fa-solid fa-box-archive"></i>
             <span>Products</span>
           </a>
-          <a href="adminArchive.html" class="ADMIN-NAV-LINK">
+          <a href="adminArchive.html" class="ADMIN-NAV-LINK active">
             <i class="fa-solid fa-archive"></i>
             <span>Archive</span>
           </a>
-          <a href="adminOrders.html" class="ADMIN-NAV-LINK active">
+          <a href="adminOrders.html" class="ADMIN-NAV-LINK">
             <i class="fa-solid fa-clipboard-check"></i>
             <span>Orders</span>
           </a>
@@ -64,8 +60,6 @@
           </a>
         </nav>
 
-
-        <!-- ===================== LOGOUT ===================== -->
         <div class="ADMIN-SIDEBAR-FOOTER">
           <a href="loginSignUp.html" class="ADMIN-NAV-LINK ADMIN-LOGOUT">
             <i class="fa-solid fa-right-from-bracket"></i>
@@ -74,22 +68,16 @@
         </div>
       </aside>
 
-
-      <!-- ====================== MAIN AREA ====================== -->
       <div class="ADMIN-MAIN">
-        <!-- ====================== TOP BAR ====================== -->
         <header class="ADMIN-TOPBAR">
           <button type="button" class="ADMIN-MENU-BUTTON" aria-label="Toggle menu">
             <i class="fa-solid fa-bars"></i>
           </button>
 
-
           <div class="ADMIN-TOPBAR-ACTIONS">
             <button type="button" class="ADMIN-ICON-BUTTON" aria-label="Notifications">
               <i class="fa-regular fa-bell"></i>
             </button>
-
-
             <div class="ADMIN-USER">
               <div class="ADMIN-USER-AVATAR">
                 <i class="fa-regular fa-user"></i>
@@ -106,57 +94,46 @@
           </div>
         </header>
 
-
-        <!-- ====================== ORDERS ====================== -->
-        <section class="ADMIN-CONTENT ADMIN-ORDERS-CONTENT">
+        <section class="ADMIN-CONTENT ADMIN-PRODUCTS-CONTENT">
           <div class="ADMIN-INTRO">
-            <h2>Orders</h2>
+            <h2>Archived Products</h2>
           </div>
 
-
-          <!-- ===================== TOOLBAR ===================== -->
-          <div class="ADMIN-ORDERS-TOOLS">
+          <div class="ADMIN-PRODUCTS-TOOLS">
             <label class="ADMIN-SEARCH">
-              <input id="admin-order-search" type="search" placeholder="Search orders...">
+              <input id="admin-archive-product-search" type="search" placeholder="Search archived products...">
               <i class="fa-solid fa-magnifying-glass"></i>
             </label>
-
-
             <label class="ADMIN-FILTER">
-              <select id="admin-order-status">
-                <option>All Status</option>
+              <select id="admin-archive-product-category">
+                <option>All Categories</option>
               </select>
             </label>
           </div>
 
-
-          <!-- ===================== ORDERS TABLE ===================== -->
           <section class="ADMIN-TABLE-CARD">
             <div class="ADMIN-TABLE-WRAP">
-              <table class="ADMIN-TABLE ADMIN-ORDERS-TABLE">
+              <table class="ADMIN-TABLE ADMIN-PRODUCTS-TABLE">
                 <thead>
                   <tr>
-                    <th>Order ID</th>
-                    <th>Customer</th>
-                    <th>Items</th>
-                    <th>Total</th>
-                    <th>Status</th>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price (16oz / 22oz)</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
-                <tbody id="admin-orders-body"></tbody>
+                <tbody id="admin-archive-products-body"></tbody>
               </table>
             </div>
           </section>
 
-
-          <!-- ===================== PAGINATION ===================== -->
-          <div class="ADMIN-PAGINATION" id="admin-orders-pagination"></div>
+          <div class="ADMIN-PAGINATION" id="admin-archive-pagination"></div>
         </section>
       </div>
     </section>
   </main>
+
   <script src="script.js"></script>
 </body>
 </html>
-

@@ -14,6 +14,7 @@ $products = $conn->query("
     SELECT p.*, c.category_slug
     FROM products p
     JOIN categories c ON p.category_id = c.category_id
+    WHERE p.status = 'active'
 ");
 
 while ($row = $products->fetch_assoc()) {

@@ -2370,6 +2370,10 @@ footer {
 .ADMIN-SIDEBAR {
     display: flex;
     flex-direction: column;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    overflow-y: auto;
     background: #232323;
     color: #fff;
 }

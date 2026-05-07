@@ -237,6 +237,8 @@ document.addEventListener("click", (event) => {
     const customerCount = qs("#admin-dashboard-customer-count");
     const orderCount = qs("#admin-dashboard-order-count");
     const productCount = qs("#admin-dashboard-product-count");
+    const activeProductCount = qs("#admin-dashboard-active-product-count");
+    const archivedProductCount = qs("#admin-dashboard-archived-product-count");
     const recentOrdersBody = qs("#admin-dashboard-recent-orders-body");
 
 
@@ -271,6 +273,8 @@ document.addEventListener("click", (event) => {
         if (customerCount) customerCount.textContent = result.customer_count ?? 0;
         if (orderCount) orderCount.textContent = result.total_orders ?? 0;
         if (productCount) productCount.textContent = result.product_count ?? 0;
+        if (activeProductCount) activeProductCount.textContent = result.active_product_count ?? 0;
+        if (archivedProductCount) archivedProductCount.textContent = result.archived_product_count ?? 0;
 
         if (recentOrdersBody) {
           const recentOrders = Array.isArray(result.recent_orders) ? result.recent_orders : [];
@@ -305,6 +309,8 @@ document.addEventListener("click", (event) => {
         if (customerCount) customerCount.textContent = "--";
         if (orderCount) orderCount.textContent = "--";
         if (productCount) productCount.textContent = "--";
+        if (activeProductCount) activeProductCount.textContent = "--";
+        if (archivedProductCount) archivedProductCount.textContent = "--";
         if (recentOrdersBody) {
           recentOrdersBody.innerHTML = `
             <tr>
@@ -1327,7 +1333,7 @@ if (matchingOption) {
                   <td>
                     <div class="ADMIN-TABLE-ACTIONS">
                       <button type="button" data-edit-id="${product.id}" aria-label="Edit ${product.name}"><i class="fa-solid fa-pen"></i></button>
-                      <button type="button" aria-label="Delete ${product.name}"><i class="fa-regular fa-trash-can"></i></button>
+                      <button type="button" data-archive-id="${product.id}" aria-label="Archive ${product.name}"><i class="fa-solid fa-archive"></i></button>
                     </div>
                   </td>
                 </tr>
@@ -1355,15 +1361,12 @@ if (matchingOption) {
       });
 
       // Add delete button event listeners
-      qsa(".ADMIN-TABLE-ACTIONS button", tableBody).forEach((button) => {
-        if (!button.dataset.editId && button.querySelector('.fa-trash-can, .fa-circle-xmark')) {
-          button.addEventListener("click", (event) => {
-            const row = event.target.closest('tr');
-            const productId = row.querySelector('[data-edit-id]').dataset.editId;
-            const productName = row.querySelector('td:nth-child(2)').textContent;
-            deleteProduct(Number(productId), productName);
-          });
-        }
+      qsa("[data-archive-id]", tableBody).forEach((button) => {
+        button.addEventListener("click", () => {
+          const productId = Number(button.dataset.archiveId);
+          const productName = adminProducts.find((item) => item.id === productId)?.name || 'product';
+          archiveProduct(productId, productName);
+        });
       });
     };
 
@@ -1514,39 +1517,11 @@ if (matchingOption) {
       reader.readAsDataURL(file);
     });
 
-    const deleteProduct = async (productId, productName) => {
-      if (!confirm(`Are you sure you want to delete "${productName}"? This action cannot be undone.`)) {
-        return;
-      }
-
-      try {
-        const response = await fetch('api/delete_product.php', {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ product_id: productId })
-        });
-
-        const result = await response.json();
-        
-        if (result.success) {
-          alert(`"${productName}" has been deleted successfully.`);
-          await fetchProducts(); // Refresh the products list
-        } else {
-          alert(`Error deleting product: ${result.message}`);
-        }
-      } catch (error) {
-        console.error('Error deleting product:', error);
-        alert('Failed to delete product. Please try again.');
-      }
-    };
-
     const saveProduct = async (productData) => {
       const isEdit = activeEditId !== null;
       const url = isEdit ? 'api/update_product.php' : 'api/add_product.php';
       const method = isEdit ? 'PUT' : 'POST';
-      
+
       if (isEdit) {
         productData.product_id = activeEditId;
       }
@@ -1561,10 +1536,10 @@ if (matchingOption) {
         });
 
         const result = await response.json();
-        
+
         if (result.success) {
           alert(`Product ${isEdit ? 'updated' : 'added'} successfully!`);
-          await fetchProducts(); // Refresh the products list
+          await fetchProducts();
           closeModal();
         } else {
           alert(`Error ${isEdit ? 'updating' : 'adding'} product: ${result.message}`);
@@ -1590,7 +1565,6 @@ if (matchingOption) {
         return;
       }
 
-      // Find category_id from category name
       const categoryData = await fetch('api/get_categories.php').then(res => res.json());
       const categoryObj = categoryData.data.find(cat => cat.category_name === category);
       const categoryId = categoryObj ? categoryObj.category_id : 0;
@@ -1601,18 +1575,243 @@ if (matchingOption) {
         description: description,
         price_16: price16,
         price_22: price22 || null,
-        stock: 100, // Default stock
+        stock: 100,
         image: image || 'images/default-product.jpg'
       };
 
       await saveProduct(productData);
     });
 
+    const archiveProduct = async (productId, productName) => {
+      if (!confirm(`Are you sure you want to archive "${productName}"? This can be restored later.`)) {
+        return;
+      }
+
+      try {
+        const response = await fetch('api/delete_product.php', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ product_id: productId, status: 'archive' })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          alert(`"${productName}" has been archived successfully.`);
+          await fetchProducts();
+        } else {
+          alert(`Error archiving product: ${result.message}`);
+        }
+      } catch (error) {
+        console.error('Error archiving product:', error);
+        alert('Failed to archive product. Please try again.');
+      }
+    };
+
     renderTable();
   })();
 
+  // =================== ADMIN ARCHIVE PAGE LOGIC ==================
+  const restoreProduct = async (productId, productName) => {
+    if (!confirm(`Restore "${productName}" to the active storefront?`)) {
+      return;
+    }
 
+    try {
+      const response = await fetch('api/delete_product.php', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ product_id: productId, status: 'active' })
+      });
 
+      const result = await response.json();
+      if (result.success) {
+        alert(`"${productName}" was restored successfully.`);
+        await window.fetchArchivedProducts();
+      } else {
+        alert(`Error restoring product: ${result.message}`);
+      }
+    } catch (error) {
+      console.error('Error restoring product:', error);
+      alert('Failed to restore product. Please try again.');
+    }
+  };
+
+  (function initAdminArchivePage() {
+    const tableBody = qs("#admin-archive-products-body");
+    const pagination = qs("#admin-archive-pagination");
+    const searchInput = qs("#admin-archive-product-search");
+    const categorySelect = qs("#admin-archive-product-category");
+
+    if (!tableBody || !pagination || !searchInput || !categorySelect) return;
+
+    const PRODUCTS_PER_PAGE = 8;
+    let currentPage = 1;
+    let archivedProducts = [];
+    let categories = ["All Categories"];
+
+    const formatPrice = (product) =>
+      product.price22 ? `PHP ${product.price16} / PHP ${product.price22}` : `PHP ${product.price16}`;
+
+    const updateCategoryDropdowns = () => {
+      categorySelect.innerHTML = categories
+        .map((category) => `<option value="${category}">${category}</option>`)
+        .join("");
+    };
+
+    const fetchArchivedProducts = async () => {
+      tableBody.innerHTML = `<tr><td colspan="5">Loading archived products...</td></tr>`;
+      try {
+        const response = await fetch('api/get_products.php?status=archive');
+        const data = await response.json();
+        if (data.success) {
+          archivedProducts = (data.products || []).map((product) => ({
+            id: product.product_id,
+            name: product.product_name,
+            category: product.category_name,
+            price16: parseFloat(product.price_16) || 0,
+            price22: parseFloat(product.price_22) > 0 ? parseFloat(product.price_22) : null,
+            image: product.image || 'images/default-product.jpg',
+          }));
+
+          categories = ["All Categories", ...new Set(archivedProducts.map((product) => product.category))];
+          updateCategoryDropdowns();
+          renderTable();
+        } else {
+          tableBody.innerHTML = `<tr><td colspan="5">Unable to load archived products: ${data.message || 'Unknown error'}</td></tr>`;
+        }
+      } catch (error) {
+        console.error('Error fetching archived products:', error);
+        tableBody.innerHTML = `<tr><td colspan="5">Unable to load archived products.</td></tr>`;
+      }
+    };
+
+    window.fetchArchivedProducts = fetchArchivedProducts;
+
+    const getFilteredProducts = () => {
+      const query = searchInput.value.trim().toLowerCase();
+      const selectedCategory = categorySelect.value;
+
+      return archivedProducts.filter((product) => {
+        const matchesQuery =
+          !query ||
+          product.name.toLowerCase().includes(query) ||
+          product.category.toLowerCase().includes(query) ||
+          formatPrice(product).toLowerCase().includes(query);
+        const matchesCategory =
+          selectedCategory === "All Categories" || product.category === selectedCategory;
+
+        return matchesQuery && matchesCategory;
+      });
+    };
+
+    const createPageButton = (label, page, isActive = false, isDisabled = false, icon = "") => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = `ADMIN-PAGE-BUTTON${isActive ? " active" : ""}`;
+      button.disabled = isDisabled;
+      button.innerHTML = icon || label;
+
+      if (!isDisabled) {
+        button.addEventListener("click", () => {
+          currentPage = page;
+          renderTable();
+        });
+      }
+
+      return button;
+    };
+
+    const renderPagination = (totalPages) => {
+      pagination.innerHTML = "";
+
+      pagination.appendChild(createPageButton("", Math.max(1, currentPage - 1), false, currentPage === 1, '<i class="fa-solid fa-chevron-left"></i>'));
+
+      const pagesToShow = [];
+      for (let page = 1; page <= totalPages; page += 1) {
+        if (page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1) {
+          pagesToShow.push(page);
+        }
+      }
+
+      pagesToShow.forEach((page, index) => {
+        const previousPage = pagesToShow[index - 1];
+        if (previousPage && page - previousPage > 1) {
+          const ellipsis = document.createElement("span");
+          ellipsis.className = "ADMIN-PAGE-ELLIPSIS";
+          ellipsis.textContent = "...";
+          pagination.appendChild(ellipsis);
+        }
+        pagination.appendChild(createPageButton(String(page), page, page === currentPage));
+      });
+
+      pagination.appendChild(createPageButton("", Math.min(totalPages, currentPage + 1), false, currentPage === totalPages, '<i class="fa-solid fa-chevron-right"></i>'));
+    };
+
+    const renderTable = () => {
+      const filteredProducts = getFilteredProducts();
+      const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE));
+
+      if (currentPage > totalPages) {
+        currentPage = totalPages;
+      }
+
+      const start = (currentPage - 1) * PRODUCTS_PER_PAGE;
+      const currentProducts = filteredProducts.slice(start, start + PRODUCTS_PER_PAGE);
+
+      tableBody.innerHTML = currentProducts.length
+        ? currentProducts
+            .map(
+              (product) => `
+                <tr>
+                  <td>
+                    <div class="ADMIN-PRODUCT-THUMB">
+                      <img src="${product.image}" alt="${product.name}">
+                    </div>
+                  </td>
+                  <td>${product.name}</td>
+                  <td>${product.category}</td>
+                  <td>${formatPrice(product)}</td>
+                  <td>
+                    <div class="ADMIN-TABLE-ACTIONS">
+                      <button type="button" data-restore-id="${product.id}" aria-label="Restore ${product.name}"><i class="fa-solid fa-rotate-left"></i></button>
+                    </div>
+                  </td>
+                </tr>
+              `
+            )
+            .join("")
+        : `
+            <tr>
+              <td colspan="5" class="ADMIN-NO-DATA">No archived products found.</td>
+            </tr>
+          `;
+
+      renderPagination(totalPages);
+
+      qsa("[data-restore-id]", tableBody).forEach((button) => {
+        button.addEventListener("click", () => {
+          const productId = Number(button.dataset.restoreId);
+          const productName = archivedProducts.find((item) => item.id === productId)?.name || 'product';
+          restoreProduct(productId, productName);
+        });
+      });
+    };
+
+    searchInput.addEventListener("input", () => {
+      currentPage = 1;
+      renderTable();
+    });
+
+    categorySelect.addEventListener("change", () => {
+      currentPage = 1;
+      renderTable();
+    });
+
+    fetchArchivedProducts();
+  })();
 
   // =================== ADMIN ORDERS PAGE LOGIC ===================
   (function initAdminOrdersPage() {

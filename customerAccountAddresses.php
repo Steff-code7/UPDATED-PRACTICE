@@ -1,6 +1,17 @@
 <?php
 require_once 'account-common.php';
 $activePage = 'addresses';
+
+$addresses = [];
+try {
+    $stmt = $pdo->prepare(
+        "SELECT * FROM addresses WHERE user_id = :user_id ORDER BY is_primary DESC, updated_at DESC"
+    );
+    $stmt->execute(['user_id' => $user_id]);
+    $addresses = $stmt->fetchAll();
+} catch (Exception $e) {
+    $addresses = [];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,9 +33,30 @@ $activePage = 'addresses';
                     <h2>Your Addresses</h2>
                     <button class="btn primary" id="addAddressBtn" style="margin-bottom: 20px;">+ Add New Address</button>
                     <div id="addressesList">
-                        <div style="text-align: center; padding: 40px;">
-                            <p>No addresses found.</p>
-                        </div>
+                        <?php if (empty($addresses)): ?>
+                            <div style="text-align: center; padding: 40px;">
+                                <p>No addresses found.</p>
+                            </div>
+                        <?php else: ?>
+                            <?php foreach ($addresses as $address): ?>
+                                <article class="ACCOUNT-DETAIL-CARD">
+                                    <div class="ACCOUNT-CARD-HEADER">
+                                        <h4><?php echo htmlspecialchars(ucfirst($address['address_type'])); ?><?php echo $address['is_primary'] ? ' <span style="color: #ff5eb3;">(Primary)</span>' : ''; ?></h4>
+                                        <div style="display: flex; gap: 10px;">
+                                            <button class="btn outline small" onclick="editAddress(<?php echo intval($address['address_id']); ?>)">EDIT</button>
+                                            <?php if (!$address['is_primary']): ?>
+                                                <button type="button" class="btn outline small" onclick="setAsPrimary(<?php echo intval($address['address_id']); ?>)">SET AS PRIMARY</button>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                    <div class="ACCOUNT-CARD-BODY">
+                                        <div><span>Address</span><strong><?php echo htmlspecialchars($address['address_line']); ?></strong></div>
+                                        <div><span>Landmark</span><strong><?php echo htmlspecialchars($address['landmark'] ?: 'Not set'); ?></strong></div>
+                                        <div><span>Instructions</span><strong><?php echo htmlspecialchars($address['delivery_instructions'] ?: 'None'); ?></strong></div>
+                                    </div>
+                                </article>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
 
                     <div id="addressModal" class="address-modal-overlay">

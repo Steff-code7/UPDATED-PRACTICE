@@ -6,23 +6,48 @@ require_once 'db.php';
 
 try {
     $categoryId = isset($_GET['category_id']) ? intval($_GET['category_id']) : null;
+    $status = isset($_GET['status']) ? strtolower(trim($_GET['status'])) : 'active';
+    $status = $status === 'archive' || $status === 'archived' ? 'archive' : 'active';
 
     if ($categoryId) {
-        $stmt = $pdo->prepare("
-            SELECT p.*, c.category_name
-            FROM Products p
-            JOIN Categories c ON p.category_id = c.category_id
-            WHERE p.category_id = :category_id
-            ORDER BY p.product_name
-        ");
-        $stmt->execute(['category_id' => $categoryId]);
+        if ($status === 'active') {
+            $stmt = $pdo->prepare("
+                SELECT p.*, c.category_name
+                FROM Products p
+                JOIN Categories c ON p.category_id = c.category_id
+                WHERE p.category_id = :category_id AND p.status = :status
+                ORDER BY p.product_name
+            ");
+            $stmt->execute(['category_id' => $categoryId, 'status' => $status]);
+        } else {
+            $stmt = $pdo->prepare("
+                SELECT p.*, c.category_name
+                FROM Products p
+                JOIN Categories c ON p.category_id = c.category_id
+                WHERE p.category_id = :category_id AND p.status = 'archive'
+                ORDER BY p.product_name
+            ");
+            $stmt->execute(['category_id' => $categoryId]);
+        }
     } else {
-        $stmt = $pdo->query("
-            SELECT p.*, c.category_name
-            FROM Products p
-            JOIN Categories c ON p.category_id = c.category_id
-            ORDER BY c.category_id, p.product_name
-        ");
+        if ($status === 'active') {
+            $stmt = $pdo->prepare("
+                SELECT p.*, c.category_name
+                FROM Products p
+                JOIN Categories c ON p.category_id = c.category_id
+                WHERE p.status = :status
+                ORDER BY c.category_id, p.product_name
+            ");
+            $stmt->execute(['status' => $status]);
+        } else {
+            $stmt = $pdo->query("
+                SELECT p.*, c.category_name
+                FROM Products p
+                JOIN Categories c ON p.category_id = c.category_id
+                WHERE p.status = 'archive'
+                ORDER BY c.category_id, p.product_name
+            ");
+        }
     }
 
     $products = $stmt->fetchAll();
