@@ -66,7 +66,7 @@ try {
 
     // Check if email already exists
 
-    $stmt = $pdo->prepare("SELECT user_id FROM Users WHERE email = :email");
+    $stmt = $pdo->prepare("SELECT user_id FROM users WHERE email = :email");
 
     $stmt->execute(['email' => $email]);
 
@@ -84,7 +84,7 @@ try {
 
     // Check if username already exists
 
-    $stmt = $pdo->prepare("SELECT user_id FROM Users WHERE username = :username");
+    $stmt = $pdo->prepare("SELECT user_id FROM users WHERE username = :username");
 
     $stmt->execute(['username' => $username]);
 
@@ -103,34 +103,37 @@ try {
     // Hash password and insert user
 
     $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+    $verificationToken = bin2hex(random_bytes(32));
 
 
 
     $stmt = $pdo->prepare("
 
-        INSERT INTO Users (username, email, password_hash, role, status)
+        INSERT INTO users (username, email, password_hash, role, status, verification_token, email_verified)
 
-        VALUES (:username, :email, :password_hash, 'customer', 'active')
+        VALUES (:username, :email, :password_hash, 'customer', 'pending', :verification_token, 0)
 
     ");
 
     $stmt->execute([
 
-        'username'      => $username,
+        'username'           => $username,
 
-        'email'         => $email,
+        'email'              => $email,
 
-        'password_hash' => $passwordHash
+        'password_hash'      => $passwordHash,
+
+        'verification_token' => $verificationToken
 
     ]);
 
 
 
-    sendWelcomeEmail($username, $email);
+    sendVerificationEmail($username, $email, $verificationToken);
 
 
 
-    echo json_encode(['message' => 'Account created successfully! You can now log in.']);
+    echo json_encode(['message' => 'Account created successfully! Check your email for a confirmation link.']);
 
 
 

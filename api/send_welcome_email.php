@@ -43,10 +43,10 @@ function createMailer(string $businessName)
     }
 }
 
-function sendWelcomeEmail(string $customerName, string $emailAddress): bool
+function sendVerificationEmail(string $customerName, string $emailAddress, string $verificationToken): bool
 {
     $businessName = 'YAS Milktea House';
-    $loginLink = 'http://localhost/UPDATED%20PRACTICE/loginSignUp.html';
+    $verificationLink = 'http://localhost/UPDATED%20PRACTICE/verify_email.php?token=' . urlencode($verificationToken);
 
     try {
         $mail = createMailer($businessName);
@@ -62,35 +62,34 @@ function sendWelcomeEmail(string $customerName, string $emailAddress): bool
         $safeBusinessName = htmlspecialchars($businessName, ENT_QUOTES, 'UTF-8');
 
         $mail->isHTML(true);
-        $mail->Subject = "Welcome to {$businessName}!";
+        $mail->Subject = "Confirm your email for {$businessName}";
         $mail->Body = "
             <p>Hi {$safeName},</p>
 
-            <p>Welcome to {$safeBusinessName}!</p>
+            <p>Thanks for signing up at {$safeBusinessName}.</p>
 
-            <p>Your account has been successfully created using this email address: <strong>{$safeEmail}</strong>.</p>
+            <p>Please confirm your email address by clicking the button below:</p>
 
-            <p>You can now log in and start exploring our products, place orders, and enjoy exclusive offers.</p>
+            <p><a href=\"{$verificationLink}\" style=\"display:inline-block;padding:12px 24px;color:#ffffff;background-color:#333333;text-decoration:none;border-radius:4px;\">Confirm Email</a></p>
 
-            <p><a href=\"{$loginLink}\">Log in here</a></p>
+            <p>If the button does not work, copy and paste this link into your browser:</p>
+            <p><a href=\"{$verificationLink}\">{$verificationLink}</a></p>
 
-            <p>If you have any questions or need assistance, feel free to reply to this email. We're happy to help.</p>
-
-            <p>Thanks for joining us!</p>
+            <p>If you did not create this account, you can ignore this email.</p>
 
             <p>Best regards,<br>{$safeBusinessName} Team</p>
         ";
         $mail->AltBody = "Hi {$customerName},\n\n"
-            . "Welcome to {$businessName}!\n\n"
-            . "Your account has been successfully created using this email address: {$emailAddress}.\n\n"
-            . "Log in here: {$loginLink}\n\n"
-            . "Thanks for joining us!\n\n"
+            . "Thanks for signing up at {$businessName}.\n\n"
+            . "Please confirm your email address by visiting the following link:\n\n"
+            . "{$verificationLink}\n\n"
+            . "If you did not create this account, you can ignore this email.\n\n"
             . "Best regards,\n{$businessName} Team";
 
         $mail->send();
         return true;
     } catch (\Throwable $exception) {
-        error_log('Welcome email failed: ' . $exception->getMessage());
+        error_log('Verification email failed: ' . $exception->getMessage());
         return false;
     }
 }

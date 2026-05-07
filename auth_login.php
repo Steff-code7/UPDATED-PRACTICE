@@ -17,18 +17,25 @@ try {
     }
 
     // Find user by username OR email
-    $stmt = $pdo->prepare("
-        SELECT * FROM users
-        WHERE (username = :identifier OR email = :identifier)
-        AND status = 'active'
-        LIMIT 1
-    ");
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :identifier OR email = :identifier LIMIT 1");
     $stmt->execute(['identifier' => $identifier]);
     $user = $stmt->fetch();
 
     if (!$user || !password_verify($password, $user['password_hash'])) {
         http_response_code(401);
         echo json_encode(['message' => 'Invalid username or password.']);
+        exit;
+    }
+
+    if ($user['status'] !== 'active') {
+        if ($user['status'] === 'pending') {
+            http_response_code(403);
+            echo json_encode(['message' => 'Please verify your email before logging in.']);
+            exit;
+        }
+
+        http_response_code(403);
+        echo json_encode(['message' => 'Your account is inactive. Contact support.']);
         exit;
     }
 
