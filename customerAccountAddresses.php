@@ -23,7 +23,7 @@ $activePage = 'addresses';
                     <button class="btn primary" id="addAddressBtn" style="margin-bottom: 20px;">+ Add New Address</button>
                     <div id="addressesList">
                         <div style="text-align: center; padding: 40px;">
-                            <p>Loading addresses...</p>
+                            <p>No addresses found.</p>
                         </div>
                     </div>
 
