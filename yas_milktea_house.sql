@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 08, 2026 at 10:25 AM
+-- Generation Time: May 08, 2026 at 01:28 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -49,8 +49,8 @@ CREATE TABLE `addresses` (
 --
 
 INSERT INTO `addresses` (`address_id`, `user_id`, `address_type`, `house_no`, `street`, `barangay`, `city`, `province`, `address_line`, `landmark`, `delivery_instructions`, `is_primary`, `created_at`, `updated_at`) VALUES
-(9, 34, 'home', NULL, NULL, NULL, NULL, NULL, 'Blk 51 Lot 10, Duhat, Rizal, Taguig, Metro Manila', 'Near Laundry shop', 'Call or text when arrived', 1, '2026-05-08 05:44:42', '2026-05-08 05:44:42'),
-(23, 35, 'home', 'BLK 51 LOT 10', 'Duhat', 'Rizal', 'Taguig', 'Manila', 'BLK 51 LOT 10 Duhat street, Barangay Rizal, Taguig, Manila', 'near laundry shop', 'call upon arrival', 1, '2026-05-08 06:39:54', '2026-05-08 06:47:03');
+(23, 35, 'home', 'BLK 51 LOT 10', 'Duhat', 'Rizal', 'Taguig', 'Manila', 'BLK 51 LOT 10 Duhat street, Barangay Rizal, Taguig, Manila', 'near laundry shop', 'call upon arrival', 1, '2026-05-08 06:39:54', '2026-05-08 06:47:03'),
+(24, 34, 'home', 'blk 51 lot 10', 'duhat', 'rizal', 'taguig', 'manila', 'blk 51 lot 10 duhat street, Barangay rizal, taguig, manila', 'Near Laundry shop', '', 1, '2026-05-08 10:45:22', '2026-05-08 10:45:22');
 
 -- --------------------------------------------------------
 
@@ -104,7 +104,9 @@ INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `order_type`, `total_
 (16, 34, '2026-05-07 19:31:27', 'delivery', 120.00, 'pending'),
 (17, 34, '2026-05-07 19:32:28', 'dine-in', 675.00, 'pending'),
 (18, 35, '2026-05-07 23:15:56', 'dine-in', 90.00, 'pending'),
-(19, 34, '2026-05-08 01:25:20', 'dine-in', 90.00, 'pending');
+(19, 34, '2026-05-08 01:25:20', 'dine-in', 90.00, 'pending'),
+(20, 35, '2026-05-08 17:05:50', 'dine-in', 90.00, 'pending'),
+(24, 34, '2026-05-08 18:13:40', 'dine-in', 545.00, 'pending');
 
 -- --------------------------------------------------------
 
@@ -139,7 +141,11 @@ INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `location`
 (18, 17, 10, 'Dine In', '16oz', '25%', 'None', NULL, NULL, NULL, 1, 95.00),
 (19, 17, 20, 'Dine In', '16oz', '25%', 'Oreo (₱20), Whip (₱25), White Pearl (₱20)', NULL, NULL, NULL, 1, 130.00),
 (20, 18, 4, 'Dine In', '16oz', '25%', 'None', NULL, NULL, NULL, 1, 90.00),
-(21, 19, 4, 'Dine In', '16oz', '25%', 'None', NULL, NULL, NULL, 1, 90.00);
+(21, 19, 4, 'Dine In', '16oz', '25%', 'None', NULL, NULL, NULL, 1, 90.00),
+(22, 20, 2, 'Dine In', '16oz', '25%', 'None', NULL, NULL, NULL, 1, 90.00),
+(23, 24, 18, 'Dine In', '22oz', '75%', 'Oreo (₱20), Whip (₱25), White Pearl (₱20)', NULL, NULL, NULL, 1, 190.00),
+(24, 24, 34, 'Dine In', 'Duo', NULL, 'Rice (₱20)', NULL, NULL, 'Duo', 1, 200.00),
+(25, 24, 1, 'Dine In', '16oz', '25%', 'Oreo (₱20), Whip (₱25), White Pearl (₱20)', NULL, NULL, NULL, 1, 155.00);
 
 -- --------------------------------------------------------
 
@@ -165,7 +171,9 @@ INSERT INTO `payments` (`payment_id`, `order_id`, `amount`, `method`, `status`, 
 (9, 16, 120.00, 'online_payment', 'pending', '2026-05-07 11:31:27'),
 (10, 17, 675.00, 'cash_on_delivery', 'pending', '2026-05-07 11:32:28'),
 (11, 18, 90.00, 'cash_on_delivery', 'pending', '2026-05-07 15:15:56'),
-(12, 19, 90.00, 'cash_on_delivery', 'pending', '2026-05-07 17:25:20');
+(12, 19, 90.00, 'cash_on_delivery', 'pending', '2026-05-07 17:25:20'),
+(13, 20, 90.00, 'cash_on_delivery', 'pending', '2026-05-08 09:05:50'),
+(14, 24, 545.00, 'cash_on_delivery', 'pending', '2026-05-08 10:13:40');
 
 -- --------------------------------------------------------
 
@@ -354,7 +362,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `address_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `address_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -366,19 +374,19 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `order_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `order_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `payment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `products`
