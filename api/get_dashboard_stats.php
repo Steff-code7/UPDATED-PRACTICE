@@ -52,6 +52,37 @@ try {
     ");
     $recentOrders = $recentOrdersStmt->fetchAll();
 
+    $bestSellingStmt = $pdo->query("
+        SELECT
+            p.product_id,
+            p.product_name,
+            p.image,
+            SUM(oi.quantity) AS total_quantity,
+            SUM(oi.quantity * oi.price) AS total_revenue
+        FROM order_items oi
+        JOIN products p ON oi.product_id = p.product_id
+        GROUP BY p.product_id, p.product_name, p.image
+        ORDER BY total_quantity DESC
+        LIMIT 5
+    ");
+    $bestSelling = $bestSellingStmt->fetchAll();
+
+    $leastSellingStmt = $pdo->query("
+        SELECT
+            p.product_id,
+            p.product_name,
+            p.image,
+            COALESCE(SUM(oi.quantity), 0) AS total_quantity,
+            COALESCE(SUM(oi.quantity * oi.price), 0) AS total_revenue
+        FROM products p
+        LEFT JOIN order_items oi ON p.product_id = oi.product_id
+        WHERE p.status = 'active'
+        GROUP BY p.product_id, p.product_name, p.image
+        ORDER BY total_quantity ASC, p.product_id ASC
+        LIMIT 5
+    ");
+    $leastSelling = $leastSellingStmt->fetchAll();
+
     echo json_encode([
         'success' => true,
         'product_count' => (int) ($productCountStats['active_products'] ?? 0) + (int) ($productCountStats['archived_products'] ?? 0),
@@ -60,6 +91,8 @@ try {
         'customer_count' => (int) ($customerStats['customer_count'] ?? 0),
         'total_orders' => (int) ($orderCountStats['total_orders'] ?? 0),
         'recent_orders' => $recentOrders,
+        'best_selling' => $bestSelling,
+        'least_selling' => $leastSelling,
     ]);
 } catch (PDOException $e) {
     http_response_code(500);

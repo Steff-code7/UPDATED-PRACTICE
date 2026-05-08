@@ -14,6 +14,7 @@
 <body class="admin-dashboard-page">
   <!-- ====================== ADMIN SHELL ====================== -->
   <main class="ADMIN-PAGE">
+    <div class="ADMIN-SIDEBAR-OVERLAY"></div>
     <section class="ADMIN-APP">
       <!-- ===================== SIDEBAR ===================== -->
       <aside class="ADMIN-SIDEBAR">
@@ -152,6 +153,51 @@
             </article>
           </div>
 
+
+          <!-- ===================== SALES PERFORMANCE ===================== -->
+          <div class="ADMIN-SALES-PERFORMANCE">
+            <!-- Best Selling Products -->
+            <section class="ADMIN-TABLE-CARD">
+              <div class="ADMIN-TABLE-HEADER">
+                <h3>Best Selling Products</h3>
+                <a href="adminProducts.html" class="ADMIN-VIEW-ALL">View All</a>
+              </div>
+              <div class="ADMIN-TABLE-WRAP">
+                <table class="ADMIN-TABLE ADMIN-TABLE--sales">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Product</th>
+                      <th>Quantity Sold</th>
+                      <th>Revenue</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-best-selling-body"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <!-- Least Selling Products -->
+            <section class="ADMIN-TABLE-CARD">
+              <div class="ADMIN-TABLE-HEADER">
+                <h3>Least Selling Products</h3>
+                <a href="adminProducts.html" class="ADMIN-VIEW-ALL">View All</a>
+              </div>
+              <div class="ADMIN-TABLE-WRAP">
+                <table class="ADMIN-TABLE ADMIN-TABLE--sales">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Product</th>
+                      <th>Quantity Sold</th>
+                      <th>Revenue</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-least-selling-body"></tbody>
+                </table>
+              </div>
+            </section>
+          </div>
 
           <!-- ===================== ORDERS TABLE ===================== -->
           <section class="ADMIN-TABLE-CARD">

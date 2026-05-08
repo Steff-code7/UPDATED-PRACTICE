@@ -2345,22 +2345,23 @@ footer {
 ===================================================== */
 /* ===================== PAGE SHELL ===================== */
 .admin-dashboard-page {
-    min-height: 100vh;
+    height: 100vh;
     background: #ececec;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 .ADMIN-PAGE {
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
     margin: 0;
+    overflow: hidden;
 }
 
 .ADMIN-APP {
     display: grid;
-    grid-template-columns: 210px 1fr;
+    grid-template-columns: 1fr;
     width: 100%;
-    min-height: 100vh;
+    height: 100vh;
     background: #fff;
     border: none;
     box-shadow: none;
@@ -2371,11 +2372,39 @@ footer {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    z-index: 9998;
+    width: 210px;
     overflow-y: auto;
+    overflow-x: hidden;
     background: #232323;
     color: #fff;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.ADMIN-SIDEBAR.show {
+    transform: translateX(0);
+}
+
+.ADMIN-SIDEBAR-OVERLAY {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9997;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.ADMIN-SIDEBAR-OVERLAY.show {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .ADMIN-BRAND {
@@ -2455,6 +2484,8 @@ footer {
 .ADMIN-MAIN {
     display: flex;
     flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
     background: #fff;
 }
 
@@ -2466,6 +2497,7 @@ footer {
     border-bottom: 1px solid #d7d7d7;
     z-index: 5000;
     position: relative;
+    flex-shrink: 0;
 }
 
 .ADMIN-MENU-BUTTON,
@@ -2480,6 +2512,11 @@ footer {
     color: #444;
     font-size: 1rem;
     cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.ADMIN-MENU-BUTTON:hover {
+    color: #ff4da6;
 }
 
 .ADMIN-TOPBAR-ACTIONS {
@@ -2624,6 +2661,9 @@ footer {
 
 /* ===================== CONTENT ===================== */
 .ADMIN-CONTENT {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
     padding: 18px 22px 16px;
 }
 
@@ -2685,6 +2725,7 @@ footer {
 /* ===================== TABLE ===================== */
 .ADMIN-TABLE-CARD {
     margin-top: 18px;
+    width: 100%;
 }
 
 .ADMIN-TABLE-HEADER {
@@ -2724,7 +2765,11 @@ footer {
 .ADMIN-TABLE {
     width: 100%;
     border-collapse: collapse;
-    min-width: 760px;
+}
+
+.ADMIN-TABLE--sales {
+    table-layout: fixed;
+    min-width: 0;
 }
 
 .ADMIN-TABLE thead {
@@ -2738,6 +2783,33 @@ footer {
     color: #1b1b1b;
     font-size: 0.9rem;
     text-align: left;
+}
+
+.ADMIN-TABLE--sales th,
+.ADMIN-TABLE--sales td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ADMIN-TABLE--sales th:nth-child(1),
+.ADMIN-TABLE--sales td:nth-child(1) {
+    width: 48px;
+    padding-left: 10px;
+}
+
+.ADMIN-TABLE--sales th:nth-child(2),
+.ADMIN-TABLE--sales td:nth-child(2) {
+    width: 40%;
+    min-width: 180px;
+}
+
+.ADMIN-TABLE--sales th:nth-child(3),
+.ADMIN-TABLE--sales td:nth-child(3),
+.ADMIN-TABLE--sales th:nth-child(4),
+.ADMIN-TABLE--sales td:nth-child(4) {
+    width: 30%;
+    min-width: 120px;
 }
 
 .ADMIN-TABLE th {
@@ -2816,6 +2888,14 @@ footer {
     color: #d13d3d;
     background: #ffe1e1;
     border: 1px solid #f3aaaa;
+}
+
+/* ===================== SALES PERFORMANCE ===================== */
+.ADMIN-SALES-PERFORMANCE {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
 }
 
 /* ===================== PRODUCTS PAGE ===================== */
@@ -3382,6 +3462,10 @@ footer {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    .ADMIN-SALES-PERFORMANCE {
+        grid-template-columns: 1fr;
+    }
+
     .ADMIN-PRODUCTS-TOOLS {
         grid-template-columns: minmax(220px, 1fr) 180px;
     }
@@ -3636,6 +3720,10 @@ footer {
     }
 
     .ADMIN-STATS {
+        grid-template-columns: 1fr;
+    }
+
+    .ADMIN-SALES-PERFORMANCE {
         grid-template-columns: 1fr;
     }
 

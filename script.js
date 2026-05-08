@@ -229,6 +229,38 @@ document.addEventListener("click", (event) => {
     });
   })();
 
+// ===================== ADMIN SIDEBAR TOGGLE ======================
+  (function initAdminSidebarToggle() {
+    const menuButtons = qsa(".ADMIN-MENU-BUTTON");
+    const sidebar = qs(".ADMIN-SIDEBAR");
+    const overlay = qs(".ADMIN-SIDEBAR-OVERLAY");
+
+    if (!menuButtons.length || !sidebar || !overlay) return;
+
+    const toggleSidebar = () => {
+      sidebar.classList.toggle("show");
+      overlay.classList.toggle("show");
+    };
+
+    const closeSidebar = () => {
+      sidebar.classList.remove("show");
+      overlay.classList.remove("show");
+    };
+
+    menuButtons.forEach((button) => button.addEventListener("click", (event) => {
+      event.stopPropagation();
+      toggleSidebar();
+    }));
+
+    overlay.addEventListener("click", closeSidebar);
+
+    // Close sidebar on nav link click
+    const navLinks = qsa(".ADMIN-NAV-LINK", sidebar);
+    navLinks.forEach((link) => {
+      link.addEventListener("click", closeSidebar);
+    });
+  })();
+
 
 
 
@@ -240,11 +272,12 @@ document.addEventListener("click", (event) => {
     const activeProductCount = qs("#admin-dashboard-active-product-count");
     const archivedProductCount = qs("#admin-dashboard-archived-product-count");
     const recentOrdersBody = qs("#admin-dashboard-recent-orders-body");
-
+    const bestSellingBody = qs("#admin-best-selling-body");
+    const leastSellingBody = qs("#admin-least-selling-body");
 
     if (!customerCount && !orderCount && !productCount && !recentOrdersBody) return;
 
-    const toPeso = (amount) => `₱${Number(amount || 0)}`;
+    const toPeso = (amount) => `₱${Number(amount || 0).toLocaleString('en-PH', { minimumFractionDigits: 2 })}`;
     const formatOrderId = (orderId) => `#ORD-${String(Number(orderId || 0)).padStart(4, "0")}`;
     const normalizeStatusClass = (statusValue) => {
       const status = String(statusValue || "pending").toLowerCase().trim();
@@ -275,6 +308,90 @@ document.addEventListener("click", (event) => {
         if (productCount) productCount.textContent = result.product_count ?? 0;
         if (activeProductCount) activeProductCount.textContent = result.active_product_count ?? 0;
         if (archivedProductCount) archivedProductCount.textContent = result.archived_product_count ?? 0;
+
+        // Render Best Selling Products
+        if (bestSellingBody) {
+          const bestSelling = Array.isArray(result.best_selling) ? result.best_selling : [];
+
+          if (!bestSelling.length) {
+            bestSellingBody.innerHTML = `
+              <tr>
+                <td colspan="4">No sales data available.</td>
+              </tr>
+            `;
+          } else {
+            bestSellingBody.innerHTML = bestSelling
+              .map((product, index) => {
+                const quantity = Number(product.total_quantity || 0);
+                const maxQty = Math.max(...bestSelling.map(p => Number(p.total_quantity || 0)));
+                const barWidth = maxQty > 0 ? (quantity / maxQty) * 100 : 0;
+                return `
+                  <tr>
+                    <td><strong>${index + 1}</strong></td>
+                    <td>
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <img src="${product.image || 'images/placeholder.png'}" alt="${product.product_name}" 
+                             style="width: 32px; height: 32px; border-radius: 4px; object-fit: cover;">
+                        <span>${product.product_name || 'Unknown'}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <span>${quantity}</span>
+                        <div style="width: 100px; height: 4px; background: #f0f0f0; border-radius: 2px; overflow: hidden;">
+                          <div style="height: 100%; background: #e91e63; width: ${barWidth}%;"></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>${toPeso(product.total_revenue || 0)}</td>
+                  </tr>
+                `;
+              })
+              .join("");
+          }
+        }
+
+        // Render Least Selling Products
+        if (leastSellingBody) {
+          const leastSelling = Array.isArray(result.least_selling) ? result.least_selling : [];
+
+          if (!leastSelling.length) {
+            leastSellingBody.innerHTML = `
+              <tr>
+                <td colspan="4">No products available.</td>
+              </tr>
+            `;
+          } else {
+            leastSellingBody.innerHTML = leastSelling
+              .map((product, index) => {
+                const quantity = Number(product.total_quantity || 0);
+                const maxQty = Math.max(...leastSelling.map(p => Number(p.total_quantity || 0)));
+                const barWidth = maxQty > 0 ? (quantity / maxQty) * 100 : 0;
+                return `
+                  <tr>
+                    <td><strong>${index + 1}</strong></td>
+                    <td>
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <img src="${product.image || 'images/placeholder.png'}" alt="${product.product_name}" 
+                             style="width: 32px; height: 32px; border-radius: 4px; object-fit: cover;">
+                        <span>${product.product_name || 'Unknown'}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <span>${quantity}</span>
+                        <div style="width: 100px; height: 4px; background: #f0f0f0; border-radius: 2px; overflow: hidden;">
+                          <div style="height: 100%; background: #e91e63; width: ${barWidth}%;"></div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>${toPeso(product.total_revenue || 0)}</td>
+                  </tr>
+                `;
+              })
+              .join("");
+          }
+        }
 
         if (recentOrdersBody) {
           const recentOrders = Array.isArray(result.recent_orders) ? result.recent_orders : [];
@@ -311,6 +428,20 @@ document.addEventListener("click", (event) => {
         if (productCount) productCount.textContent = "--";
         if (activeProductCount) activeProductCount.textContent = "--";
         if (archivedProductCount) archivedProductCount.textContent = "--";
+        if (bestSellingBody) {
+          bestSellingBody.innerHTML = `
+            <tr>
+              <td colspan="4">Unable to load best selling products.</td>
+            </tr>
+          `;
+        }
+        if (leastSellingBody) {
+          leastSellingBody.innerHTML = `
+            <tr>
+              <td colspan="4">Unable to load least selling products.</td>
+            </tr>
+          `;
+        }
         if (recentOrdersBody) {
           recentOrdersBody.innerHTML = `
             <tr>
