@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 08, 2026 at 01:28 PM
+-- Generation Time: May 08, 2026 at 05:46 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -50,7 +50,8 @@ CREATE TABLE `addresses` (
 
 INSERT INTO `addresses` (`address_id`, `user_id`, `address_type`, `house_no`, `street`, `barangay`, `city`, `province`, `address_line`, `landmark`, `delivery_instructions`, `is_primary`, `created_at`, `updated_at`) VALUES
 (23, 35, 'home', 'BLK 51 LOT 10', 'Duhat', 'Rizal', 'Taguig', 'Manila', 'BLK 51 LOT 10 Duhat street, Barangay Rizal, Taguig, Manila', 'near laundry shop', 'call upon arrival', 1, '2026-05-08 06:39:54', '2026-05-08 06:47:03'),
-(24, 34, 'home', 'blk 51 lot 10', 'duhat', 'rizal', 'taguig', 'manila', 'blk 51 lot 10 duhat street, Barangay rizal, taguig, manila', 'Near Laundry shop', '', 1, '2026-05-08 10:45:22', '2026-05-08 10:45:22');
+(24, 34, 'home', 'blk 51 lot 10', 'duhat', 'rizal', 'taguig', 'manila', 'blk 51 lot 10 duhat street, Barangay rizal, taguig, manila', 'Near Laundry shop', '', 1, '2026-05-08 10:45:22', '2026-05-08 10:45:22'),
+(25, 28, 'home', '143', 'Yas', 'Tina', 'San Miguel', 'Surigao del Sur', '143 Yas street, Barangay Tina, San Miguel, Surigao del Sur', 'Sa Puso Mo', 'Kiss sa cheeks', 1, '2026-05-08 15:43:34', '2026-05-08 15:43:34');
 
 -- --------------------------------------------------------
 
@@ -245,7 +246,8 @@ INSERT INTO `products` (`product_id`, `category_id`, `product_name`, `price_16`,
 (45, 10, 'Fries', 30.00, 100.00, 'Crispy fries with placeholder description text while the final details are still being prepared.', 100, 'images/f-medium.png', 'active'),
 (53, 1, 'agshjgas', 51.00, 562.00, 'csax', 100, 'https://wallup.net/wp-content/uploads/2018/10/06/708149-kittens-kitten-cat-cats-baby-cute-s.jpg', 'archive'),
 (54, 1, 'agshjgasbvtrec', 51.00, 562.00, 'vcsxs', 100, 'https://tse1.mm.bing.net/th/id/OIP.OQ9bpEwoLCZvpwV7-XjZ9AHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3', 'archive'),
-(55, 1, 'ArchiveTest', 67.00, 67.00, 'vdc', 100, 'https://tse1.mm.bing.net/th/id/OIP.OQ9bpEwoLCZvpwV7-XjZ9AHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3', 'archive');
+(55, 1, 'ArchiveTest', 67.00, 67.00, 'vdc', 100, 'https://tse1.mm.bing.net/th/id/OIP.OQ9bpEwoLCZvpwV7-XjZ9AHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3', 'archive'),
+(56, 2, 'Test Product', 1000.00, 5000.00, 'BARBEI', 100, 'https://i.pinimg.com/736x/59/b3/ac/59b3ac35dd06ede9530bcea7951e7f87.jpg', 'archive');
 
 -- --------------------------------------------------------
 
@@ -291,7 +293,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `username`, `email`, `password_hash`, `role`, `status`, `email_verified`, `verification_token`, `verified_at`, `created_at`, `full_name`, `contact_number`, `date_of_birth`, `profile_picture`, `updated_at`) VALUES
 (21, 'Stef', 'marekeyks101@gmail.com', '$2y$10$46yj/F93p7Gf3eJ0gEtOG.bYAkSg62LkejbqvkwW.4/4BpSXeLA6O', 'admin', 'active', 0, NULL, NULL, '2026-05-01 19:36:27', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-04 16:16:21'),
 (27, 'testuser456', 'testuser456@example.com', '$2y$10$94OqRBmJyUjqWW5I69r.leBf7jwvCRpIxzS7Z.TnVtav/LbMewEe6', 'customer', 'active', 0, NULL, NULL, '2026-05-04 16:03:10', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-04 16:16:21'),
-(28, 'krisha_customer', 'narcisokrishaaudrey@gmail.com', '$2y$10$awo1Y7BwclbQEA0vQnJB3.ispUVF1lSKSZO1o9gkvZQWlrK8iXyNW', 'customer', 'active', 0, NULL, NULL, '2026-05-04 16:11:03', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-04 16:16:21'),
+(28, 'krisha_customer', 'narcisokrishaaudrey@gmail.com', '$2y$10$awo1Y7BwclbQEA0vQnJB3.ispUVF1lSKSZO1o9gkvZQWlrK8iXyNW', 'customer', 'active', 0, NULL, NULL, '2026-05-04 16:11:03', NULL, NULL, NULL, 'images/profile_28_1778251916.jpg', '2026-05-08 14:51:56'),
 (34, 'Penny', 'Kirigato.07@gmail.com', '$2y$10$L9dSP9BGkluYkz6BdwhFjuCDcDKRjySWswHNea6wXmcfeM8Y0Lep2', 'customer', 'active', 1, NULL, '2026-05-07 11:20:55', '2026-05-07 11:19:01', 'Penny Pilasyo', '09565656', '1895-02-05', 'images/yas_logo.png', '2026-05-07 11:30:06'),
 (35, 'Freaky', 'sbaltazar.1012@umak.edu.ph', '$2y$10$Q/XzuoBSZaFGOwe4Jr.wSOq1N0o98WCby5UyX/7SRA3A1lKDAMCOq', 'customer', 'active', 1, NULL, '2026-05-07 11:56:23', '2026-05-07 11:55:32', 'Stephanie Naureen Baltazar', '9562154685', '1212-12-12', 'images/yas_logo.png', '2026-05-07 15:16:37');
 
@@ -362,7 +364,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `address_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `address_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -392,7 +394,7 @@ ALTER TABLE `payments`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `product_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=56;
+  MODIFY `product_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `rewards`

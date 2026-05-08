@@ -2,6 +2,27 @@
 require_once 'account-common.php';
 $activePage = 'addresses';
 
+$barangayOptions = [
+    'Bagyang',
+    'Baras',
+    'Bitaugan',
+    'Bolhoon',
+    'Calatngan',
+    'Carromata',
+    'Castillo',
+    'Libas Gua / Libas de Arriba',
+    'Libas Sud / Libas de Abajo',
+    'Magroyong',
+    'Mahayag (Maitum)',
+    'Patong',
+    'Poblacion (Town Center)',
+    'Sagbayan',
+    'San Roque',
+    'Siagao',
+    'Tina',
+    'Umalag'
+];
+
 $addresses = [];
 try {
     $stmt = $pdo->prepare(
@@ -92,16 +113,22 @@ try {
                                     </div>
                                     <div class="form-group">
                                         <label for="barangay">Barangay <span class="required">*</span></label>
-                                        <input type="text" id="barangay" name="barangay" required placeholder="e.g. San Roque">
+                                        <?php $selectedBarangay = $_POST['barangay'] ?? ''; ?>
+                                        <select id="barangay" name="barangay" required>
+                                            <option value="" disabled <?php echo $selectedBarangay === '' ? 'selected' : ''; ?>>Select Barangay</option>
+                                            <?php foreach ($barangayOptions as $barangay): ?>
+                                                <option value="<?php echo htmlspecialchars($barangay); ?>" <?php echo $selectedBarangay === $barangay ? 'selected' : ''; ?>><?php echo htmlspecialchars($barangay); ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="city">City <span class="required">*</span></label>
-                                        <input type="text" id="city" name="city" required placeholder="e.g. Taguig City">
+                                        <input type="text" id="city" name="city" required value="San Miguel" readonly>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="province">Province <span class="required">*</span></label>
-                                    <input type="text" id="province" name="province" required placeholder="e.g. Metro Manila">
+                                    <input type="text" id="province" name="province" required value="Surigao del Sur" readonly>
                                 </div>
                                 <div class="form-group">
                                     <label for="completeAddress">Complete Address</label>
@@ -121,6 +148,7 @@ try {
                                         <span>Set as primary address</span>
                                     </label>
                                 </div>
+                                <p style="margin: 0 0 12px; font-size: 13px; color: #666;">Delivery is limited to these areas only.</p>
                                 <div class="form-actions">
                                     <button type="submit" class="btn primary">Save Address</button>
                                     <button type="button" class="btn outline" id="closeAddressModal">Cancel</button>

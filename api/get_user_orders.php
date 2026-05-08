@@ -38,7 +38,7 @@ try {
     foreach ($orders as &$order) {
         if (!$order['order_id'] || !$order['order_date'] || $order['order_date'] === '0000-00-00 00:00:00') {
             continue;
-        }
+        }x`
         $order['order_display_id'] = '#ORD-' . str_pad($order['order_id'], 4, '0', STR_PAD_LEFT);
         $order['formatted_date'] = date('M d, Y g:i A', strtotime($order['order_date']));
     }
