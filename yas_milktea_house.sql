@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 07, 2026 at 07:35 PM
+-- Generation Time: May 08, 2026 at 10:25 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -31,6 +31,11 @@ CREATE TABLE `addresses` (
   `address_id` int(10) UNSIGNED NOT NULL,
   `user_id` int(10) UNSIGNED NOT NULL,
   `address_type` enum('home','office','other') DEFAULT 'home',
+  `house_no` varchar(50) DEFAULT NULL,
+  `street` varchar(255) DEFAULT NULL,
+  `barangay` varchar(255) DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `province` varchar(100) DEFAULT NULL,
   `address_line` varchar(255) NOT NULL,
   `landmark` varchar(255) DEFAULT NULL,
   `delivery_instructions` text DEFAULT NULL,
@@ -43,14 +48,9 @@ CREATE TABLE `addresses` (
 -- Dumping data for table `addresses`
 --
 
-INSERT INTO `addresses` (`address_id`, `user_id`, `address_type`, `address_line`, `landmark`, `delivery_instructions`, `is_primary`, `created_at`, `updated_at`) VALUES
-(1, 34, 'home', '143 Yas', 'Sa puso mo St.', '<3', 1, '2026-05-07 11:30:46', '2026-05-07 17:33:52'),
-(2, 34, 'home', ' cAScdA', 'CAS', 'cA', 0, '2026-05-07 14:46:34', '2026-05-07 15:30:30'),
-(3, 34, 'home', 'vsdczbvsd', 'feasx', 'vsdcskj e', 0, '2026-05-07 14:48:25', '2026-05-07 17:33:20'),
-(4, 35, 'home', 'rizal', 'taguig', 'testing', 1, '2026-05-07 14:59:15', '2026-05-07 14:59:15'),
-(5, 35, 'home', 'rizal', 'taguig', 'cas', 0, '2026-05-07 15:22:04', '2026-05-07 15:22:04'),
-(6, 34, 'home', 'bvefcds', 'bverc', 'bvrecfdxs', 0, '2026-05-07 15:30:30', '2026-05-07 17:33:14'),
-(7, 34, 'home', 'Bahay ko', 'Bahay mo', 'Bahay natin', 0, '2026-05-07 17:33:48', '2026-05-07 17:33:52');
+INSERT INTO `addresses` (`address_id`, `user_id`, `address_type`, `house_no`, `street`, `barangay`, `city`, `province`, `address_line`, `landmark`, `delivery_instructions`, `is_primary`, `created_at`, `updated_at`) VALUES
+(9, 34, 'home', NULL, NULL, NULL, NULL, NULL, 'Blk 51 Lot 10, Duhat, Rizal, Taguig, Metro Manila', 'Near Laundry shop', 'Call or text when arrived', 1, '2026-05-08 05:44:42', '2026-05-08 05:44:42'),
+(23, 35, 'home', 'BLK 51 LOT 10', 'Duhat', 'Rizal', 'Taguig', 'Manila', 'BLK 51 LOT 10 Duhat street, Barangay Rizal, Taguig, Manila', 'near laundry shop', 'call upon arrival', 1, '2026-05-08 06:39:54', '2026-05-08 06:47:03');
 
 -- --------------------------------------------------------
 
@@ -354,7 +354,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `addresses`
 --
 ALTER TABLE `addresses`
-  MODIFY `address_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `address_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `categories`

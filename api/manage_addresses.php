@@ -33,12 +33,17 @@ try {
         case 'add':
             // Add new address
             $stmt = $pdo->prepare("
-                INSERT INTO addresses (user_id, address_type, address_line, landmark, delivery_instructions, is_primary)
-                VALUES (:user_id, :type, :address, :landmark, :instructions, :is_primary)
+                INSERT INTO addresses (user_id, address_type, house_no, street, barangay, city, province, address_line, landmark, delivery_instructions, is_primary)
+                VALUES (:user_id, :type, :house_no, :street, :barangay, :city, :province, :address, :landmark, :instructions, :is_primary)
             ");
             $stmt->execute([
                 'user_id' => $user_id,
                 'type' => $data['address_type'] ?? 'home',
+                'house_no' => $data['house_no'] ?? null,
+                'street' => $data['street'] ?? null,
+                'barangay' => $data['barangay'] ?? null,
+                'city' => $data['city'] ?? null,
+                'province' => $data['province'] ?? null,
                 'address' => $data['address_line'] ?? '',
                 'landmark' => $data['landmark'] ?? null,
                 'instructions' => $data['delivery_instructions'] ?? null,
@@ -80,6 +85,11 @@ try {
             $stmt = $pdo->prepare("
                 UPDATE addresses 
                 SET address_type = :type,
+                    house_no = :house_no,
+                    street = :street,
+                    barangay = :barangay,
+                    city = :city,
+                    province = :province,
                     address_line = :address,
                     landmark = :landmark,
                     delivery_instructions = :instructions,
@@ -88,6 +98,11 @@ try {
             ");
             $stmt->execute([
                 'type' => $data['address_type'] ?? 'home',
+                'house_no' => $data['house_no'] ?? null,
+                'street' => $data['street'] ?? null,
+                'barangay' => $data['barangay'] ?? null,
+                'city' => $data['city'] ?? null,
+                'province' => $data['province'] ?? null,
                 'address' => $data['address_line'] ?? '',
                 'landmark' => $data['landmark'] ?? null,
                 'instructions' => $data['delivery_instructions'] ?? null,

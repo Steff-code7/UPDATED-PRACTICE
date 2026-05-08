@@ -64,7 +64,16 @@ $activePage = 'overview';
                             </div>
                             <div class="ACCOUNT-CARD-BODY">
                                 <?php if ($primaryAddress): ?>
-                                    <div><span>Home Address</span><strong id="overviewAddress"><?php echo htmlspecialchars($primaryAddress['address_line']); ?></strong></div>
+                                    <?php
+                                        $formattedAddress = '';
+                                        if (!empty($primaryAddress['house_no'])) $formattedAddress .= $primaryAddress['house_no'];
+                                        if (!empty($primaryAddress['street']))   $formattedAddress .= ($formattedAddress ? ' ' : '') . $primaryAddress['street'] . ' street';
+                                        if (!empty($primaryAddress['barangay'])) $formattedAddress .= ($formattedAddress ? ', ' : '') . 'Barangay ' . $primaryAddress['barangay'];
+                                        if (!empty($primaryAddress['city']))     $formattedAddress .= ($formattedAddress ? ', ' : '') . $primaryAddress['city'];
+                                        if (!empty($primaryAddress['province'])) $formattedAddress .= ($formattedAddress ? ', ' : '') . $primaryAddress['province'];
+                                        if (!$formattedAddress) $formattedAddress = $primaryAddress['address_line'];
+                                    ?>
+                                    <div><span>Home Address</span><strong id="overviewAddress"><?php echo htmlspecialchars($formattedAddress); ?></strong></div>
                                     <div><span>Landmark</span><strong id="overviewLandmark"><?php echo htmlspecialchars($primaryAddress['landmark'] ?: 'Not set'); ?></strong></div>
                                     <div><span>Delivery Instructions</span><strong id="overviewInstructions"><?php echo htmlspecialchars($primaryAddress['delivery_instructions'] ?: 'None'); ?></strong></div>
                                 <?php else: ?>

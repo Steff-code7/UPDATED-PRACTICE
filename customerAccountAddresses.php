@@ -50,7 +50,16 @@ try {
                                         </div>
                                     </div>
                                     <div class="ACCOUNT-CARD-BODY">
-                                        <div><span>Address</span><strong><?php echo htmlspecialchars($address['address_line']); ?></strong></div>
+                                        <?php
+                                            $formattedAddress = '';
+                                            if (!empty($address['house_no'])) $formattedAddress .= $address['house_no'];
+                                            if (!empty($address['street']))   $formattedAddress .= ($formattedAddress ? ' ' : '') . $address['street'] . ' street';
+                                            if (!empty($address['barangay'])) $formattedAddress .= ($formattedAddress ? ', ' : '') . 'Barangay ' . $address['barangay'];
+                                            if (!empty($address['city']))     $formattedAddress .= ($formattedAddress ? ', ' : '') . $address['city'];
+                                            if (!empty($address['province'])) $formattedAddress .= ($formattedAddress ? ', ' : '') . $address['province'];
+                                            if (!$formattedAddress) $formattedAddress = $address['address_line'];
+                                        ?>
+                                        <div><span>Address</span><strong><?php echo htmlspecialchars($formattedAddress); ?></strong></div>
                                         <div><span>Landmark</span><strong><?php echo htmlspecialchars($address['landmark'] ?: 'Not set'); ?></strong></div>
                                         <div><span>Instructions</span><strong><?php echo htmlspecialchars($address['delivery_instructions'] ?: 'None'); ?></strong></div>
                                     </div>
@@ -72,28 +81,50 @@ try {
                                         <option value="other">Other</option>
                                     </select>
                                 </div>
+                                <div class="address-fields-grid">
+                                    <div class="form-group">
+                                        <label for="houseNumber">House No. <span class="required">*</span></label>
+                                        <input type="text" id="houseNumber" name="house_number" required placeholder="e.g. 143">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="street">Street <span class="required">*</span></label>
+                                        <input type="text" id="street" name="street" required placeholder="e.g. Yas Street">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="barangay">Barangay <span class="required">*</span></label>
+                                        <input type="text" id="barangay" name="barangay" required placeholder="e.g. San Roque">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="city">City <span class="required">*</span></label>
+                                        <input type="text" id="city" name="city" required placeholder="e.g. Taguig City">
+                                    </div>
+                                </div>
                                 <div class="form-group">
-                                    <label for="addressLine">Address <span style="color: #ff4da6;">*</span></label>
-                                    <input type="text" id="addressLine" name="address_line" required placeholder="House number, street name">
+                                    <label for="province">Province <span class="required">*</span></label>
+                                    <input type="text" id="province" name="province" required placeholder="e.g. Metro Manila">
+                                </div>
+                                <div class="form-group">
+                                    <label for="completeAddress">Complete Address</label>
+                                    <input type="text" id="completeAddress" name="complete_address" readonly placeholder="Displays formatted address">
                                 </div>
                                 <div class="form-group">
                                     <label for="landmark">Landmark</label>
-                                    <input type="text" id="landmark" name="landmark" placeholder="Nearby landmark or reference">
+                                    <input type="text" id="landmark" name="landmark" placeholder="e.g. Near Petron, Beside 7-Eleven">
                                 </div>
                                 <div class="form-group">
                                     <label for="deliveryInstructions">Delivery Instructions</label>
-                                    <textarea id="deliveryInstructions" name="delivery_instructions" placeholder="Any special delivery instructions" rows="3"></textarea>
+                                    <textarea id="deliveryInstructions" name="delivery_instructions" placeholder="e.g. Leave at the gate, Call upon arrival, etc." rows="4"></textarea>
                                 </div>
-                                <div class="form-group">
-                                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <div class="form-group checkbox-group">
+                                    <label>
                                         <input type="checkbox" id="isPrimary" name="is_primary">
                                         <span>Set as primary address</span>
                                     </label>
                                 </div>
-                                <div style="display: flex; gap: 10px;">
+                                <div class="form-actions">
                                     <button type="submit" class="btn primary">Save Address</button>
                                     <button type="button" class="btn outline" id="closeAddressModal">Cancel</button>
-                                    <button type="button" class="btn danger" id="deleteAddressBtn" style="display: none; margin-left: auto;">Delete</button>
+                                    <button type="button" class="btn danger" id="deleteAddressBtn" style="display: none;">Delete</button>
                                 </div>
                             </form>
                         </div>

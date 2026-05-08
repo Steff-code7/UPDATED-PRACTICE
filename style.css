@@ -5222,8 +5222,10 @@ footer {
     background: rgba(0, 0, 0, 0.8);
     z-index: 1000;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     overflow-y: auto;
+    padding: 40px 16px;
+    box-sizing: border-box;
 }
 
 #addressModal.address-modal-overlay.show {
@@ -5235,8 +5237,9 @@ footer {
 .address-modal-inner {
     background: #121212;
     color: #f5f5f5;
+    width: 100%;
     max-width: 500px;
-    margin: 50px auto;
+    margin: 0 auto;
     border-radius: 16px;
     padding: 30px;
     box-shadow: 0 0 40px rgba(0, 0, 0, 0.75);
@@ -5278,6 +5281,21 @@ footer {
     color: #fff;
 }
 
+.address-modal-inner .address-fields-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.address-modal-inner .form-group.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    color: #fff;
+}
+
 .address-modal-inner .form-group input[type="checkbox"] {
     width: 20px;
     height: 20px;
@@ -5285,11 +5303,69 @@ footer {
     margin: 0;
 }
 
-.address-modal-inner .form-group label[style] span {
+.address-modal-inner .form-group label span,
+.address-modal-inner .form-group.checkbox-group span {
     font-size: 0.95rem;
     color: #fff;
 }
 
+.form-group .required,
+.address-modal-inner .required,
+.address-modal-inner .form-group label span.required {
+    color: #ff4da6;
+}
+
+.address-modal-inner .form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+    justify-content: flex-start;
+}
+
+.address-modal-inner .form-actions .btn {
+    min-width: 120px;
+}
+
+.address-modal-inner .form-actions .btn.danger {
+    margin-left: auto;
+}
+
+.address-modal-inner .form-actions .btn.outline {
+    background: transparent;
+    border-color: #ff4da6;
+    color: #fff;
+}
+
+.address-modal-inner .form-actions .btn.primary {
+    background: #ff4da6;
+    color: #000;
+}
+
+.address-modal-inner .form-actions .btn.danger {
+    background: #d32f2f;
+    color: #fff;
+    border: none;
+}
+
+.form-group input[readonly],
+.form-group textarea[readonly] {
+    background: rgba(255, 255, 255, 0.05);
+    cursor: not-allowed;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+@media (max-width: 760px) {
+    .address-modal-inner .address-fields-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .address-modal-inner {
+        width: calc(100% - 32px);
+        max-width: 520px;
+        padding: 24px;
+    }
+}
 
 /* ===================== BUTTON STYLES ===================== */
 .btn {

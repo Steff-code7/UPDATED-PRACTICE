@@ -313,6 +313,43 @@ document.addEventListener('DOMContentLoaded', async () => {
         const addAddressBtn = document.getElementById('addAddressBtn');
         const closeAddressModal = document.getElementById('closeAddressModal');
         const deleteAddressBtn = document.getElementById('deleteAddressBtn');
+        const completeAddressInput = document.getElementById('completeAddress');
+
+        // Function to format complete address from address object
+        function formatCompleteAddress(address) {
+            const houseNumber = address.house_no || '';
+            const street = address.street || '';
+            const barangay = address.barangay || '';
+            const city = address.city || '';
+            const province = address.province || '';
+
+            let completeAddress = '';
+            if (houseNumber) completeAddress += houseNumber;
+            if (street) completeAddress += (completeAddress ? ' ' : '') + street + ' street';
+            if (barangay) completeAddress += (completeAddress ? ', ' : '') + 'Barangay ' + barangay;
+            if (city) completeAddress += (completeAddress ? ', ' : '') + city;
+            if (province) completeAddress += (completeAddress ? ', ' : '') + province;
+
+            return completeAddress;
+        }
+
+        // Function to update complete address display
+        function updateCompleteAddress() {
+            const houseNumber = document.getElementById('houseNumber').value.trim();
+            const street = document.getElementById('street').value.trim();
+            const barangay = document.getElementById('barangay').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const province = document.getElementById('province').value.trim();
+
+            let completeAddress = '';
+            if (houseNumber) completeAddress += houseNumber;
+            if (street) completeAddress += (completeAddress ? ' ' : '') + street + ' street';
+            if (barangay) completeAddress += (completeAddress ? ', ' : '') + 'Barangay ' + barangay;
+            if (city) completeAddress += (completeAddress ? ', ' : '') + city;
+            if (province) completeAddress += (completeAddress ? ', ' : '') + province;
+
+            if (completeAddressInput) completeAddressInput.value = completeAddress;
+        }
 
         // Debug: Check if elements exist
         console.log('Checking for address elements...');
@@ -332,10 +369,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const modalTitle = document.getElementById('addressModalTitle');
                 if (modalTitle) modalTitle.textContent = 'Add New Address';
                 addressForm.reset();
+                if (completeAddressInput) completeAddressInput.value = '';
                 const addressIdInput = document.getElementById('addressId');
                 if (addressIdInput) addressIdInput.value = '';
                 deleteAddressBtn.style.display = 'none';
                 addressModal.classList.add('show');
+            });
+
+            // Add real-time update listeners to address fields
+            ['houseNumber', 'street', 'barangay', 'city', 'province'].forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    field.addEventListener('input', updateCompleteAddress);
+                    field.addEventListener('change', updateCompleteAddress);
+                }
             });
 
             closeAddressModal.addEventListener('click', () => {
@@ -354,11 +401,23 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const addressId = document.getElementById('addressId').value;
                 const action = addressId ? 'update' : 'add';
 
+                const houseNumber = document.getElementById('houseNumber').value.trim();
+                const street = document.getElementById('street').value.trim();
+                const barangay = document.getElementById('barangay').value.trim();
+                const city = document.getElementById('city').value.trim();
+                const province = document.getElementById('province').value.trim();
+                const compiledAddressLine = completeAddressInput ? completeAddressInput.value.trim() : [houseNumber, street, barangay, city, province].filter(Boolean).join(', ');
+
                 const payload = {
                     action: action,
                     address_id: addressId,
                     address_type: document.getElementById('addressType').value,
-                    address_line: document.getElementById('addressLine').value,
+                    house_no: houseNumber,
+                    street: street,
+                    barangay: barangay,
+                    city: city,
+                    province: province,
+                    address_line: compiledAddressLine,
                     landmark: document.getElementById('landmark').value,
                     delivery_instructions: document.getElementById('deliveryInstructions').value,
                     is_primary: document.getElementById('isPrimary').checked ? 1 : 0
@@ -382,7 +441,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             const overviewAddress = document.getElementById('overviewAddress');
                             const overviewLandmark = document.getElementById('overviewLandmark');
                             const overviewInstructions = document.getElementById('overviewInstructions');
-                            if (overviewAddress) overviewAddress.textContent = document.getElementById('addressLine').value;
+                            if (overviewAddress) overviewAddress.textContent = compiledAddressLine;
                             if (overviewLandmark) overviewLandmark.textContent = document.getElementById('landmark').value || 'Not set';
                             if (overviewInstructions) overviewInstructions.textContent = document.getElementById('deliveryInstructions').value || 'None';
                         }
@@ -455,6 +514,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 let html = '';
                 data.addresses.forEach(address => {
+                    const completeAddressDisplay = formatCompleteAddress(address);
                     const isPrimaryBtn = address.is_primary ? '' : `<button type="button" class="btn outline small" onclick="setAsPrimary(${address.address_id})">SET AS PRIMARY</button>`;
                     
                     html += `
@@ -467,7 +527,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 </div>
                             </div>
                             <div class="ACCOUNT-CARD-BODY">
-                                <div><span>Address</span><strong>${address.address_line}</strong></div>
+                                <div><span>Address</span><strong>${completeAddressDisplay}</strong></div>
                                 <div><span>Landmark</span><strong>${address.landmark || 'Not set'}</strong></div>
                                 <div><span>Instructions</span><strong>${address.delivery_instructions || 'None'}</strong></div>
                             </div>
@@ -498,10 +558,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                     document.getElementById('addressModalTitle').textContent = 'Edit Address';
                     document.getElementById('addressId').value = address.address_id;
                     document.getElementById('addressType').value = address.address_type;
-                    document.getElementById('addressLine').value = address.address_line;
+                    document.getElementById('houseNumber').value = address.house_no || '';
+                    document.getElementById('street').value = address.street || '';
+                    document.getElementById('barangay').value = address.barangay || '';
+                    document.getElementById('city').value = address.city || '';
+                    document.getElementById('province').value = address.province || '';
                     document.getElementById('landmark').value = address.landmark || '';
                     document.getElementById('deliveryInstructions').value = address.delivery_instructions || '';
                     document.getElementById('isPrimary').checked = address.is_primary;
+                    updateCompleteAddress();
                     deleteAddressBtn.style.display = 'block';
                     addressModal.classList.add('show');
                 }
