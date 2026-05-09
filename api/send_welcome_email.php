@@ -61,7 +61,8 @@ function createMailer(string $businessName)
 function sendVerificationEmail(string $customerName, string $emailAddress, string $verificationToken): bool
 {
     $businessName = 'YAS Milktea House';
-    $verificationLink = 'http://localhost/UPDATED%20PRACTICE/verify_email.php?token=' . urlencode($verificationToken);
+    $siteUrl = 'https://dress-quartered-showcase.ngrok-free.dev/UPDATED%20PRACTICE';
+    $verificationLink = $siteUrl . '/verify_email.php?token=' . urlencode($verificationToken);
 
     try {
         $mail = createMailer($businessName);
