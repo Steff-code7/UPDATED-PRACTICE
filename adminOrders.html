@@ -115,45 +115,124 @@
           </div>
 
 
-          <!-- ===================== TOOLBAR ===================== -->
+          <!-- ===================== SEARCH BAR ===================== -->
           <div class="ADMIN-ORDERS-TOOLS">
             <label class="ADMIN-SEARCH">
-              <input id="admin-order-search" type="search" placeholder="Search orders...">
+              <input id="admin-order-search" type="search" placeholder="Search across all orders...">
               <i class="fa-solid fa-magnifying-glass"></i>
-            </label>
-
-
-            <label class="ADMIN-FILTER">
-              <select id="admin-order-status">
-                <option>All Status</option>
-              </select>
             </label>
           </div>
 
 
-          <!-- ===================== ORDERS TABLE ===================== -->
-          <section class="ADMIN-TABLE-CARD">
-            <div class="ADMIN-TABLE-WRAP">
-              <table class="ADMIN-TABLE ADMIN-ORDERS-TABLE">
-                <thead>
-                  <tr>
-                    <th>Order ID</th>
-                    <th>Customer</th>
-                    <th>Items</th>
-                    <th>Total</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="admin-orders-body"></tbody>
-              </table>
-            </div>
-          </section>
+          <!-- ===================== ORDERS TABLES ===================== -->
+          <div class="ADMIN-ORDERS-GRID">
+            <!-- PENDING ORDERS TABLE -->
+            <section class="ADMIN-STATUS-TABLE-CARD">
+              <div class="ADMIN-STATUS-TABLE-HEADER">
+                <h3>Pending Orders</h3>
+                <span class="ADMIN-STATUS-BADGE pending" id="pending-count">0</span>
+              </div>
+              <div class="ADMIN-STATUS-TABLE-WRAP">
+                <table class="ADMIN-TABLE ADMIN-STATUS-TABLE">
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Customer</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="pending-orders-body"></tbody>
+                </table>
+              </div>
+            </section>
 
+            <!-- PREPARING ORDERS TABLE -->
+            <section class="ADMIN-STATUS-TABLE-CARD">
+              <div class="ADMIN-STATUS-TABLE-HEADER">
+                <h3>Preparing Orders</h3>
+                <span class="ADMIN-STATUS-BADGE preparing" id="preparing-count">0</span>
+              </div>
+              <div class="ADMIN-STATUS-TABLE-WRAP">
+                <table class="ADMIN-TABLE ADMIN-STATUS-TABLE">
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Customer</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="preparing-orders-body"></tbody>
+                </table>
+              </div>
+            </section>
 
-          <!-- ===================== PAGINATION ===================== -->
-          <div class="ADMIN-PAGINATION" id="admin-orders-pagination"></div>
+            <!-- COMPLETED ORDERS TABLE -->
+            <section class="ADMIN-STATUS-TABLE-CARD">
+              <div class="ADMIN-STATUS-TABLE-HEADER">
+                <h3>Completed Orders</h3>
+                <span class="ADMIN-STATUS-BADGE completed" id="completed-count">0</span>
+              </div>
+              <div class="ADMIN-STATUS-TABLE-WRAP">
+                <table class="ADMIN-TABLE ADMIN-STATUS-TABLE">
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Customer</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="completed-orders-body"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <!-- CANCELLED ORDERS TABLE -->
+            <section class="ADMIN-STATUS-TABLE-CARD">
+              <div class="ADMIN-STATUS-TABLE-HEADER">
+                <h3>Cancelled Orders</h3>
+                <span class="ADMIN-STATUS-BADGE cancelled" id="cancelled-count">0</span>
+              </div>
+              <div class="ADMIN-STATUS-TABLE-WRAP">
+                <table class="ADMIN-TABLE ADMIN-STATUS-TABLE">
+                  <thead>
+                    <tr>
+                      <th>Order ID</th>
+                      <th>Customer</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cancelled-orders-body"></tbody>
+                </table>
+              </div>
+            </section>
+          </div>
         </section>
+
+        <!-- ===================== ORDER DETAILS MODAL ===================== -->
+        <div class="ADMIN-MODAL-OVERLAY" id="order-details-modal" hidden>
+          <div class="ADMIN-MODAL" role="dialog" aria-modal="true" aria-labelledby="order-details-title" tabindex="-1">
+            <div class="ADMIN-MODAL-HEADER">
+              <h3 id="order-details-title">Order Details</h3>
+              <button type="button" class="ADMIN-MODAL-CLOSE" aria-label="Close modal">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <div class="ADMIN-MODAL-BODY" id="order-modal-body">
+              <!-- Content will be injected here -->
+            </div>
+            <div class="ADMIN-MODAL-FOOTER">
+              <button type="button" class="ADMIN-MODAL-CANCEL-BTN" id="modal-cancel-btn" style="display: none;">
+                Cancel Order
+              </button>
+              <button type="button" class="ADMIN-MODAL-NEXT-BTN" id="modal-next-btn" style="display: none;">
+                Next Status
+              </button>
+              <button type="button" class="ADMIN-MODAL-CLOSE-BTN">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </main>

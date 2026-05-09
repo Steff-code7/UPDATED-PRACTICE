@@ -1946,252 +1946,297 @@ if (matchingOption) {
 
   // =================== ADMIN ORDERS PAGE LOGIC ===================
   (function initAdminOrdersPage() {
-    const tableBody = qs("#admin-orders-body");
-    const pagination = qs("#admin-orders-pagination");
+    const pendingBody = qs("#pending-orders-body");
+    const preparingBody = qs("#preparing-orders-body");
+    const completedBody = qs("#completed-orders-body");
+    const cancelledBody = qs("#cancelled-orders-body");
     const searchInput = qs("#admin-order-search");
-    const statusSelect = qs("#admin-order-status");
+    const modal = qs("#order-details-modal");
+    const modalBody = qs("#order-modal-body");
+    const modalCloseBtn = qs(".ADMIN-MODAL-CLOSE", modal);
+    const modalCloseBtnBottom = qs(".ADMIN-MODAL-CLOSE-BTN", modal);
+    const modalCancelBtn = qs("#modal-cancel-btn");
+    const modalNextBtn = qs("#modal-next-btn");
 
+    if (!pendingBody || !preparingBody || !completedBody || !cancelledBody) return;
 
-
-
-    if (!tableBody || !pagination || !searchInput || !statusSelect) return;
-
-
-
-
-    const ORDERS_PER_PAGE = 8;
-    let currentPage = 1;
     let orders = [];
+    let allOrderDetails = {}; // Store full order details
 
     const formatOrderId = (id) => `#ORD-${String(Number(id || 0)).padStart(4, "0")}`;
-    const toPeso = (amount) => `₱${Number(amount || 0).toLocaleString("en-PH", { minimumFractionDigits: 2 })}`;
-    const normalizeStatusClass = (statusValue) => {
-      const s = String(statusValue || "pending").toLowerCase().trim();
-      if (s === "cancelled" || s === "canceled") return "canceled";
+    const toPeso = (amount) => `\u20b1${Number(amount || 0).toLocaleString("en-PH", { minimumFractionDigits: 2 })}`;
+
+    const normalizeStatus = (status) => {
+      const s = String(status || "pending").toLowerCase().trim();
+      if (s === "cancelled" || s === "canceled") return "cancelled";
       return s;
     };
-    const toTitleStatus = (statusValue) => {
-      const s = String(statusValue || "pending").toLowerCase().trim();
-      if (s === "cancelled") return "Canceled";
-      return s.charAt(0).toUpperCase() + s.slice(1);
-    };
 
-    const populateStatusFilter = () => {
-      const unique = ["All Status", ...new Set(orders.map((o) => toTitleStatus(o.status)))];
-      statusSelect.innerHTML = unique
-        .map((s) => `<option value="${s}">${s}</option>`)
-        .join("");
-    };
+    const escapeHtml = (value) =>
+      String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
-    tableBody.innerHTML = `<tr><td colspan="6">Loading orders...</td></tr>`;
+    // Fetch all orders on page load
+    function loadOrders() {
+      fetch("api/get_orders.php")
+        .then((res) => {
+          if (!res.ok) throw new Error("Failed to load orders.");
+          return res.json();
+        })
+        .then((result) => {
+          if (!result.success) throw new Error(result.message || "Could not fetch orders.");
 
-    fetch("api/get_orders.php")
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to load orders.");
-        return res.json();
-      })
-      .then((result) => {
-        if (!result.success) throw new Error(result.message || "Could not fetch orders.");
-        orders = (result.data || []).map((o) => ({
-          id: formatOrderId(o.order_id),
-          customer: o.username || "Guest",
-          items: o.items || "No items",
-          total: toPeso(o.total_amount),
-          status: toTitleStatus(o.status),
-          statusClass: normalizeStatusClass(o.status),
-        }));
-        populateStatusFilter();
-        renderTable();
-      })
-      .catch(() => {
-        tableBody.innerHTML = `<tr><td colspan="6">Unable to load orders.</td></tr>`;
-      });
+          allOrderDetails = {};
+          orders = (result.data || []).map((o) => {
+            const orderId = formatOrderId(o.order_id);
+            allOrderDetails[orderId] = o; // Store full details
+            return {
+              id: orderId,
+              order_id: o.order_id,
+              customer: o.username || "Guest",
+              items: o.items || "No items",
+              total: toPeso(o.total_amount),
+              status: normalizeStatus(o.status),
+              fullname: o.fullname || o.username || "Guest"
+            };
+          });
 
+          renderAllTables();
+        })
+        .catch((error) => {
+          console.error("Error loading orders:", error);
+          pendingBody.innerHTML = `<tr><td colspan="3" class="ADMIN-TABLE-EMPTY">Unable to load orders.</td></tr>`;
+        });
+    }
 
-
-
-    const getFilteredOrders = () => {
+    // Get filtered orders by status and search
+    function getOrdersByStatus(status) {
       const query = searchInput.value.trim().toLowerCase();
-      const selectedStatus = statusSelect.value;
-
-
-
-
       return orders.filter((order) => {
+        const matchesStatus = order.status === status;
         const matchesQuery =
           !query ||
           order.id.toLowerCase().includes(query) ||
           order.customer.toLowerCase().includes(query) ||
-          order.items.toLowerCase().includes(query) ||
-          order.status.toLowerCase().includes(query);
-        const matchesStatus =
-          selectedStatus === "All Status" || order.status === selectedStatus;
-
-
-
-
-        return matchesQuery && matchesStatus;
+          order.items.toLowerCase().includes(query);
+        return matchesStatus && matchesQuery;
       });
-    };
+    }
 
+    // Render table for a specific status
+    function renderTable(status, bodyElement) {
+      const statusOrders = getOrdersByStatus(status);
+      if (statusOrders.length === 0) {
+        bodyElement.innerHTML = `<tr><td colspan="3" class="ADMIN-TABLE-EMPTY">No ${status} orders.</td></tr>`;
+      } else {
+        bodyElement.innerHTML = statusOrders
+          .map(
+            (order) => `
+              <tr>
+                <td>${escapeHtml(order.id)}</td>
+                <td>${escapeHtml(order.customer)}</td>
+                <td>
+                  <div class="ADMIN-TABLE-ACTIONS">
+                    <button type="button" class="view-order-btn" data-order-id="${escapeHtml(order.order_id)}" aria-label="View ${escapeHtml(order.id)} details">
+                      <i class="fa-regular fa-eye"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `
+          )
+          .join("");
+      }
 
+      // Update count badge
+      const countBadge = qs(`#${status}-count`);
+      if (countBadge) {
+        countBadge.textContent = statusOrders.length;
+      }
+    }
 
+    // Render all four tables
+    function renderAllTables() {
+      renderTable("pending", pendingBody);
+      renderTable("preparing", preparingBody);
+      renderTable("completed", completedBody);
+      renderTable("cancelled", cancelledBody);
+      attachViewOrderHandlers();
+    }
 
-    const createPageButton = (label, page, isActive = false, isDisabled = false, icon = "") => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = `ADMIN-PAGE-BUTTON${isActive ? " active" : ""}`;
-      button.disabled = isDisabled;
-      button.innerHTML = icon || label;
-
-
-
-
-      if (!isDisabled) {
-        button.addEventListener("click", () => {
-          currentPage = page;
-          renderTable();
+    // Attach click handlers to view order buttons
+    function attachViewOrderHandlers() {
+      document.querySelectorAll(".view-order-btn").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          const orderId = this.dataset.orderId;
+          showOrderDetails(orderId);
         });
-      }
-
-
-
-
-      return button;
-    };
-
-
-
-
-    const renderPagination = (totalPages) => {
-      pagination.innerHTML = "";
-
-
-
-
-      pagination.appendChild(
-        createPageButton(
-          "",
-          Math.max(1, currentPage - 1),
-          false,
-          currentPage === 1,
-          '<i class="fa-solid fa-chevron-left"></i>'
-        )
-      );
-
-
-
-
-      const pagesToShow = [];
-      for (let page = 1; page <= totalPages; page += 1) {
-        if (page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1) {
-          pagesToShow.push(page);
-        }
-      }
-
-
-
-
-      pagesToShow.forEach((page, index) => {
-        const previousPage = pagesToShow[index - 1];
-        if (previousPage && page - previousPage > 1) {
-          const ellipsis = document.createElement("span");
-          ellipsis.className = "ADMIN-PAGE-ELLIPSIS";
-          ellipsis.textContent = "...";
-          pagination.appendChild(ellipsis);
-        }
-
-
-
-
-        pagination.appendChild(createPageButton(String(page), page, page === currentPage));
       });
+    }
 
+    // Show order details in modal
+    function showOrderDetails(orderId) {
+      const order = orders.find((o) => o.order_id === parseInt(orderId));
+      if (!order) return;
 
+      const fullOrder = allOrderDetails[order.id];
 
-
-      pagination.appendChild(
-        createPageButton(
-          "",
-          Math.min(totalPages, currentPage + 1),
-          false,
-          currentPage === totalPages,
-          '<i class="fa-solid fa-chevron-right"></i>'
-        )
-      );
-    };
-
-
-
-
-    const renderTable = () => {
-      const filteredOrders = getFilteredOrders();
-      const totalPages = Math.max(1, Math.ceil(filteredOrders.length / ORDERS_PER_PAGE));
-
-
-
-
-      if (currentPage > totalPages) {
-        currentPage = totalPages;
+      // Parse items if it's a string
+      let itemsList = [];
+      if (fullOrder.items && fullOrder.items !== "No items") {
+        itemsList = fullOrder.items.split(", ").map(item => ({
+          name: item,
+          quantity: fullOrder.item_count || 1
+        }));
       }
 
+      // Build modal content
+      let modalContent = `
+        <div class="ADMIN-MODAL-DETAIL">
+          <div class="ADMIN-MODAL-DETAIL-LABEL">Order ID</div>
+          <div class="ADMIN-MODAL-DETAIL-VALUE">${escapeHtml(order.id)}</div>
+        </div>
+        <div class="ADMIN-MODAL-DETAIL">
+          <div class="ADMIN-MODAL-DETAIL-LABEL">Customer Username and Fullname</div>
+          <div class="ADMIN-MODAL-DETAIL-VALUE">
+            ${escapeHtml(order.customer)}${fullOrder.fullname && fullOrder.fullname !== order.customer ? ` (${escapeHtml(fullOrder.fullname)})` : ''}
+          </div>
+        </div>
+        <div class="ADMIN-MODAL-DETAIL">
+          <div class="ADMIN-MODAL-DETAIL-LABEL">Status</div>
+          <div class="ADMIN-MODAL-DETAIL-VALUE" style="text-transform: capitalize; color: #007bff; font-weight: 700;">${order.status}</div>
+        </div>
+        <div class="ADMIN-MODAL-DETAIL">
+          <div class="ADMIN-MODAL-DETAIL-LABEL">Items</div>
+          <div class="ADMIN-MODAL-ITEMS-LIST">
+      `;
 
+      if (itemsList.length > 0) {
+        modalContent += itemsList
+          .map(
+            (item) => `
+              <div class="ADMIN-MODAL-ITEM">
+                <div class="ADMIN-MODAL-ITEM-NAME">${escapeHtml(item.name)}</div>
+              </div>
+            `
+          )
+          .join("");
+      } else {
+        modalContent += `<div class="ADMIN-MODAL-ITEM"><div class="ADMIN-MODAL-ITEM-NAME">${escapeHtml(fullOrder.items || "No items")}</div></div>`;
+      }
 
+      modalContent += `
+          </div>
+        </div>
+        <div class="ADMIN-MODAL-DETAIL">
+          <div class="ADMIN-MODAL-DETAIL-LABEL">Total</div>
+          <div class="ADMIN-MODAL-DETAIL-VALUE">${order.total}</div>
+        </div>
+      `;
 
-      const start = (currentPage - 1) * ORDERS_PER_PAGE;
-      const currentOrders = filteredOrders.slice(start, start + ORDERS_PER_PAGE);
+      modalBody.innerHTML = modalContent;
 
+      // Show/hide action buttons based on status
+      modalCancelBtn.style.display = order.status === "pending" ? "inline-flex" : "none";
+      modalNextBtn.style.display = order.status !== "completed" && order.status !== "cancelled" ? "inline-flex" : "none";
 
+      // Attach action handlers
+      modalCancelBtn.onclick = () => cancelOrder(orderId);
+      modalNextBtn.onclick = () => moveOrderToNextStatus(orderId);
 
+      // Show modal
+      modal.hidden = false;
+      modal.classList.add("active");
+      const dialog = qs(".ADMIN-MODAL", modal);
+      if (dialog) dialog.focus();
+    }
 
-      tableBody.innerHTML = currentOrders.length
-        ? currentOrders
-            .map(
-              (order) => `
-                <tr>
-                  <td>${order.id}</td>
-                  <td>${order.customer}</td>
-                  <td>${order.items}</td>
-                  <td>${order.total}</td>
-                  <td><span class="ADMIN-STATUS ${order.statusClass}">${order.status}</span></td>
-                  <td>
-                    <div class="ADMIN-TABLE-ACTIONS">
-                      <button type="button" aria-label="View ${order.id}">
-                        <i class="fa-regular fa-eye"></i>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              `
-            )
-            .join("")
-        : `
-            <tr>
-              <td colspan="6" class="ADMIN-NO-DATA">No orders matched your search.</td>
-            </tr>
-          `;
+    // Move order to next status
+    function moveOrderToNextStatus(orderId) {
+      const order = orders.find((o) => o.order_id === parseInt(orderId));
+      if (!order) return;
 
+      const nextStatuses = {
+        pending: "preparing",
+        preparing: "completed",
+        completed: "completed",
+        cancelled: "cancelled"
+      };
 
+      const nextStatus = nextStatuses[order.status];
+      if (!nextStatus || nextStatus === order.status) {
+        alert("This order cannot be moved to the next status.");
+        return;
+      }
 
+      updateOrderStatus(orderId, nextStatus);
+    }
 
-      renderPagination(totalPages);
-    };
+    // Cancel order
+    function cancelOrder(orderId) {
+      if (!confirm("Are you sure you want to cancel this order?")) return;
+      updateOrderStatus(orderId, "cancelled");
+    }
 
+    // Update order status via API
+    function updateOrderStatus(orderId, newStatus) {
+      fetch("api/update_order_status.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          order_id: orderId,
+          status: newStatus
+        })
+      })
+        .then((res) => res.json())
+        .then((result) => {
+          if (result.success) {
+            alert(`Order ${newStatus === 'cancelled' ? 'cancelled' : 'moved to ' + newStatus} successfully!`);
+            closeModal();
+            loadOrders(); // Reload orders
+          } else {
+            alert("Error: " + result.message);
+          }
+        })
+        .catch((error) => {
+          console.error("Error updating order:", error);
+          alert("Failed to update order status.");
+        });
+    }
 
+    // Close modal
+    function closeModal() {
+      modal.classList.remove("active");
+      modal.hidden = true;
+    }
 
+    // Modal close event listeners
+    modalCloseBtn.addEventListener("click", closeModal);
+    modalCloseBtnBottom.addEventListener("click", closeModal);
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && modal.classList.contains("active")) {
+        closeModal();
+      }
+    });
 
+    // Search input listener
     searchInput.addEventListener("input", () => {
-      currentPage = 1;
-      renderTable();
+      renderAllTables();
     });
 
-
-
-
-    statusSelect.addEventListener("change", () => {
-      currentPage = 1;
-      renderTable();
-    });
+    // Initial load
+    loadOrders();
   })();
 
 

@@ -11,6 +11,7 @@ try {
     $sql = "
         SELECT o.order_id, o.total_amount, o.status, o.order_date,
                COALESCE(u.username, 'Guest') AS username,
+               COALESCE(u.full_name, 'Guest') AS fullname,
                COALESCE(
                    GROUP_CONCAT(
                        DISTINCT p.product_name
@@ -43,7 +44,7 @@ try {
         $sql .= " WHERE " . implode(" AND ", $conditions);
     }
 
-    $sql .= " GROUP BY o.order_id, o.total_amount, o.status, o.order_date, u.username ORDER BY o.order_date DESC, o.order_id DESC";
+    $sql .= " GROUP BY o.order_id, o.total_amount, o.status, o.order_date, u.username, u.full_name ORDER BY o.order_date DESC, o.order_id DESC";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
