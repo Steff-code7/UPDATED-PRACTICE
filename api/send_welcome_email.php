@@ -17,17 +17,32 @@ function createMailer(string $businessName)
             return null;
         }
 
+        $configPath = __DIR__ . '/mail_config.php';
+        if (!file_exists($configPath)) {
+            error_log('Mail config missing. Copy api/mail_config.example.php to api/mail_config.php.');
+            return null;
+        }
+
+        $config = require $configPath;
+        $host = $config['host'] ?? '';
+        $username = $config['username'] ?? '';
+        $password = $config['password'] ?? '';
+        $port = (int) ($config['port'] ?? 587);
+
+        if ($host === '' || $username === '' || $password === '') {
+            error_log('Mail config is incomplete.');
+            return null;
+        }
+
         $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
         $mail->isSMTP();
-        $mail->Host = 'smtp.gmail.com';
+        $mail->Host = $host;
         $mail->SMTPAuth = true;
-
-        // Replace these with your real Gmail/business email and app password.
-        $mail->Username = 'sbaltazar.1012@umak.edu.ph';
-        $mail->Password = 'cedrqxjhnusvdswe';
+        $mail->Username = $username;
+        $mail->Password = $password;
 
         $mail->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
+        $mail->Port = $port;
         $mail->SMTPOptions = [
             'ssl' => [
                 'verify_peer' => false,
