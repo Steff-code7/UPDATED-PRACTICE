@@ -271,11 +271,12 @@ document.addEventListener("click", (event) => {
     const productCount = qs("#admin-dashboard-product-count");
     const activeProductCount = qs("#admin-dashboard-active-product-count");
     const archivedProductCount = qs("#admin-dashboard-archived-product-count");
+    const revenueTotal = qs("#admin-dashboard-revenue");
     const recentOrdersBody = qs("#admin-dashboard-recent-orders-body");
     const bestSellingBody = qs("#admin-best-selling-body");
     const leastSellingBody = qs("#admin-least-selling-body");
 
-    if (!customerCount && !orderCount && !productCount && !recentOrdersBody) return;
+    if (!customerCount && !orderCount && !productCount && !revenueTotal && !recentOrdersBody) return;
 
     const toPeso = (amount) => `₱${Number(amount || 0).toLocaleString('en-PH', { minimumFractionDigits: 2 })}`;
     const formatOrderId = (orderId) => `#ORD-${String(Number(orderId || 0)).padStart(4, "0")}`;
@@ -308,6 +309,7 @@ document.addEventListener("click", (event) => {
         if (productCount) productCount.textContent = result.product_count ?? 0;
         if (activeProductCount) activeProductCount.textContent = result.active_product_count ?? 0;
         if (archivedProductCount) archivedProductCount.textContent = result.archived_product_count ?? 0;
+        if (revenueTotal) revenueTotal.textContent = toPeso(result.total_revenue || 0);
 
         // Render Best Selling Products
         if (bestSellingBody) {
@@ -428,6 +430,7 @@ document.addEventListener("click", (event) => {
         if (productCount) productCount.textContent = "--";
         if (activeProductCount) activeProductCount.textContent = "--";
         if (archivedProductCount) archivedProductCount.textContent = "--";
+        if (revenueTotal) revenueTotal.textContent = "--";
         if (bestSellingBody) {
           bestSellingBody.innerHTML = `
             <tr>

@@ -2712,9 +2712,11 @@ footer {
     display: block;
     margin-top: 2px;
     color: #111;
+    font-family: "Poppins", sans-serif;
     font-size: 1.8rem;
     line-height: 1;
     font-weight: 800;
+    font-variant-numeric: tabular-nums;
 }
 
 .ADMIN-STAT-CARD p {

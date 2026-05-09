@@ -27,6 +27,13 @@ try {
     ");
     $orderCountStats = $orderCountStmt->fetch();
 
+    $revenueStmt = $pdo->query("
+        SELECT COALESCE(SUM(total_amount), 0) AS total_revenue
+        FROM orders
+        WHERE LOWER(TRIM(status)) = 'completed'
+    ");
+    $revenueStats = $revenueStmt->fetch();
+
     $recentOrdersStmt = $pdo->query("
         SELECT
             o.order_id,
@@ -90,6 +97,7 @@ try {
         'archived_product_count' => (int) ($productCountStats['archived_products'] ?? 0),
         'customer_count' => (int) ($customerStats['customer_count'] ?? 0),
         'total_orders' => (int) ($orderCountStats['total_orders'] ?? 0),
+        'total_revenue' => (float) ($revenueStats['total_revenue'] ?? 0),
         'recent_orders' => $recentOrders,
         'best_selling' => $bestSelling,
         'least_selling' => $leastSelling,
