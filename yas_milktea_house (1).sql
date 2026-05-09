@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 08, 2026 at 05:46 PM
+-- Generation Time: May 09, 2026 at 02:33 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -291,7 +291,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `email`, `password_hash`, `role`, `status`, `email_verified`, `verification_token`, `verified_at`, `created_at`, `full_name`, `contact_number`, `date_of_birth`, `profile_picture`, `updated_at`) VALUES
-(21, 'Stef', 'marekeyks101@gmail.com', '$2y$10$46yj/F93p7Gf3eJ0gEtOG.bYAkSg62LkejbqvkwW.4/4BpSXeLA6O', 'admin', 'active', 0, NULL, NULL, '2026-05-01 19:36:27', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-04 16:16:21'),
+(21, 'Stef_admin', 'marekeyks101@gmail.com', '$2y$10$46yj/F93p7Gf3eJ0gEtOG.bYAkSg62LkejbqvkwW.4/4BpSXeLA6O', 'admin', 'active', 0, NULL, NULL, '2026-05-01 19:36:27', 'Stephanie Baltazar', NULL, NULL, 'images/profile_21_1778329893.jpg', '2026-05-09 12:31:33'),
 (27, 'testuser456', 'testuser456@example.com', '$2y$10$94OqRBmJyUjqWW5I69r.leBf7jwvCRpIxzS7Z.TnVtav/LbMewEe6', 'customer', 'active', 0, NULL, NULL, '2026-05-04 16:03:10', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-04 16:16:21'),
 (28, 'krisha_customer', 'narcisokrishaaudrey@gmail.com', '$2y$10$awo1Y7BwclbQEA0vQnJB3.ispUVF1lSKSZO1o9gkvZQWlrK8iXyNW', 'customer', 'active', 0, NULL, NULL, '2026-05-04 16:11:03', NULL, NULL, NULL, 'images/profile_28_1778251916.jpg', '2026-05-08 14:51:56'),
 (34, 'Penny', 'Kirigato.07@gmail.com', '$2y$10$L9dSP9BGkluYkz6BdwhFjuCDcDKRjySWswHNea6wXmcfeM8Y0Lep2', 'customer', 'active', 1, NULL, '2026-05-07 11:20:55', '2026-05-07 11:19:01', 'Penny Pilasyo', '09565656', '1895-02-05', 'images/yas_logo.png', '2026-05-07 11:30:06'),

@@ -40,12 +40,14 @@ try {
     }
 
     // Save session
-    $_SESSION['user_id']  = $user['user_id'];
-    $_SESSION['username'] = $user['username'];
-    $_SESSION['role']     = $user['role'];
+    $_SESSION['user_id']     = $user['user_id'];
+    $_SESSION['username']    = $user['username'];
+    $_SESSION['role']        = $user['role'];
+    $_SESSION['full_name']   = $user['full_name'];
+    $_SESSION['profile_picture'] = $user['profile_picture'];
 
     // Redirect based on role
-    $redirect = $user['role'] === 'admin' ? 'adminDashboard.html' : 'customerHomePage.html';
+    $redirect = in_array($user['role'], ['admin', 'staff']) ? 'adminDashboard.html' : 'customerHomePage.html';
 
     echo json_encode([
         'message'  => 'Login successful.',

@@ -4,9 +4,14 @@ session_start();
 
 require_once 'db.php';
 
+// Debug: Log session state
+error_log("Update Account - Session data: " . print_r($_SESSION, true));
+error_log("Update Account - Session ID: " . session_id());
+
 if (!isset($_SESSION['user_id'])) {
+    error_log("Update Account - No user_id in session");
     http_response_code(401);
-    echo json_encode(['message' => 'Unauthorized']);
+    echo json_encode(['message' => 'Unauthorized', 'debug' => ['session_id' => session_id(), 'session_keys' => array_keys($_SESSION)]]);
     exit;
 }
 
