@@ -96,6 +96,14 @@
 <div class="AUTH-INPUT">
                 <i class="fa fa-key"></i>
                 <input id="signupPassword" type="password" placeholder="Password">
+                <button type="button" class="password-toggle" aria-label="Toggle password visibility" data-target="signupPassword"><i class="fa fa-eye"></i></button>
+            </div>
+
+
+<div class="AUTH-INPUT">
+                <i class="fa fa-key"></i>
+                <input id="signupConfirmPassword" type="password" placeholder="Confirm Password">
+                <button type="button" class="password-toggle" aria-label="Toggle confirm password visibility" data-target="signupConfirmPassword"><i class="fa fa-eye"></i></button>
             </div>
 
 
@@ -120,6 +128,7 @@
 <div class="AUTH-INPUT">
                 <i class="fa fa-key"></i>
                 <input id="loginPassword" type="password" placeholder="Password">
+                <button type="button" class="password-toggle" aria-label="Toggle password visibility" data-target="loginPassword"><i class="fa fa-eye"></i></button>
             </div>
 
 
@@ -299,6 +308,7 @@
     const signupUsername = document.getElementById("signupUsername");
     const signupEmail = document.getElementById("signupEmail");
     const signupPassword = document.getElementById("signupPassword");
+    const signupConfirmPassword = document.getElementById("signupConfirmPassword");
     const signupSubmit = document.getElementById("signupSubmit");
     const signupFeedback = document.getElementById("signupFeedback");
     const loginIdentifier = document.getElementById("loginIdentifier");
@@ -323,15 +333,40 @@ goSignup.onclick = () => {
         button.textContent = isLoading ? loadingText : defaultText;
     };
 
+    const validatePasswordMatch = () => {
+        const password = signupPassword.value;
+        const confirmPassword = signupConfirmPassword.value;
+
+        if (!confirmPassword) {
+            signupFeedback.textContent = "";
+            return true;
+        }
+
+        if (password !== confirmPassword) {
+            signupFeedback.textContent = "Passwords do not match.";
+            return false;
+        }
+
+        signupFeedback.textContent = "";
+        return true;
+    };
+
+    signupPassword.addEventListener("input", validatePasswordMatch);
+    signupConfirmPassword.addEventListener("input", validatePasswordMatch);
 
     const attemptSignup = async () => {
         const username = signupUsername.value.trim();
         const email = signupEmail.value.trim();
         const password = signupPassword.value;
+        const confirmPassword = signupConfirmPassword.value;
 
 
-        if (!username || !email || !password) {
+        if (!username || !email || !password || !confirmPassword) {
             signupFeedback.textContent = "Please complete all signup fields.";
+            return;
+        }
+
+        if (!validatePasswordMatch()) {
             return;
         }
 
@@ -362,6 +397,7 @@ goSignup.onclick = () => {
             signupUsername.value = "";
             signupEmail.value = "";
             signupPassword.value = "";
+            signupConfirmPassword.value = "";
             showVerificationModal();
         } catch (error) {
             signupFeedback.textContent = "Unable to connect to the server.";
@@ -426,8 +462,35 @@ goSignup.onclick = () => {
     signupSubmit.onclick = attemptSignup;
     loginSubmit.onclick = attemptLogin;
 
+    // Password show/hide toggles
+    document.querySelectorAll('.password-toggle').forEach(btn => {
+        const input = document.getElementById(btn.dataset.target);
 
-    [signupUsername, signupEmail, signupPassword, loginIdentifier, loginPassword].filter(Boolean).forEach((input) => {
+        // Show toggle only when the field has a value
+        input.addEventListener('input', () => {
+            const hasValue = input.value.length > 0;
+            btn.classList.toggle('visible', hasValue);
+            // Reset to hidden state when field is cleared
+            if (!hasValue) {
+                input.type = 'password';
+                btn.querySelector('i').className = 'fa fa-eye';
+            }
+        });
+
+        btn.addEventListener('click', () => {
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        });
+    });
+
+
+    [signupUsername, signupEmail, signupPassword, signupConfirmPassword, loginIdentifier, loginPassword].filter(Boolean).forEach((input) => {
         input.addEventListener("keydown", (event) => {
             if (event.key === "Enter") {
                 event.preventDefault();

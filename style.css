@@ -4393,6 +4393,44 @@ footer {
     pointer-events: none;
 }
 
+.AUTH-INPUT .password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 18px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 6px;
+    z-index: 2;
+    color: rgba(34, 34, 34, 0.78);
+    font-size: 1rem;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+}
+
+.AUTH-INPUT .password-toggle.visible {
+    display: flex;
+}
+
+.AUTH-INPUT .password-toggle:hover {
+    color: #000;
+}
+
+.AUTH-INPUT .password-toggle i {
+    position: static;
+    transform: none;
+    pointer-events: none;
+    color: inherit;
+    width: 1.25em;
+    text-align: center;
+}
+
 .FORM input {
     display: block;
     width: 100%;
@@ -4411,6 +4449,16 @@ footer {
 
 .FORM input::placeholder {
     color: rgba(34, 34, 34, 0.78);
+}
+
+/* Hide browser-native password reveal button */
+.FORM input[type="password"]::-ms-reveal,
+.FORM input[type="password"]::-ms-clear {
+    display: none;
+}
+.FORM input[type="password"]::-webkit-credentials-auto-fill-button,
+.FORM input[type="password"]::-webkit-textfield-decoration-container {
+    display: none;
 }
 
 .FORM.login .AUTH-INPUT:hover i,
@@ -4433,7 +4481,7 @@ footer {
     color: #000;
 }
 
-.FORM button {
+.FORM button:not(.password-toggle) {
     display: block;
     width: 350px;
     max-width: 100%;
