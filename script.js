@@ -3889,6 +3889,13 @@ updateTotal();
     if (checkoutBtn) {
       checkoutBtn.addEventListener("click", (event) => {
         event.preventDefault();
+
+        const isCustomerPage = window.location.pathname.toLowerCase().includes("customeritems.html");
+        if (!isCustomerPage) {
+          window.location.href = "loginSignUp.html";
+          return;
+        }
+
         window.location.href = buildCheckoutUrl();
       });
     }

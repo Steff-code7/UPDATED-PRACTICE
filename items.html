@@ -29,7 +29,7 @@
         <nav class="nav-links">
             <a href="index.html">home</a>
             <a href="aboutUs.html">about</a>
-            <a href="customerMenu.php">menu</a>
+            <a href="menu.php">menu</a>
         </nav>
         <a class="order-btn" href="loginSignUp.html">ORDER NOW</a>
         <div class="menu-toggle">&#9776;</div>
@@ -66,30 +66,6 @@
 
 
 
-<!-- ===================== LOCATION ===================== -->
-                    <div class="option-group">
-                        <p>Location:</p>
-                        <div class="segmented-control">
-                            <input type="radio" name="location" id="dine" checked data-price="0">
-                            <label for="dine">Dine In</label>
-
-
-
-
-<input type="radio" name="location" id="togo" data-price="0">
-                            <label for="togo">To Go</label>
-
-
-
-
-<input type="radio" name="location" id="delivery" data-price="25">
-                            <label for="delivery">Delivery</label>
-                        </div>
-                    </div>
-
-
-
-
 <!-- ====================== ITEM OPTIONS ====================== -->
                     <div id="item-options"></div>
 
@@ -122,7 +98,7 @@
 
 <!-- ====================== ITEM ACTIONS ====================== -->
                     <div class="ITEM-ACTIONS">
-                        <a href="menu.html" class="BACK-MENU-BUTTON">
+                        <a href="menu.php" class="BACK-MENU-BUTTON">
                             <img src="images/arrow-left-solid.png" alt="Back to menu icon" class="BTN-ICON">
                             BACK TO MENU
                         </a>
@@ -130,9 +106,12 @@
 
 
 
-<a href="loginSignUp.html" class="ADD-CART-BUTTON">
-                            <i class="fa-solid fa-basket-shopping"></i> ADD TO CART
-                        </a>
+                        <div class="ITEM-PRIMARY-ACTIONS">
+                            <a href="#" id="checkout-btn" class="CHECKOUT-BUTTON">CHECK OUT</a>
+                            <a href="#" id="add-cart-btn" class="ADD-CART-BUTTON CART-ICON-BUTTON" aria-label="Add to cart">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -208,13 +187,6 @@
     <script src="script.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
 
 
 
