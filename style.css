@@ -864,7 +864,7 @@ body {
 
 .promotions-page .about .GLOBAL-PAGE-OVERLAY,
 .promotions-page .about .GLOBAL-PAGE-OVERLAY-BOTTOM {
-    z-index: 1;
+    z-index: 20;
 }
 
 .promotions-page .about .custom-shape-divider-top-1764244138,
@@ -2314,6 +2314,7 @@ footer {
 .FOOTER-ICONS {
     display: flex;
     justify-content: right;
+    align-items: center;
     gap: 15px;
     margin-top: 20px;
 }
@@ -2332,6 +2333,24 @@ footer {
     color: #ff4da6;
 }
 
+.FOOTER-ICONS-DIVIDER {
+    color: #000;
+    opacity: 0.4;
+    font-size: 18px;
+}
+
+.FOOTER-CONTACT-SUPPORT {
+    font-size: 13px;
+    font-family: 'Poppins', sans-serif;
+    color: #000 !important;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.FOOTER-CONTACT-SUPPORT:hover {
+    color: #ff4da6 !important;
+}
+
 .FOOTER-COPYRIGHT {
     position: absolute;
     bottom: 10px;
@@ -2340,6 +2359,17 @@ footer {
     font-size: 12px;
     opacity: 0.7;
     transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+.FOOTER-COPYRIGHT a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.FOOTER-COPYRIGHT a:hover {
+    color: #ff4da6;
 }
 
 /* =====================================================

@@ -84,7 +84,7 @@ $activePage = 'personal-details';
             </div>
         </div>
         <div class="FOOTER-COPYRIGHT">
-            <p>&copy; 2020 Yas Milktea House</p>
+            <p>&copy; 2020 Yas Milktea House &nbsp;|&nbsp; <a href="#">Terms &amp; Conditions</a> &nbsp;|&nbsp; <a href="#">Privacy Policy</a></p>
         </div>
     </footer>
 
