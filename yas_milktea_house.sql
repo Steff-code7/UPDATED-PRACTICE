@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 09, 2026 at 09:41 PM
+-- Generation Time: May 11, 2026 at 01:43 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -49,9 +49,7 @@ CREATE TABLE `addresses` (
 --
 
 INSERT INTO `addresses` (`address_id`, `user_id`, `address_type`, `house_no`, `street`, `barangay`, `city`, `province`, `address_line`, `landmark`, `delivery_instructions`, `is_primary`, `created_at`, `updated_at`) VALUES
-(24, 34, 'home', 'blk 51 lot 10', 'duhat', 'rizal', 'taguig', 'manila', 'blk 51 lot 10 duhat street, Barangay rizal, taguig, manila', 'Near Laundry shop', '', 1, '2026-05-08 10:45:22', '2026-05-08 10:45:22'),
-(25, 28, 'home', '143', 'Yas', 'Tina', 'San Miguel', 'Surigao del Sur', '143 Yas street, Barangay Tina, San Miguel, Surigao del Sur', 'Sa Puso Mo', 'Kiss sa cheeks', 1, '2026-05-08 15:43:34', '2026-05-08 15:43:34'),
-(27, 36, 'home', 'blk 51 lot 10', 'duhat', 'Bagyang', 'San Miguel', 'Surigao del Sur', 'blk 51 lot 10 duhat street, Barangay Bagyang, San Miguel, Surigao del Sur', 'near laundry shop', '', 1, '2026-05-09 19:38:55', '2026-05-09 19:38:55');
+(25, 28, 'home', '143', 'Yas', 'Tina', 'San Miguel', 'Surigao del Sur', '143 Yas street, Barangay Tina, San Miguel, Surigao del Sur', 'Sa Puso Mo', 'Kiss sa cheeks', 1, '2026-05-08 15:43:34', '2026-05-08 15:43:34');
 
 -- --------------------------------------------------------
 
@@ -102,11 +100,7 @@ CREATE TABLE `orders` (
 
 INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `order_type`, `total_amount`, `status`) VALUES
 (14, 28, '2026-05-05 13:28:19', 'delivery', 260.00, 'pending'),
-(16, 34, '2026-05-07 19:31:27', 'delivery', 120.00, 'pending'),
-(17, 34, '2026-05-07 19:32:28', 'dine-in', 675.00, 'pending'),
-(19, 34, '2026-05-08 01:25:20', 'dine-in', 90.00, 'pending'),
-(24, 34, '2026-05-08 18:13:40', 'dine-in', 545.00, 'completed'),
-(25, 36, '2026-05-10 03:29:30', 'dine-in', 545.00, 'pending');
+(26, 38, '2026-05-11 18:50:34', 'delivery', 245.00, 'pending');
 
 -- --------------------------------------------------------
 
@@ -136,17 +130,7 @@ CREATE TABLE `order_items` (
 INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `location`, `size`, `sugar_level`, `addons`, `flavor`, `pieces_per_box`, `serving`, `quantity`, `price`) VALUES
 (10, 14, 12, 'Delivery', '22oz', '25%', 'Whip (₱25)', NULL, NULL, NULL, 1, 145.00),
 (11, 14, 3, 'Delivery', '16oz', '25%', 'None', NULL, NULL, NULL, 1, 90.00),
-(16, 16, 39, 'Delivery', 'Solo', NULL, 'None', NULL, NULL, 'Solo', 1, 95.00),
-(17, 17, 43, 'Dine In', 'N/A', NULL, 'None', NULL, NULL, NULL, 6, 75.00),
-(18, 17, 10, 'Dine In', '16oz', '25%', 'None', NULL, NULL, NULL, 1, 95.00),
-(19, 17, 20, 'Dine In', '16oz', '25%', 'Oreo (₱20), Whip (₱25), White Pearl (₱20)', NULL, NULL, NULL, 1, 130.00),
-(21, 19, 4, 'Dine In', '16oz', '25%', 'None', NULL, NULL, NULL, 1, 90.00),
-(23, 24, 18, 'Dine In', '22oz', '75%', 'Oreo (₱20), Whip (₱25), White Pearl (₱20)', NULL, NULL, NULL, 1, 190.00),
-(24, 24, 34, 'Dine In', 'Duo', NULL, 'Rice (₱20)', NULL, NULL, 'Duo', 1, 200.00),
-(25, 24, 1, 'Dine In', '16oz', '25%', 'Oreo (₱20), Whip (₱25), White Pearl (₱20)', NULL, NULL, NULL, 1, 155.00),
-(26, 25, 32, 'Dine In', '5 Pieces', NULL, 'None', 'Original', '5 Pieces', NULL, 6, 60.00),
-(27, 25, 10, 'Dine In', '16oz', '25%', 'None', NULL, NULL, NULL, 1, 95.00),
-(28, 25, 6, 'Dine In', '16oz', '25%', 'None', NULL, NULL, NULL, 1, 90.00);
+(29, 26, 1, 'Delivery', '16oz', '100%', 'Oreo (₱20)', NULL, NULL, NULL, 2, 110.00);
 
 -- --------------------------------------------------------
 
@@ -169,11 +153,7 @@ CREATE TABLE `payments` (
 
 INSERT INTO `payments` (`payment_id`, `order_id`, `amount`, `method`, `status`, `payment_date`) VALUES
 (7, 14, 260.00, 'cash_on_delivery', 'pending', '2026-05-05 05:28:19'),
-(9, 16, 120.00, 'online_payment', 'pending', '2026-05-07 11:31:27'),
-(10, 17, 675.00, 'cash_on_delivery', 'pending', '2026-05-07 11:32:28'),
-(12, 19, 90.00, 'cash_on_delivery', 'pending', '2026-05-07 17:25:20'),
-(14, 24, 545.00, 'cash_on_delivery', 'pending', '2026-05-08 10:13:40'),
-(15, 25, 545.00, 'cash_on_delivery', 'pending', '2026-05-09 19:29:30');
+(16, 26, 245.00, 'cash_on_delivery', 'pending', '2026-05-11 10:50:34');
 
 -- --------------------------------------------------------
 
@@ -293,8 +273,10 @@ INSERT INTO `users` (`user_id`, `username`, `email`, `password_hash`, `role`, `s
 (21, 'Stef_admin', 'marekeyks101@gmail.com', '$2y$10$46yj/F93p7Gf3eJ0gEtOG.bYAkSg62LkejbqvkwW.4/4BpSXeLA6O', 'admin', 'active', 0, NULL, NULL, '2026-05-01 19:36:27', 'Stephanie Baltazar', NULL, NULL, 'images/profile_21_1778329893.jpg', '2026-05-09 12:31:33'),
 (27, 'testuser456', 'testuser456@example.com', '$2y$10$94OqRBmJyUjqWW5I69r.leBf7jwvCRpIxzS7Z.TnVtav/LbMewEe6', 'customer', 'active', 0, NULL, NULL, '2026-05-04 16:03:10', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-04 16:16:21'),
 (28, 'krisha_customer', 'narcisokrishaaudrey@gmail.com', '$2y$10$awo1Y7BwclbQEA0vQnJB3.ispUVF1lSKSZO1o9gkvZQWlrK8iXyNW', 'customer', 'active', 0, NULL, NULL, '2026-05-04 16:11:03', NULL, NULL, NULL, 'images/profile_28_1778251916.jpg', '2026-05-08 14:51:56'),
-(34, 'Penny', 'Kirigato.07@gmail.com', '$2y$10$L9dSP9BGkluYkz6BdwhFjuCDcDKRjySWswHNea6wXmcfeM8Y0Lep2', 'customer', 'active', 1, NULL, '2026-05-07 11:20:55', '2026-05-07 11:19:01', 'Penny Pilasyo', '09565656', '1895-02-05', 'images/yas_logo.png', '2026-05-07 11:30:06'),
-(36, 'stephanie naureen baltazar', 'sbaltazar.1012@umak.edu.ph', '$2y$10$5nq114RLRHKnbezRpeKaBuaa2UshoEemE6F/0Fz1NXjFWmkutZQj6', 'customer', 'active', 1, NULL, '2026-05-09 14:33:21', '2026-05-09 14:32:52', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-09 14:33:21');
+(37, 'kirii', 'Kirigato.07@gmail.com', '$2y$10$V9ZYg08SOrjkw3S40Vnwle7Rl2OjQk23JZLocjUrf/dELPIbp7oUS', 'customer', 'active', 1, NULL, '2026-05-10 05:18:27', '2026-05-10 05:16:49', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-10 05:18:27'),
+(38, 'ayokona', 'chescamanding5@gmail.com', '$2y$10$a7JLBZH2xSAkwwHUnpfML.Eg4Y0p/7lr2XsmtiynD17c0iC466ci2', 'customer', 'active', 1, NULL, '2026-05-11 10:26:50', '2026-05-11 10:26:26', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-11 10:26:50'),
+(39, 'Krisha_staff', 'crazyy.icecreamm@gmail.com', '$2y$10$jB8xfyjhj/fLGK9Jtxv7Bec7HjPjzyLdLRG8NU62mXCRMk1es4Npa', 'customer', 'active', 1, NULL, '2026-05-11 11:34:59', '2026-05-11 11:33:46', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-11 11:34:59'),
+(40, 'stifanny', 'sbaltazar.1012@umak.edu.ph', '$2y$10$SVV9QyKY4D05BVE3DZM1IOtxl0576.ud6kFLGVo.FavHo9gZs3eqa', 'customer', 'active', 1, NULL, '2026-05-11 11:35:55', '2026-05-11 11:35:09', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-11 11:35:55');
 
 --
 -- Indexes for dumped tables
@@ -375,19 +357,19 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `order_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `order_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `payment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -405,7 +387,7 @@ ALTER TABLE `rewards`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- Constraints for dumped tables
