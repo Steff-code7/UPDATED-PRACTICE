@@ -2596,230 +2596,334 @@ if (matchingOption) {
 
   // ================= ADMIN PAYMENTS PAGE LOGIC =================
   (function initAdminPaymentsPage() {
-    const tableBody = qs("#admin-payments-body");
-    const pagination = qs("#admin-payments-pagination");
     const searchInput = qs("#admin-payment-search");
-    const statusSelect = qs("#admin-payment-status");
+    const modal = qs("#payment-details-modal");
+    const modalBody = qs("#payment-modal-body");
+    const modalCloseBtn = qs(".ADMIN-MODAL-CLOSE", modal);
+    const modalCloseBtnBottom = qs(".ADMIN-MODAL-CLOSE-BTN", modal);
 
+    const tableConfig = {
+      cash_on_delivery: {
+        body: qs("#cod-payments-body"),
+        count: qs("#cod-payments-count"),
+        empty: "No cash on delivery payments.",
+      },
+      cash: {
+        body: qs("#cash-payments-body"),
+        count: qs("#cash-payments-count"),
+        empty: "No pay in store payments.",
+      },
+      gcash: {
+        body: qs("#gcash-payments-body"),
+        count: qs("#gcash-payments-count"),
+        empty: "No GCash payments.",
+      },
+    };
 
+    if (!searchInput || !modal || !modalBody || !Object.values(tableConfig).every((config) => config.body && config.count)) return;
 
+    let payments = [];
 
-    if (!tableBody || !pagination || !searchInput || !statusSelect) return;
+    const escapeHtml = (value) =>
+      String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
+    const titleCase = (value) => {
+      const text = String(value || "").toLowerCase();
+      return text.charAt(0).toUpperCase() + text.slice(1);
+    };
 
+    const toPeso = (amount) =>
+      `\u20b1${Number(amount || 0).toLocaleString("en-PH", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`;
 
+    const formatId = (prefix, id) => `#${prefix}-${String(Number(id || 0)).padStart(4, "0")}`;
 
-    const PAYMENTS_PER_PAGE = 8;
-    let currentPage = 1;
+    const normalizeMethod = (method) => {
+      const normalized = String(method || "cash_on_delivery").toLowerCase().trim();
+      if (normalized === "online_payment") return "gcash";
+      if (["cash_on_delivery", "cash", "gcash"].includes(normalized)) return normalized;
+      return "cash_on_delivery";
+    };
 
+    const getMethodLabel = (method) => {
+      const labels = {
+        cash_on_delivery: "Cash on Delivery",
+        cash: "Pay in Store",
+        gcash: "GCash",
+      };
+      return labels[normalizeMethod(method)] || "Cash on Delivery";
+    };
 
-
-
-    const payments = [
-      { paymentId: "#PAY-2001", orderId: "#ORD-1001", amount: 180, method: "Cash on Delivery", status: "Paid" },
-      { paymentId: "#PAY-2002", orderId: "#ORD-1002", amount: 250, method: "Online Payment", status: "Paid" },
-      { paymentId: "#PAY-2003", orderId: "#ORD-1003", amount: 110, method: "Cash on Delivery", status: "Paid" },
-      { paymentId: "#PAY-2004", orderId: "#ORD-1004", amount: 300, method: "Online Payment", status: "Refunded" },
-      { paymentId: "#PAY-2005", orderId: "#ORD-1005", amount: 190, method: "Cash on Delivery", status: "Paid" },
-      { paymentId: "#PAY-2006", orderId: "#ORD-1006", amount: 155, method: "Online Payment", status: "Paid" },
-      { paymentId: "#PAY-2007", orderId: "#ORD-1007", amount: 185, method: "Cash on Delivery", status: "Pending" },
-      { paymentId: "#PAY-2008", orderId: "#ORD-1008", amount: 195, method: "Online Payment", status: "Paid" },
-      { paymentId: "#PAY-2009", orderId: "#ORD-1009", amount: 210, method: "Cash on Delivery", status: "Paid" },
-      { paymentId: "#PAY-2010", orderId: "#ORD-1010", amount: 170, method: "Online Payment", status: "Refunded" },
-    ];
-
-
-
-
-    const statuses = ["All Status", ...new Set(payments.map((payment) => payment.status))];
-    statusSelect.innerHTML = statuses
-      .map((status) => `<option value="${status}">${status}</option>`)
-      .join("");
-
-
-
+    const normalizeStatus = (status) => {
+      const normalized = String(status || "unpaid").toLowerCase().trim();
+      if (normalized === "pending") return "unpaid";
+      return ["active", "paid", "unpaid", "refunded"].includes(normalized) ? normalized : "unpaid";
+    };
 
     const getFilteredPayments = () => {
       const query = searchInput.value.trim().toLowerCase();
-      const selectedStatus = statusSelect.value;
+      if (!query) return payments;
 
-
-
-
-      return payments.filter((payment) => {
-        const matchesQuery =
-          !query ||
-          payment.paymentId.toLowerCase().includes(query) ||
-          payment.orderId.toLowerCase().includes(query) ||
-          payment.method.toLowerCase().includes(query) ||
-          payment.status.toLowerCase().includes(query) ||
-          String(payment.amount).includes(query);
-        const matchesStatus =
-          selectedStatus === "All Status" || payment.status === selectedStatus;
-
-
-
-
-        return matchesQuery && matchesStatus;
-      });
-    };
-
-
-
-
-    const createPageButton = (label, page, isActive = false, isDisabled = false, icon = "") => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = `ADMIN-PAGE-BUTTON${isActive ? " active" : ""}`;
-      button.disabled = isDisabled;
-      button.innerHTML = icon || label;
-
-
-
-
-      if (!isDisabled) {
-        button.addEventListener("click", () => {
-          currentPage = page;
-          renderTable();
-        });
-      }
-
-
-
-
-      return button;
-    };
-
-
-
-
-    const renderPagination = (totalPages) => {
-      pagination.innerHTML = "";
-
-
-
-
-      pagination.appendChild(
-        createPageButton(
-          "",
-          Math.max(1, currentPage - 1),
-          false,
-          currentPage === 1,
-          '<i class="fa-solid fa-chevron-left"></i>'
-        )
-      );
-
-
-
-
-      const pagesToShow = [];
-      for (let page = 1; page <= totalPages; page += 1) {
-        if (page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1) {
-          pagesToShow.push(page);
-        }
-      }
-
-
-
-
-      pagesToShow.forEach((page, index) => {
-        const previousPage = pagesToShow[index - 1];
-        if (previousPage && page - previousPage > 1) {
-          const ellipsis = document.createElement("span");
-          ellipsis.className = "ADMIN-PAGE-ELLIPSIS";
-          ellipsis.textContent = "...";
-          pagination.appendChild(ellipsis);
-        }
-
-
-
-
-        pagination.appendChild(createPageButton(String(page), page, page === currentPage));
-      });
-
-
-
-
-      pagination.appendChild(
-        createPageButton(
-          "",
-          Math.min(totalPages, currentPage + 1),
-          false,
-          currentPage === totalPages,
-          '<i class="fa-solid fa-chevron-right"></i>'
-        )
+      return payments.filter((payment) =>
+        [
+          payment.paymentId,
+          payment.orderId,
+          payment.userId,
+          payment.amount,
+          payment.methodLabel,
+          payment.status,
+          payment.receiptInfo,
+          payment.gcashReference,
+          payment.gcashMobile,
+        ]
+          .join(" ")
+          .toLowerCase()
+          .includes(query)
       );
     };
 
+    const getBuckets = () => {
+      const buckets = {
+        cash_on_delivery: [],
+        cash: [],
+        gcash: [],
+      };
 
+      getFilteredPayments().forEach((payment) => {
+        buckets[payment.method].push(payment);
+      });
 
+      return buckets;
+    };
 
-    const renderTable = () => {
-      const filteredPayments = getFilteredPayments();
-      const totalPages = Math.max(1, Math.ceil(filteredPayments.length / PAYMENTS_PER_PAGE));
+    const renderPaymentRows = (method, methodPayments) => {
+      const config = tableConfig[method];
+      config.count.textContent = methodPayments.length;
 
-
-
-
-      if (currentPage > totalPages) {
-        currentPage = totalPages;
-      }
-
-
-
-
-      const start = (currentPage - 1) * PAYMENTS_PER_PAGE;
-      const currentPayments = filteredPayments.slice(start, start + PAYMENTS_PER_PAGE);
-
-
-
-
-      tableBody.innerHTML = currentPayments.length
-        ? currentPayments
+      config.body.innerHTML = methodPayments.length
+        ? methodPayments
             .map(
               (payment) => `
                 <tr>
-                  <td>${payment.paymentId}</td>
-                  <td>${payment.orderId}</td>
-                  <td>PHP ${payment.amount}</td>
-                  <td>${payment.method}</td>
-                  <td><span class="ADMIN-STATUS ${payment.status.toLowerCase()}">${payment.status}</span></td>
+                  <td>${escapeHtml(payment.paymentId)}</td>
+                  <td>${escapeHtml(payment.orderId)}</td>
+                  <td><span class="ADMIN-STATUS ${payment.status}">${titleCase(payment.status)}</span></td>
+                  <td>
+                    <div class="ADMIN-TABLE-ACTIONS">
+                      <button type="button" class="view-payment-btn" data-payment-id="${payment.id}" aria-label="View ${escapeHtml(payment.paymentId)}">
+                        <i class="fa-regular fa-eye"></i>
+                      </button>
+                    </div>
+                  </td>
                 </tr>
               `
             )
             .join("")
         : `
             <tr>
-              <td colspan="5" class="ADMIN-NO-DATA">No payments matched your search.</td>
+              <td colspan="4" class="ADMIN-TABLE-EMPTY">${config.empty}</td>
             </tr>
           `;
-
-
-
-
-      renderPagination(totalPages);
     };
 
+    const renderTables = () => {
+      const buckets = getBuckets();
+      Object.keys(tableConfig).forEach((method) => {
+        renderPaymentRows(method, buckets[method]);
+      });
+    };
 
+    const getReceiptLabel = (payment) => {
+      if (payment.method === "cash") {
+        return payment.receiptInfo || "No receipt yet";
+      }
+      if (payment.method === "cash_on_delivery") {
+        return payment.receiptInfo || "Unofficial receipt pending";
+      }
+      if (payment.status === "unpaid") {
+        return "Awaiting confirmation";
+      }
+      return payment.gcashReference
+        ? `Reference: ${payment.gcashReference}${payment.gcashMobile ? ` | Mobile: ${payment.gcashMobile}` : ""}`
+        : "Unpaid - no GCash reference submitted";
+    };
 
+    const buildPaymentStatusButtons = (payment) =>
+      ["active", "paid", "unpaid", "refunded"]
+        .map(
+          (status) => `
+            <button type="button" class="ADMIN-USER-STATUS-BTN ${payment.status === status ? "active" : ""}" data-payment-status="${status}">
+              ${titleCase(status)}
+            </button>
+          `
+        )
+        .join("");
 
-    searchInput.addEventListener("input", () => {
-      currentPage = 1;
-      renderTable();
+    const openPaymentModal = (paymentId) => {
+      const payment = payments.find((item) => item.id === Number(paymentId));
+      if (!payment) return;
+
+      modalBody.innerHTML = `
+        <div class="ADMIN-MODAL-DETAIL">
+          <div class="ADMIN-MODAL-DETAIL-LABEL">Payment ID</div>
+          <div class="ADMIN-MODAL-DETAIL-VALUE">${escapeHtml(payment.paymentId)}</div>
+        </div>
+        <div class="ADMIN-MODAL-DETAIL">
+          <div class="ADMIN-MODAL-DETAIL-LABEL">Order ID</div>
+          <div class="ADMIN-MODAL-DETAIL-VALUE">${escapeHtml(payment.orderId)}</div>
+        </div>
+        <div class="ADMIN-MODAL-DETAIL">
+          <div class="ADMIN-MODAL-DETAIL-LABEL">User ID</div>
+          <div class="ADMIN-MODAL-DETAIL-VALUE">${escapeHtml(payment.userId || "N/A")}</div>
+        </div>
+        <div class="ADMIN-MODAL-DETAIL">
+          <div class="ADMIN-MODAL-DETAIL-LABEL">Amount</div>
+          <div class="ADMIN-MODAL-DETAIL-VALUE">${toPeso(payment.amount)}</div>
+        </div>
+        <div class="ADMIN-MODAL-DETAIL">
+          <div class="ADMIN-MODAL-DETAIL-LABEL">Method</div>
+          <div class="ADMIN-MODAL-DETAIL-VALUE">${escapeHtml(payment.methodLabel)}</div>
+        </div>
+        <div class="ADMIN-MODAL-DETAIL">
+          <div class="ADMIN-MODAL-DETAIL-LABEL">Status</div>
+          <div class="ADMIN-MODAL-DETAIL-VALUE"><span class="ADMIN-STATUS ${payment.status}">${titleCase(payment.status)}</span></div>
+        </div>
+        <div class="ADMIN-MODAL-DETAIL">
+          <div class="ADMIN-MODAL-DETAIL-LABEL">Manual Status Update</div>
+          <div class="ADMIN-USER-STATUS-GROUP" data-payment-id="${payment.id}">
+            ${buildPaymentStatusButtons(payment)}
+          </div>
+        </div>
+        <div class="ADMIN-MODAL-DETAIL">
+          <div class="ADMIN-MODAL-DETAIL-LABEL">Receipt Info</div>
+          <div class="ADMIN-MODAL-DETAIL-VALUE">${escapeHtml(getReceiptLabel(payment))}</div>
+        </div>
+        ${payment.method === "gcash" ? `
+          <div class="ADMIN-MODAL-DETAIL">
+            <div class="ADMIN-MODAL-DETAIL-LABEL">GCash Reference Number</div>
+            <div class="ADMIN-MODAL-DETAIL-VALUE">${escapeHtml(payment.gcashReference || "N/A")}</div>
+          </div>
+          <div class="ADMIN-MODAL-DETAIL">
+            <div class="ADMIN-MODAL-DETAIL-LABEL">GCash Mobile Number</div>
+            <div class="ADMIN-MODAL-DETAIL-VALUE">${escapeHtml(payment.gcashMobile || "N/A")}</div>
+          </div>
+        ` : ""}
+      `;
+
+      modal.hidden = false;
+      modal.classList.add("active");
+      document.body.classList.add("modal-active");
+      const dialog = qs(".ADMIN-MODAL", modal);
+      if (dialog) dialog.focus();
+    };
+
+    const closeModal = () => {
+      modal.classList.remove("active");
+      modal.hidden = true;
+      document.body.classList.remove("modal-active");
+    };
+
+    const updatePaymentStatus = async (paymentId, status) => {
+      const payment = payments.find((item) => item.id === Number(paymentId));
+      if (!payment || payment.status === status) return;
+
+      try {
+        const response = await fetch("api/update_payment_status.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ payment_id: payment.id, status }),
+        });
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || "Could not update payment status.");
+        }
+
+        payment.status = normalizeStatus(result.status || status);
+        payment.receiptInfo = result.receipt_info || payment.receiptInfo;
+        renderTables();
+        openPaymentModal(payment.id);
+      } catch (error) {
+        console.error("Error updating payment status:", error);
+        alert(error.message || "Could not update payment status.");
+      }
+    };
+
+    const fetchPayments = async () => {
+      try {
+        const response = await fetch("api/get_payments.php");
+        if (!response.ok) throw new Error("Failed to fetch payments.");
+        const data = await response.json();
+
+        if (!data.success || !Array.isArray(data.payments)) {
+          throw new Error(data.message || "Could not load payments.");
+        }
+
+        payments = data.payments.map((payment) => {
+          const method = normalizeMethod(payment.method);
+          return {
+            id: Number(payment.payment_id),
+            paymentId: formatId("PAY", payment.payment_id),
+            orderId: formatId("ORD", payment.order_id),
+            userId: payment.user_id || "",
+            amount: Number(payment.amount || 0),
+            method,
+            methodLabel: getMethodLabel(method),
+            status: normalizeStatus(payment.status),
+            receiptInfo: payment.receipt_info || "",
+            gcashReference: payment.gcash_reference || "",
+            gcashMobile: payment.gcash_mobile || "",
+          };
+        });
+
+        renderTables();
+      } catch (error) {
+        console.error("Error fetching payments:", error);
+        Object.values(tableConfig).forEach((config) => {
+          config.count.textContent = "0";
+          config.body.innerHTML = `
+            <tr>
+              <td colspan="4" class="ADMIN-TABLE-EMPTY">Unable to load payments.</td>
+            </tr>
+          `;
+        });
+      }
+    };
+
+    Object.values(tableConfig).forEach((config) => {
+      config.body.addEventListener("click", (event) => {
+        const button = event.target.closest(".view-payment-btn");
+        if (!button) return;
+        openPaymentModal(button.dataset.paymentId);
+      });
     });
 
-
-
-
-    statusSelect.addEventListener("change", () => {
-      currentPage = 1;
-      renderTable();
+    modalBody.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-payment-status]");
+      if (!button) return;
+      const group = button.closest("[data-payment-id]");
+      updatePaymentStatus(group.dataset.paymentId, button.dataset.paymentStatus);
     });
 
+    modalCloseBtn.addEventListener("click", closeModal);
+    modalCloseBtnBottom.addEventListener("click", closeModal);
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) closeModal();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && modal.classList.contains("active")) closeModal();
+    });
 
+    searchInput.addEventListener("input", renderTables);
 
-
-    renderTable();
+    fetchPayments();
   })();
 
 
@@ -4184,6 +4288,13 @@ updateTotal();
     const deliveryFeeEl = qs("#confirm-item-delivery-fee");
     const totalEl = qs("#confirm-item-total");
     const locationInputs = qsa("input[name='order_location']");
+    const paymentInputs = qsa("input[name='payment_method']");
+    const gcashFields = qs("#gcash-payment-fields");
+    const gcashReferenceInput = qs("#gcash-reference-number");
+    const gcashMobileInput = qs("#gcash-mobile-number");
+    const gcashQrButton = qs("#view-gcash-qr");
+    const gcashQrModal = qs("#gcash-qr-modal");
+    const gcashQrCloseButtons = qsa(".GCASH-QR-CLOSE, .GCASH-QR-DONE", gcashQrModal);
 
 
     const parseAddonEntries = (addonsValue) => {
@@ -4363,6 +4474,49 @@ updateTotal();
       locationInputs.forEach((radio) => radio.addEventListener("change", updateOrderTotals));
     }
 
+    const toggleGcashFields = () => {
+      const selectedPaymentInput = document.querySelector("input[name='payment_method']:checked");
+      const isGcash = selectedPaymentInput?.value === "gcash";
+      if (gcashFields) gcashFields.hidden = !isGcash;
+      if (!isGcash) {
+        if (gcashReferenceInput) gcashReferenceInput.value = "";
+        if (gcashMobileInput) gcashMobileInput.value = "";
+      }
+    };
+
+    if (paymentInputs.length) {
+      paymentInputs.forEach((radio) => radio.addEventListener("change", toggleGcashFields));
+      toggleGcashFields();
+    }
+
+    const openGcashQrModal = () => {
+      if (!gcashQrModal) return;
+      gcashQrModal.hidden = false;
+      gcashQrModal.classList.add("active");
+      const dialog = qs(".GCASH-QR-DIALOG", gcashQrModal);
+      if (dialog) dialog.focus();
+    };
+
+    const closeGcashQrModal = () => {
+      if (!gcashQrModal) return;
+      gcashQrModal.classList.remove("active");
+      gcashQrModal.hidden = true;
+    };
+
+    if (gcashQrButton) {
+      gcashQrButton.addEventListener("click", openGcashQrModal);
+    }
+
+    if (gcashQrModal) {
+      gcashQrCloseButtons.forEach((button) => button.addEventListener("click", closeGcashQrModal));
+      gcashQrModal.addEventListener("click", (event) => {
+        if (event.target === gcashQrModal) closeGcashQrModal();
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && gcashQrModal.classList.contains("active")) closeGcashQrModal();
+      });
+    }
+
     const placeOrderBtn = qs(".PLACE-ORDER-BUTTON");
     if (placeOrderBtn) {
       placeOrderBtn.addEventListener("click", async (event) => {
@@ -4375,9 +4529,17 @@ updateTotal();
 
         const selectedPaymentInput = document.querySelector("input[name='payment_method']:checked");
         const paymentMethod = selectedPaymentInput?.value || "cash_on_delivery";
+        const gcashReference = gcashReferenceInput?.value.trim() || "";
+        const gcashMobile = gcashMobileInput?.value.trim() || "";
         const selectedLocation = getSelectedLocation();
         const locationLabel = getSelectedLocationLabel();
         const orderType = selectedLocation === "delivery" ? "delivery" : selectedLocation === "to_go" ? "to-go" : "dine-in";
+
+        if (paymentMethod === "gcash" && !gcashReference) {
+          alert("Please enter your GCash reference number.");
+          gcashReferenceInput?.focus();
+          return;
+        }
 
         const payloadItems = cart.map((item) => ({
           product_id: item.product_id || item.productId || null,
@@ -4406,6 +4568,8 @@ updateTotal();
             body: JSON.stringify({
               order_type: orderType,
               payment_method: paymentMethod,
+              gcash_reference: gcashReference,
+              gcash_mobile: gcashMobile,
               delivery_fee: deliveryFee,
               items: payloadItems,
             }),

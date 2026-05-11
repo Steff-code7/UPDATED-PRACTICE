@@ -102,14 +102,35 @@
                         <label class="PAYMENT-OPTION">
                             <input type="radio" name="payment_method" value="cash_on_delivery" checked>
                             <span class="PAYMENT-OPTION-CIRCLE"></span>
-                            <span class="PAYMENT-OPTION-LABEL">Cash</span>
+                            <span class="PAYMENT-OPTION-LABEL">Cash on Delivery</span>
                         </label>
 
                         <label class="PAYMENT-OPTION">
-                            <input type="radio" name="payment_method" value="online_payment">
+                            <input type="radio" name="payment_method" value="cash">
                             <span class="PAYMENT-OPTION-CIRCLE"></span>
-                            <span class="PAYMENT-OPTION-LABEL">Online Payment</span>
+                            <span class="PAYMENT-OPTION-LABEL">Pay in Store</span>
                         </label>
+
+                        <label class="PAYMENT-OPTION">
+                            <input type="radio" name="payment_method" value="gcash">
+                            <span class="PAYMENT-OPTION-CIRCLE"></span>
+                            <span class="PAYMENT-OPTION-LABEL">GCash</span>
+                        </label>
+
+                        <div class="GCASH-PAYMENT-FIELDS" id="gcash-payment-fields" hidden>
+                            <button type="button" class="GCASH-QR-BUTTON" id="view-gcash-qr">
+                                <i class="fa-solid fa-qrcode"></i>
+                                View QR Code
+                            </button>
+                            <label>
+                                <span>GCash Reference Number</span>
+                                <input id="gcash-reference-number" type="text" inputmode="numeric" autocomplete="off" placeholder="Enter reference number">
+                            </label>
+                            <label>
+                                <span>GCash Mobile Number</span>
+                                <input id="gcash-mobile-number" type="tel" autocomplete="tel" placeholder="09XXXXXXXXX">
+                            </label>
+                        </div>
 
                         <a href="#" class="PLACE-ORDER-BUTTON">
                             <i class="fa-solid fa-cart-shopping"></i>
@@ -120,6 +141,26 @@
             </div>
         </section>
     </main>
+
+    <div class="GCASH-QR-MODAL" id="gcash-qr-modal" hidden>
+        <section class="GCASH-QR-DIALOG" role="dialog" aria-modal="true" aria-labelledby="gcash-qr-title" tabindex="-1">
+            <div class="GCASH-QR-HEADER">
+                <h3 id="gcash-qr-title">GCash QR Payment</h3>
+                <button type="button" class="GCASH-QR-CLOSE" aria-label="Close QR code">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="GCASH-QR-BODY">
+                <img src="images/GCash_QR.jpg" alt="YAS Milktea House GCash QR code">
+                <p>Scan the QR code using GCash. After payment, close this popup, then enter your GCash reference number and mobile number before placing your order.</p>
+                <p>Your payment will be marked as awaiting verification until staff or admin confirms it.</p>
+            </div>
+            <div class="GCASH-QR-FOOTER">
+                <button type="button" class="GCASH-QR-DONE">Done</button>
+            </div>
+        </section>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

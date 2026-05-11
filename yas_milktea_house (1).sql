@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 11, 2026 at 04:14 PM
+-- Generation Time: May 11, 2026 at 05:09 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -100,7 +100,9 @@ CREATE TABLE `orders` (
 
 INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `order_type`, `total_amount`, `status`) VALUES
 (14, 28, '2026-05-05 13:28:19', 'delivery', 260.00, 'completed'),
-(26, 38, '2026-05-11 18:50:34', 'delivery', 245.00, 'pending');
+(26, 38, '2026-05-11 18:50:34', 'delivery', 245.00, 'pending'),
+(27, 28, '2026-05-11 22:46:34', 'delivery', 335.00, 'pending'),
+(28, 28, '2026-05-11 23:05:58', 'dine-in', 170.00, 'pending');
 
 -- --------------------------------------------------------
 
@@ -130,7 +132,9 @@ CREATE TABLE `order_items` (
 INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `location`, `size`, `sugar_level`, `addons`, `flavor`, `pieces_per_box`, `serving`, `quantity`, `price`) VALUES
 (10, 14, 12, 'Delivery', '22oz', '25%', 'Whip (₱25)', NULL, NULL, NULL, 1, 145.00),
 (11, 14, 3, 'Delivery', '16oz', '25%', 'None', NULL, NULL, NULL, 1, 90.00),
-(29, 26, 1, 'Delivery', '16oz', '100%', 'Oreo (₱20)', NULL, NULL, NULL, 2, 110.00);
+(29, 26, 1, 'Delivery', '16oz', '100%', 'Oreo (₱20)', NULL, NULL, NULL, 2, 110.00),
+(30, 27, 11, 'Delivery', '22oz', '75%', 'Boba (₱15), Oreo (₱20)', NULL, NULL, NULL, 2, 155.00),
+(31, 28, 3, 'Dine In', '22oz', '25%', 'Whip (₱25), White Pearl (₱20), Fruit Jelly (₱15)', NULL, NULL, NULL, 1, 170.00);
 
 -- --------------------------------------------------------
 
@@ -142,8 +146,11 @@ CREATE TABLE `payments` (
   `payment_id` int(10) UNSIGNED NOT NULL,
   `order_id` int(10) UNSIGNED NOT NULL,
   `amount` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `method` enum('cash_on_delivery','online_payment') NOT NULL DEFAULT 'cash_on_delivery',
-  `status` enum('paid','refunded','pending') NOT NULL DEFAULT 'pending',
+  `method` enum('cash_on_delivery','cash','gcash','online_payment') NOT NULL DEFAULT 'cash_on_delivery',
+  `status` enum('active','paid','unpaid','refunded','pending') NOT NULL DEFAULT 'unpaid',
+  `receipt_info` varchar(255) DEFAULT NULL,
+  `gcash_reference` varchar(100) DEFAULT NULL,
+  `gcash_mobile` varchar(30) DEFAULT NULL,
   `payment_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -151,9 +158,11 @@ CREATE TABLE `payments` (
 -- Dumping data for table `payments`
 --
 
-INSERT INTO `payments` (`payment_id`, `order_id`, `amount`, `method`, `status`, `payment_date`) VALUES
-(7, 14, 260.00, 'cash_on_delivery', 'pending', '2026-05-05 05:28:19'),
-(16, 26, 245.00, 'cash_on_delivery', 'pending', '2026-05-11 10:50:34');
+INSERT INTO `payments` (`payment_id`, `order_id`, `amount`, `method`, `status`, `receipt_info`, `gcash_reference`, `gcash_mobile`, `payment_date`) VALUES
+(7, 14, 260.00, 'cash_on_delivery', 'unpaid', 'Unofficial receipt pending', NULL, NULL, '2026-05-05 05:28:19'),
+(16, 26, 245.00, 'cash_on_delivery', 'unpaid', 'Unofficial receipt pending', NULL, NULL, '2026-05-11 10:50:34'),
+(17, 27, 335.00, 'gcash', 'paid', NULL, '0123456789', '0999999999', '2026-05-11 14:46:34'),
+(18, 28, 170.00, 'gcash', 'unpaid', 'Awaiting payment', '676767676767', '09671432026', '2026-05-11 15:05:58');
 
 -- --------------------------------------------------------
 
@@ -357,19 +366,19 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `order_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `order_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `payment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `products`

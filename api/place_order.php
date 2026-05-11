@@ -5,7 +5,32 @@ session_start();
 
 require_once 'db.php';
 
+function ensurePaymentSchema(PDO $pdo): void
+{
+    $pdo->exec("
+        ALTER TABLE payments
+        MODIFY method ENUM('cash_on_delivery','cash','gcash','online_payment') NOT NULL DEFAULT 'cash_on_delivery'
+    ");
+    $pdo->exec("
+        ALTER TABLE payments
+        MODIFY status ENUM('active','paid','unpaid','refunded','pending') NOT NULL DEFAULT 'unpaid'
+    ");
+
+    $columns = $pdo->query("SHOW COLUMNS FROM payments")->fetchAll(PDO::FETCH_COLUMN);
+    if (!in_array('receipt_info', $columns, true)) {
+        $pdo->exec("ALTER TABLE payments ADD COLUMN receipt_info VARCHAR(255) DEFAULT NULL AFTER status");
+    }
+    if (!in_array('gcash_reference', $columns, true)) {
+        $pdo->exec("ALTER TABLE payments ADD COLUMN gcash_reference VARCHAR(100) DEFAULT NULL AFTER receipt_info");
+    }
+    if (!in_array('gcash_mobile', $columns, true)) {
+        $pdo->exec("ALTER TABLE payments ADD COLUMN gcash_mobile VARCHAR(30) DEFAULT NULL AFTER gcash_reference");
+    }
+}
+
 try {
+    ensurePaymentSchema($pdo);
+
     $data = json_decode(file_get_contents('php://input'), true);
     if (!is_array($data)) {
         throw new Exception('Invalid request payload.');
@@ -14,6 +39,11 @@ try {
     $user_id = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 1;
     $order_type = $data['order_type'] ?? 'dine-in';
     $payment_method = $data['payment_method'] ?? 'cash_on_delivery';
+    if ($payment_method === 'online_payment') {
+        $payment_method = 'gcash';
+    }
+    $gcash_reference = trim((string)($data['gcash_reference'] ?? ''));
+    $gcash_mobile = trim((string)($data['gcash_mobile'] ?? ''));
     $items = $data['items'] ?? [];
     $delivery_fee = isset($data['delivery_fee']) ? (float)$data['delivery_fee'] : 0.0;
 
@@ -27,8 +57,12 @@ try {
     }
 
     // Validate payment method against schema enum
-    if (!in_array($payment_method, ['cash_on_delivery', 'online_payment'])) {
+    if (!in_array($payment_method, ['cash_on_delivery', 'cash', 'gcash'])) {
         $payment_method = 'cash_on_delivery';
+    }
+
+    if ($payment_method === 'gcash' && $gcash_reference === '') {
+        throw new Exception('Please enter your GCash reference number.');
     }
 
     $pdo->beginTransaction();
@@ -125,15 +159,29 @@ try {
         ]);
     }
 
+    $payment_status = 'unpaid';
+    $receipt_info = null;
+    if ($payment_method === 'cash') {
+        $receipt_info = 'No receipt yet';
+    } elseif ($payment_method === 'cash_on_delivery') {
+        $receipt_info = 'Unofficial receipt pending';
+    } elseif ($payment_method === 'gcash') {
+        $receipt_info = 'Awaiting payment';
+    }
+
     // Insert into payments
     $stmt = $pdo->prepare("
-        INSERT INTO payments (order_id, amount, method, status)
-        VALUES (:order_id, :amount, :method, 'pending')
+        INSERT INTO payments (order_id, amount, method, status, receipt_info, gcash_reference, gcash_mobile)
+        VALUES (:order_id, :amount, :method, :status, :receipt_info, :gcash_reference, :gcash_mobile)
     ");
     $stmt->execute([
         'order_id' => $order_id,
         'amount'   => $total_amount,
-        'method'   => $payment_method
+        'method'   => $payment_method,
+        'status'   => $payment_status,
+        'receipt_info' => $receipt_info,
+        'gcash_reference' => $gcash_reference !== '' ? $gcash_reference : null,
+        'gcash_mobile' => $gcash_mobile !== '' ? $gcash_mobile : null
     ]);
 
     $pdo->commit();
