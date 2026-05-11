@@ -2249,221 +2249,128 @@ if (matchingOption) {
 
 
 
-  // ================= ADMIN CUSTOMERS PAGE LOGIC =================
+  // ================= ADMIN USERS PAGE LOGIC =================
   (function initAdminCustomersPage() {
-    const tableBody = qs("#admin-customers-body");
-    const pagination = qs("#admin-customers-pagination");
     const searchInput = qs("#admin-customer-search");
-    const statusSelect = qs("#admin-customer-status");
+    const modal = qs("#user-details-modal");
+    const modalBody = qs("#user-modal-body");
+    const modalCloseBtn = qs(".ADMIN-MODAL-CLOSE", modal);
+    const modalCloseBtnBottom = qs(".ADMIN-MODAL-CLOSE-BTN", modal);
 
-
-
-
-    if (!tableBody || !pagination || !searchInput || !statusSelect) return;
-
-
-
-
-    const CUSTOMERS_PER_PAGE = 8;
-    let currentPage = 1;
-    let customers = [];
-
-
-
-
-    // Fetch customers from the database
-    const fetchCustomers = async () => {
-      try {
-        const response = await fetch("api/get_customers.php");
-        if (!response.ok) throw new Error("Failed to fetch customers");
-        
-        const data = await response.json();
-        if (data.success && Array.isArray(data.customers)) {
-          // Map database fields to expected properties
-          customers = data.customers.map((customer) => ({
-            name: customer.full_name || "N/A",
-            email: customer.email,
-            totalOrders: parseInt(customer.total_orders) || 0,
-            status: customer.status.charAt(0).toUpperCase() + customer.status.slice(1),
-          }));
-          
-          // Update status select options
-          const statuses = ["All Status", ...new Set(customers.map((customer) => customer.status))];
-          statusSelect.innerHTML = statuses
-            .map((status) => `<option value="${status}">${status}</option>`)
-            .join("");
-          
-          renderTable();
-        }
-      } catch (error) {
-        console.error("Error fetching customers:", error);
-        tableBody.innerHTML = `
-          <tr>
-            <td colspan="5" class="ADMIN-NO-DATA">Error loading customers. Please try again.</td>
-          </tr>
-        `;
-      }
+    const tableConfig = {
+      unverified: {
+        body: qs("#unverified-users-body"),
+        count: qs("#unverified-users-count"),
+        empty: "No unverified users.",
+      },
+      customers: {
+        body: qs("#customer-users-body"),
+        count: qs("#customer-users-count"),
+        empty: "No customer accounts.",
+      },
+      inactive: {
+        body: qs("#inactive-users-body"),
+        count: qs("#inactive-users-count"),
+        empty: "No inactive accounts.",
+      },
+      staff: {
+        body: qs("#staff-users-body"),
+        count: qs("#staff-users-count"),
+        empty: "No staff accounts.",
+      },
+      admins: {
+        body: qs("#admin-users-body"),
+        count: qs("#admin-users-count"),
+        empty: "No admin accounts.",
+      },
     };
 
+    if (!searchInput || !modal || !modalBody || !Object.values(tableConfig).every((config) => config.body && config.count)) return;
 
+    let users = [];
 
+    const escapeHtml = (value) =>
+      String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 
-    // Initial fetch
-    fetchCustomers();
+    const normalizeStatus = (status) => {
+      const normalized = String(status || "pending").toLowerCase().trim();
+      return ["active", "inactive", "pending"].includes(normalized) ? normalized : "pending";
+    };
 
+    const titleCase = (value) => {
+      const text = String(value || "pending").toLowerCase();
+      return text.charAt(0).toUpperCase() + text.slice(1);
+    };
 
+    const toPeso = (amount) =>
+      `\u20b1${Number(amount || 0).toLocaleString("en-PH", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`;
 
+    const getUserCategory = (user) => {
+      if (user.role === "admin") return "admins";
+      if (user.role === "staff") return "staff";
+      if (user.status === "inactive") return "inactive";
+      if (user.status === "pending") return "unverified";
+      return "customers";
+    };
 
-    const getFilteredCustomers = () => {
+    const getFilteredUsers = () => {
       const query = searchInput.value.trim().toLowerCase();
-      const selectedStatus = statusSelect.value;
+      if (!query) return users;
 
-
-
-
-      return customers.filter((customer) => {
-        const matchesQuery =
-          !query ||
-          customer.name.toLowerCase().includes(query) ||
-          customer.email.toLowerCase().includes(query) ||
-          String(customer.totalOrders).includes(query) ||
-          customer.status.toLowerCase().includes(query);
-        const matchesStatus =
-          selectedStatus === "All Status" || customer.status === selectedStatus;
-
-
-
-
-        return matchesQuery && matchesStatus;
-      });
-    };
-
-
-
-
-    const createPageButton = (label, page, isActive = false, isDisabled = false, icon = "") => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = `ADMIN-PAGE-BUTTON${isActive ? " active" : ""}`;
-      button.disabled = isDisabled;
-      button.innerHTML = icon || label;
-
-
-
-
-      if (!isDisabled) {
-        button.addEventListener("click", () => {
-          currentPage = page;
-          renderTable();
-        });
-      }
-
-
-
-
-      return button;
-    };
-
-
-
-
-    const renderPagination = (totalPages) => {
-      pagination.innerHTML = "";
-
-
-
-
-      pagination.appendChild(
-        createPageButton(
-          "",
-          Math.max(1, currentPage - 1),
-          false,
-          currentPage === 1,
-          '<i class="fa-solid fa-chevron-left"></i>'
-        )
-      );
-
-
-
-
-      const pagesToShow = [];
-      for (let page = 1; page <= totalPages; page += 1) {
-        if (page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1) {
-          pagesToShow.push(page);
-        }
-      }
-
-
-
-
-      pagesToShow.forEach((page, index) => {
-        const previousPage = pagesToShow[index - 1];
-        if (previousPage && page - previousPage > 1) {
-          const ellipsis = document.createElement("span");
-          ellipsis.className = "ADMIN-PAGE-ELLIPSIS";
-          ellipsis.textContent = "...";
-          pagination.appendChild(ellipsis);
-        }
-
-
-
-
-        pagination.appendChild(createPageButton(String(page), page, page === currentPage));
-      });
-
-
-
-
-      pagination.appendChild(
-        createPageButton(
-          "",
-          Math.min(totalPages, currentPage + 1),
-          false,
-          currentPage === totalPages,
-          '<i class="fa-solid fa-chevron-right"></i>'
-        )
+      return users.filter((user) =>
+        [
+          user.name,
+          user.username,
+          user.email,
+          user.role,
+          user.status,
+          user.contactNumber,
+        ]
+          .join(" ")
+          .toLowerCase()
+          .includes(query)
       );
     };
 
+    const getCategoryUsers = () => {
+      const buckets = {
+        unverified: [],
+        customers: [],
+        inactive: [],
+        staff: [],
+        admins: [],
+      };
 
+      getFilteredUsers().forEach((user) => {
+        buckets[getUserCategory(user)].push(user);
+      });
 
+      return buckets;
+    };
 
-    const renderTable = () => {
-      const filteredCustomers = getFilteredCustomers();
-      const totalPages = Math.max(1, Math.ceil(filteredCustomers.length / CUSTOMERS_PER_PAGE));
+    const renderUserRows = (category, categoryUsers) => {
+      const config = tableConfig[category];
+      config.count.textContent = categoryUsers.length;
 
-
-
-
-      if (currentPage > totalPages) {
-        currentPage = totalPages;
-      }
-
-
-
-
-      const start = (currentPage - 1) * CUSTOMERS_PER_PAGE;
-      const currentCustomers = filteredCustomers.slice(start, start + CUSTOMERS_PER_PAGE);
-
-
-
-
-      tableBody.innerHTML = currentCustomers.length
-        ? currentCustomers
+      config.body.innerHTML = categoryUsers.length
+        ? categoryUsers
             .map(
-              (customer) => `
+              (user) => `
                 <tr>
-                  <td>${customer.name}</td>
-                  <td>${customer.email}</td>
-                  <td>${customer.totalOrders}</td>
-                  <td><span class="ADMIN-STATUS ${customer.status.toLowerCase()}">${customer.status}</span></td>
+                  <td>${escapeHtml(user.username)}</td>
+                  <td><span class="ADMIN-STATUS ${user.status}">${titleCase(user.status)}</span></td>
                   <td>
                     <div class="ADMIN-TABLE-ACTIONS">
-                      <button type="button" aria-label="View ${customer.name}">
+                      <button type="button" class="view-user-btn" data-user-id="${user.id}" aria-label="View ${escapeHtml(user.username)}">
                         <i class="fa-regular fa-eye"></i>
-                      </button>
-                      <button type="button" aria-label="Delete ${customer.name}">
-                        <i class="fa-regular fa-circle-xmark"></i>
                       </button>
                     </div>
                   </td>
@@ -2473,36 +2380,200 @@ if (matchingOption) {
             .join("")
         : `
             <tr>
-              <td colspan="5" class="ADMIN-NO-DATA">No customers matched your search.</td>
+              <td colspan="3" class="ADMIN-TABLE-EMPTY">${config.empty}</td>
             </tr>
           `;
-
-
-
-
-      renderPagination(totalPages);
     };
 
+    const renderTables = () => {
+      const categories = getCategoryUsers();
+      Object.keys(tableConfig).forEach((category) => {
+        renderUserRows(category, categories[category]);
+      });
+    };
 
+    const renderAddressList = (addresses) => {
+      if (!addresses.length) {
+        return `<div class="ADMIN-MODAL-ITEM"><div class="ADMIN-MODAL-ITEM-NAME">No saved addresses</div></div>`;
+      }
 
+      return addresses
+        .map(
+          (address) => `
+            <div class="ADMIN-MODAL-ITEM">
+              <div class="ADMIN-MODAL-ITEM-NAME">${escapeHtml(address)}</div>
+            </div>
+          `
+        )
+        .join("");
+    };
 
-    searchInput.addEventListener("input", () => {
-      currentPage = 1;
-      renderTable();
+    const buildStatusButtons = (user) =>
+      ["active", "inactive", "pending"]
+        .map(
+          (status) => `
+            <button type="button" class="ADMIN-USER-STATUS-BTN ${user.status === status ? "active" : ""}" data-user-status="${status}">
+              ${titleCase(status)}
+            </button>
+          `
+        )
+        .join("");
+
+    const openUserModal = (userId) => {
+      const user = users.find((item) => item.id === Number(userId));
+      if (!user) return;
+
+      modalBody.innerHTML = `
+        <div class="ADMIN-USER-MODAL-PROFILE">
+          <div class="ADMIN-USER-MODAL-AVATAR">
+            <img src="${escapeHtml(user.profilePicture)}" alt="${escapeHtml(user.username)} profile picture" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+            <span><i class="fa-regular fa-user"></i></span>
+          </div>
+          <div>
+            <h4>${escapeHtml(user.name)}</h4>
+            <p>@${escapeHtml(user.username)}</p>
+          </div>
+        </div>
+
+        <div class="ADMIN-MODAL-DETAIL">
+          <div class="ADMIN-MODAL-DETAIL-LABEL">Email</div>
+          <div class="ADMIN-MODAL-DETAIL-VALUE">${escapeHtml(user.email)}</div>
+        </div>
+        <div class="ADMIN-MODAL-DETAIL">
+          <div class="ADMIN-MODAL-DETAIL-LABEL">Contact Number</div>
+          <div class="ADMIN-MODAL-DETAIL-VALUE">${escapeHtml(user.contactNumber || "N/A")}</div>
+        </div>
+        <div class="ADMIN-USER-MODAL-STATS">
+          <div class="ADMIN-MODAL-DETAIL">
+            <div class="ADMIN-MODAL-DETAIL-LABEL">Total Orders</div>
+            <div class="ADMIN-MODAL-DETAIL-VALUE">${user.totalOrders}</div>
+          </div>
+          <div class="ADMIN-MODAL-DETAIL">
+            <div class="ADMIN-MODAL-DETAIL-LABEL">Total Spent</div>
+            <div class="ADMIN-MODAL-DETAIL-VALUE">${toPeso(user.totalSpent)}</div>
+          </div>
+        </div>
+        <div class="ADMIN-MODAL-DETAIL">
+          <div class="ADMIN-MODAL-DETAIL-LABEL">Addresses</div>
+          <div class="ADMIN-MODAL-ITEMS-LIST">
+            ${renderAddressList(user.addresses)}
+          </div>
+        </div>
+        <div class="ADMIN-MODAL-DETAIL">
+          <div class="ADMIN-MODAL-DETAIL-LABEL">Status</div>
+          <div class="ADMIN-USER-STATUS-GROUP" data-user-id="${user.id}">
+            ${buildStatusButtons(user)}
+          </div>
+        </div>
+      `;
+
+      modal.hidden = false;
+      modal.classList.add("active");
+      document.body.classList.add("modal-active");
+      const dialog = qs(".ADMIN-MODAL", modal);
+      if (dialog) dialog.focus();
+    };
+
+    const closeModal = () => {
+      modal.classList.remove("active");
+      modal.hidden = true;
+      document.body.classList.remove("modal-active");
+    };
+
+    const updateUserStatus = async (userId, status) => {
+      const user = users.find((item) => item.id === Number(userId));
+      if (!user || user.status === status) return;
+
+      try {
+        const response = await fetch("api/update_user_status.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: user.id, status }),
+        });
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || "Could not update user status.");
+        }
+
+        user.status = normalizeStatus(result.status || status);
+        renderTables();
+        openUserModal(user.id);
+      } catch (error) {
+        console.error("Error updating user status:", error);
+        alert(error.message || "Could not update user status.");
+      }
+    };
+
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch("api/get_customers.php");
+        if (!response.ok) throw new Error("Failed to fetch users");
+
+        const data = await response.json();
+        const rows = Array.isArray(data.users) ? data.users : data.customers;
+
+        if (data.success && Array.isArray(rows)) {
+          users = rows.map((user) => ({
+            id: Number(user.user_id),
+            name: user.full_name || user.username || "N/A",
+            username: user.username || "N/A",
+            email: user.email || "N/A",
+            role: String(user.role || "customer").toLowerCase(),
+            status: normalizeStatus(user.status),
+            emailVerified: Number(user.email_verified) === 1,
+            contactNumber: user.contact_number || "",
+            profilePicture: user.profile_picture || "images/yas_logo.png",
+            totalOrders: Number(user.total_orders || 0),
+            totalSpent: Number(user.total_spent || 0),
+            addresses: String(user.addresses || "")
+              .split("||")
+              .map((address) => address.trim())
+              .filter(Boolean),
+          }));
+
+          renderTables();
+        }
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        Object.values(tableConfig).forEach((config) => {
+          config.count.textContent = "0";
+          config.body.innerHTML = `
+            <tr>
+              <td colspan="3" class="ADMIN-TABLE-EMPTY">Unable to load users.</td>
+            </tr>
+          `;
+        });
+      }
+    };
+
+    Object.values(tableConfig).forEach((config) => {
+      config.body.addEventListener("click", (event) => {
+        const button = event.target.closest(".view-user-btn");
+        if (!button) return;
+        openUserModal(button.dataset.userId);
+      });
     });
 
-
-
-
-    statusSelect.addEventListener("change", () => {
-      currentPage = 1;
-      renderTable();
+    modalBody.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-user-status]");
+      if (!button) return;
+      const group = button.closest("[data-user-id]");
+      updateUserStatus(group.dataset.userId, button.dataset.userStatus);
     });
 
+    modalCloseBtn.addEventListener("click", closeModal);
+    modalCloseBtnBottom.addEventListener("click", closeModal);
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) closeModal();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && modal.classList.contains("active")) closeModal();
+    });
 
+    searchInput.addEventListener("input", renderTables);
 
-
-    renderTable();
+    fetchUsers();
   })();
 
 

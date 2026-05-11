@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Customers | Yas Milktea House</title>
+  <title>Admin Users | Yas Milktea House</title>
   <link rel="icon" type="image/png" href="images/footer_logo.png">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="..." crossorigin="anonymous">
@@ -47,7 +47,7 @@
           </a>
           <a href="adminCustomers.html" class="ADMIN-NAV-LINK active">
             <i class="fa-solid fa-users"></i>
-            <span>Customers</span>
+            <span>Users</span>
           </a>
           <a href="adminPayments.html" class="ADMIN-NAV-LINK">
             <i class="fa-solid fa-wallet"></i>
@@ -105,45 +105,132 @@
 
         <section class="ADMIN-CONTENT ADMIN-CUSTOMERS-CONTENT">
           <div class="ADMIN-INTRO">
-            <h2>Customers</h2>
+            <h2>Users</h2>
           </div>
 
 
           <div class="ADMIN-CUSTOMERS-TOOLS">
             <label class="ADMIN-SEARCH">
-              <input id="admin-customer-search" type="search" placeholder="Search customers...">
+              <input id="admin-customer-search" type="search" placeholder="Search users...">
               <i class="fa-solid fa-magnifying-glass"></i>
-            </label>
-
-
-            <label class="ADMIN-FILTER">
-              <select id="admin-customer-status">
-                <option>All Status</option>
-              </select>
             </label>
           </div>
 
 
-          <section class="ADMIN-TABLE-CARD">
-            <div class="ADMIN-TABLE-WRAP">
-              <table class="ADMIN-TABLE ADMIN-CUSTOMERS-TABLE">
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Total Orders</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="admin-customers-body"></tbody>
-              </table>
+          <div class="ADMIN-USERS-BOARD">
+            <div class="ADMIN-USERS-GRID">
+              <section class="ADMIN-STATUS-TABLE-CARD ADMIN-USERS-TABLE-CARD">
+                <div class="ADMIN-STATUS-TABLE-HEADER">
+                  <h3>Unverified</h3>
+                  <span class="ADMIN-STATUS-BADGE pending" id="unverified-users-count">0</span>
+                </div>
+                <div class="ADMIN-STATUS-TABLE-WRAP">
+                  <table class="ADMIN-TABLE ADMIN-STATUS-TABLE ADMIN-USERS-TABLE">
+                    <thead>
+                      <tr>
+                        <th>Username</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="unverified-users-body"></tbody>
+                  </table>
+                </div>
+              </section>
+
+              <section class="ADMIN-STATUS-TABLE-CARD ADMIN-USERS-TABLE-CARD">
+                <div class="ADMIN-STATUS-TABLE-HEADER">
+                  <h3>Customers</h3>
+                  <span class="ADMIN-STATUS-BADGE completed" id="customer-users-count">0</span>
+                </div>
+                <div class="ADMIN-STATUS-TABLE-WRAP">
+                  <table class="ADMIN-TABLE ADMIN-STATUS-TABLE ADMIN-USERS-TABLE">
+                    <thead>
+                      <tr>
+                        <th>Username</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="customer-users-body"></tbody>
+                  </table>
+                </div>
+              </section>
+
+              <section class="ADMIN-STATUS-TABLE-CARD ADMIN-USERS-TABLE-CARD">
+                <div class="ADMIN-STATUS-TABLE-HEADER">
+                  <h3>Inactive Accounts</h3>
+                  <span class="ADMIN-STATUS-BADGE cancelled" id="inactive-users-count">0</span>
+                </div>
+                <div class="ADMIN-STATUS-TABLE-WRAP">
+                  <table class="ADMIN-TABLE ADMIN-STATUS-TABLE ADMIN-USERS-TABLE">
+                    <thead>
+                      <tr>
+                        <th>Username</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="inactive-users-body"></tbody>
+                  </table>
+                </div>
+              </section>
+
+              <section class="ADMIN-STATUS-TABLE-CARD ADMIN-USERS-TABLE-CARD">
+                <div class="ADMIN-STATUS-TABLE-HEADER">
+                  <h3>Staffs</h3>
+                  <span class="ADMIN-STATUS-BADGE preparing" id="staff-users-count">0</span>
+                </div>
+                <div class="ADMIN-STATUS-TABLE-WRAP">
+                  <table class="ADMIN-TABLE ADMIN-STATUS-TABLE ADMIN-USERS-TABLE">
+                    <thead>
+                      <tr>
+                        <th>Username</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="staff-users-body"></tbody>
+                  </table>
+                </div>
+              </section>
             </div>
-          </section>
 
-
-          <div class="ADMIN-PAGINATION" id="admin-customers-pagination"></div>
+            <section class="ADMIN-STATUS-TABLE-CARD ADMIN-USERS-TABLE-CARD ADMIN-USERS-ADMIN-CARD">
+              <div class="ADMIN-STATUS-TABLE-HEADER">
+                <h3>Admins</h3>
+                <span class="ADMIN-STATUS-BADGE completed" id="admin-users-count">0</span>
+              </div>
+              <div class="ADMIN-STATUS-TABLE-WRAP">
+                <table class="ADMIN-TABLE ADMIN-STATUS-TABLE ADMIN-USERS-TABLE">
+                  <thead>
+                    <tr>
+                      <th>Username</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-users-body"></tbody>
+                </table>
+              </div>
+            </section>
+          </div>
         </section>
+
+        <div class="ADMIN-MODAL-OVERLAY" id="user-details-modal" hidden>
+          <div class="ADMIN-MODAL ADMIN-USER-DETAILS-MODAL" role="dialog" aria-modal="true" aria-labelledby="user-details-title" tabindex="-1">
+            <div class="ADMIN-MODAL-HEADER">
+              <h3 id="user-details-title">User Details</h3>
+              <button type="button" class="ADMIN-MODAL-CLOSE" aria-label="Close modal">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <div class="ADMIN-MODAL-BODY" id="user-modal-body"></div>
+            <div class="ADMIN-MODAL-FOOTER">
+              <button type="button" class="ADMIN-MODAL-CLOSE-BTN">Close</button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </main>
