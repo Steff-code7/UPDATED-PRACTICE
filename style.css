@@ -1642,7 +1642,7 @@ body {
 
 .dropdown-options {
     position: absolute;
-    bottom: 100%;
+    top: 100%;
     left: 0;
     z-index: 1;
     display: block;
@@ -1660,10 +1660,17 @@ body {
 
 .dropdown-options.dropdown-open {
     z-index: 5;
-    max-height: 500px;
+    max-height: 600px;
+    overflow-y: auto;
     border: 2px solid #ff4da6;
     box-shadow: none;
     transition: max-height 0.3s ease, border-color 0.1s ease, box-shadow 0.1s ease;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.dropdown-options.dropdown-open::-webkit-scrollbar {
+    display: none;
 }
 
 .dropdown-options li {
@@ -6322,6 +6329,15 @@ footer {
 .ACCOUNT-SIDEBAR-NAV a:hover {
     background: #ff4da6;
     color: #000;
+}
+
+.ACCOUNT-SIDEBAR-NAV a.logout-link {
+    color: #e53935;
+}
+
+.ACCOUNT-SIDEBAR-NAV a.logout-link:hover {
+    background: #e53935;
+    color: #fff;
 }
 
 .ACCOUNT-SIDEBAR-HELP {
