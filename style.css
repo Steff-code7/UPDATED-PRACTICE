@@ -1313,6 +1313,106 @@ body {
     padding-bottom: 20px;
 }
 
+/* ===================== LEGAL PAGES ===================== */
+.LEGAL-CONTENT-SECTION {
+    min-height: auto;
+    padding: 0 20px 70px;
+}
+
+.LEGAL-CONTENT-TEXTS {
+    width: min(1120px, 100%);
+    margin: 0 auto;
+    color: #ffffff;
+    text-align: center;
+}
+
+.LEGAL-EYEBROW {
+    padding-top: 26px;
+    font-family: "Nunito", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #ff8cc7;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.LEGAL-CONTENT-TEXTS h1 {
+    margin: 6px 0 16px;
+    font-family: "Poppins", sans-serif;
+    font-size: clamp(32px, 5vw, 54px);
+    line-height: 1;
+    font-weight: 900;
+    color: #ffffff;
+}
+
+.LEGAL-INTRO {
+    width: min(920px, 100%);
+    margin: 0 auto 34px;
+    font-family: "Nunito", sans-serif;
+    font-size: 18px;
+    line-height: 1.65;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.LEGAL-GRID {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.LEGAL-CARD {
+    position: relative;
+    overflow: hidden;
+    padding: 28px;
+    border: 1px solid rgba(255, 195, 225, 0.26);
+    border-radius: 8px;
+    background: linear-gradient(145deg, rgba(255, 195, 225, 0.12), rgba(255, 255, 255, 0.035));
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.24);
+    text-align: left;
+}
+
+.LEGAL-CARD::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: #ff5eb3;
+}
+
+.LEGAL-CARD-WIDE {
+    grid-column: 1 / -1;
+}
+
+.LEGAL-CARD h2 {
+    margin-bottom: 18px;
+    font-family: "Poppins", sans-serif;
+    font-size: 23px;
+    line-height: 1.2;
+    font-weight: 800;
+    color: #ffc3e1;
+}
+
+.LEGAL-CARD p {
+    margin-bottom: 14px;
+    font-family: "Nunito", sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.LEGAL-CARD p:last-child {
+    margin-bottom: 0;
+}
+
+.LEGAL-CARD strong {
+    color: #ffffff;
+    font-weight: 800;
+}
+
 /* =================== WHAT WE SERVE =================== */
 .WHAT-WE-SERVE-SECTION {
     display: flex;
@@ -2532,6 +2632,11 @@ footer {
     flex-shrink: 0;
 }
 
+/* Hide header border when modals are active */
+.modal-active .ADMIN-TOPBAR {
+    border-bottom-color: transparent;
+}
+
 .ADMIN-MENU-BUTTON,
 .ADMIN-ICON-BUTTON {
     display: inline-flex;
@@ -3464,7 +3569,7 @@ footer {
     display: flex;
     flex-direction: column;
     gap: 18px;
-    padding: 20px 0 0;
+    padding: 20px 18px 18px;
 }
 
 .ADMIN-ACCOUNT-PICTURE-SECTION {
@@ -3477,6 +3582,10 @@ footer {
     display: flex;
     align-items: center;
     gap: 16px;
+    padding: 16px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    background: #fafafa;
 }
 
 .ADMIN-ACCOUNT-PICTURE-PREVIEW {
@@ -3671,6 +3780,38 @@ footer {
 }
 
 @media (max-width: 760px) {
+    .LEGAL-CONTENT-SECTION {
+        padding-inline: 14px;
+        padding-bottom: 48px;
+    }
+
+    .LEGAL-EYEBROW {
+        font-size: 13px;
+        letter-spacing: 1px;
+    }
+
+    .LEGAL-INTRO {
+        font-size: 15px;
+        line-height: 1.55;
+    }
+
+    .LEGAL-GRID {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .LEGAL-CARD {
+        padding: 22px 18px;
+    }
+
+    .LEGAL-CARD h2 {
+        font-size: 20px;
+    }
+
+    .LEGAL-CARD p {
+        font-size: 15px;
+    }
+
     .promo-cards {
         grid-template-columns: 1fr;
     }

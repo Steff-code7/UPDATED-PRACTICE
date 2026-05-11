@@ -1357,6 +1357,7 @@ if (matchingOption) {
     const openModal = () => {
       modal.hidden = false;
       document.body.style.overflow = "hidden";
+      document.body.classList.add('modal-active');
     };
 
 
@@ -1365,6 +1366,7 @@ if (matchingOption) {
     const closeModal = () => {
       modal.hidden = true;
       document.body.style.overflow = "";
+      document.body.classList.remove('modal-active');
     };
 
 
@@ -2154,6 +2156,7 @@ if (matchingOption) {
       // Show modal
       modal.hidden = false;
       modal.classList.add("active");
+      document.body.classList.add('modal-active');
       const dialog = qs(".ADMIN-MODAL", modal);
       if (dialog) dialog.focus();
     }
@@ -2217,6 +2220,7 @@ if (matchingOption) {
     function closeModal() {
       modal.classList.remove("active");
       modal.hidden = true;
+      document.body.classList.remove('modal-active');
     }
 
     // Modal close event listeners
