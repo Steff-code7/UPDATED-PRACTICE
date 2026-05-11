@@ -9,6 +9,11 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+    header('Location: adminDashboard.html');
+    exit;
+}
+
 $user_id = $_SESSION['user_id'];
 
 try {

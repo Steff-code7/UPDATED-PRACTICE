@@ -15,6 +15,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const response = await fetch('api/get_account_data.php');
         const data = await response.json();
         if (data.success && data.user) {
+          // Redirect admins away from customer pages
+          if (data.user.role === 'admin') {
+            window.location.href = 'adminDashboard.html';
+            return;
+          }
+
           const profilePic = data.user.profile_picture || null;
           const username = data.user.username;
           
@@ -86,13 +92,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     clearStaleCache();
     syncUserData();
-
-    // Listen for storage changes across tabs/windows
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'userProfilePicture' || e.key === 'userName') {
-        syncUserData();
-      }
-    });
   })();
 
 // ===================== MOBILE NAV MENU ======================
