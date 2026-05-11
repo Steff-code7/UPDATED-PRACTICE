@@ -2313,6 +2313,16 @@ if (matchingOption) {
         maximumFractionDigits: 2,
       })}`;
 
+    const formatDate = (value) => {
+      if (!value) return "N/A";
+      const date = new Date(String(value).replace(" ", "T"));
+      if (Number.isNaN(date.getTime())) return "N/A";
+      const day = String(date.getDate()).padStart(2, "0");
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    };
+
     const getUserCategory = (user) => {
       if (user.role === "admin") return "admins";
       if (user.role === "staff") return "staff";
@@ -2443,6 +2453,10 @@ if (matchingOption) {
           <div class="ADMIN-MODAL-DETAIL-LABEL">Contact Number</div>
           <div class="ADMIN-MODAL-DETAIL-VALUE">${escapeHtml(user.contactNumber || "N/A")}</div>
         </div>
+        <div class="ADMIN-MODAL-DETAIL">
+          <div class="ADMIN-MODAL-DETAIL-LABEL">Account Created</div>
+          <div class="ADMIN-MODAL-DETAIL-VALUE">${escapeHtml(user.createdAt)}</div>
+        </div>
         <div class="ADMIN-USER-MODAL-STATS">
           <div class="ADMIN-MODAL-DETAIL">
             <div class="ADMIN-MODAL-DETAIL-LABEL">Total Orders</div>
@@ -2524,6 +2538,7 @@ if (matchingOption) {
             emailVerified: Number(user.email_verified) === 1,
             contactNumber: user.contact_number || "",
             profilePicture: user.profile_picture || "images/yas_logo.png",
+            createdAt: formatDate(user.created_at),
             totalOrders: Number(user.total_orders || 0),
             totalSpent: Number(user.total_spent || 0),
             addresses: String(user.addresses || "")
