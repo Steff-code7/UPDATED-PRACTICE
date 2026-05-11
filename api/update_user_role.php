@@ -2,9 +2,10 @@
 declare(strict_types=1);
 
 header('Content-Type: application/json');
-session_start();
+require_once 'session_config.php';
 
 require_once 'db.php';
+require_once 'csrf.php';
 require_once 'send_welcome_email.php';
 
 try {
@@ -15,6 +16,8 @@ try {
     }
 
     $data = json_decode(file_get_contents('php://input'), true);
+    requireCsrfToken($data['csrf_token'] ?? null);
+
     $userId = isset($data['user_id']) ? (int) $data['user_id'] : 0;
     $newRole = isset($data['role']) ? strtolower(trim((string) $data['role'])) : '';
 

@@ -2,6 +2,20 @@ document.addEventListener("DOMContentLoaded", () => {
   // ===================== HELPER SELECTORS =====================
   const qs = (sel, ctx = document) => (ctx && ctx.querySelector ? ctx.querySelector(sel) : null);
   const qsa = (sel, ctx = document) => (ctx && ctx.querySelectorAll ? Array.from(ctx.querySelectorAll(sel)) : []);
+  let csrfTokenCache = window.__CSRF_TOKEN__ || "";
+
+  const getCsrfToken = async () => {
+    if (csrfTokenCache) return csrfTokenCache;
+
+    const response = await fetch("api/get_csrf_token.php");
+    if (!response.ok) {
+      throw new Error("Could not load security token.");
+    }
+
+    const data = await response.json();
+    csrfTokenCache = data.csrf_token || "";
+    return csrfTokenCache;
+  };
 
   // ===================== PROFILE PICTURE & USERNAME SYNC =====================
   (function syncProfileAndUsername() {
@@ -13,6 +27,13 @@ document.addEventListener("DOMContentLoaded", () => {
       // Always fetch fresh data from server to prevent showing cached/old data
       try {
         const response = await fetch('api/get_account_data.php');
+
+        // Session expired or unauthorized — redirect to login
+        if (response.status === 401) {
+          window.location.href = 'loginSignUp.php';
+          return;
+        }
+
         const data = await response.json();
         if (data.success && data.user) {
           // Redirect admins away from customer pages
@@ -161,7 +182,7 @@ document.addEventListener("click", (event) => {
           window.location.href = 'customerAccount.php';
         } else {
           // Session is invalid, redirect to login
-          window.location.href = data.redirect || 'loginSignUp.html';
+          window.location.href = data.redirect || 'loginSignUp.php';
         }
       } catch (error) {
         console.error('Session validation failed:', error);
@@ -1662,6 +1683,8 @@ if (matchingOption) {
       }
 
       try {
+        productData.csrf_token = await getCsrfToken();
+
         const response = await fetch(url, {
           method: method,
           headers: {
@@ -1723,10 +1746,11 @@ if (matchingOption) {
       }
 
       try {
+        const csrfToken = await getCsrfToken();
         const response = await fetch('api/delete_product.php', {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ product_id: productId, status: 'archive' })
+          body: JSON.stringify({ product_id: productId, status: 'archive', csrf_token: csrfToken })
         });
 
         const result = await response.json();
@@ -1753,12 +1777,13 @@ if (matchingOption) {
     }
 
     try {
+      const csrfToken = await getCsrfToken();
       const response = await fetch('api/delete_product.php', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ product_id: productId, status: 'active' })
+        body: JSON.stringify({ product_id: productId, status: 'active', csrf_token: csrfToken })
       });
 
       const result = await response.json();
@@ -2188,31 +2213,33 @@ if (matchingOption) {
     }
 
     // Update order status via API
-    function updateOrderStatus(orderId, newStatus) {
-      fetch("api/update_order_status.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          order_id: orderId,
-          status: newStatus
-        })
-      })
-        .then((res) => res.json())
-        .then((result) => {
-          if (result.success) {
-            alert(`Order ${newStatus === 'cancelled' ? 'cancelled' : 'moved to ' + newStatus} successfully!`);
-            closeModal();
-            loadOrders(); // Reload orders
-          } else {
-            alert("Error: " + result.message);
-          }
-        })
-        .catch((error) => {
-          console.error("Error updating order:", error);
-          alert("Failed to update order status.");
+    async function updateOrderStatus(orderId, newStatus) {
+      try {
+        const csrfToken = await getCsrfToken();
+        const response = await fetch("api/update_order_status.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            order_id: orderId,
+            status: newStatus,
+            csrf_token: csrfToken
+          })
         });
+        const result = await response.json();
+
+        if (result.success) {
+          alert(`Order ${newStatus === 'cancelled' ? 'cancelled' : 'moved to ' + newStatus} successfully!`);
+          closeModal();
+          loadOrders(); // Reload orders
+        } else {
+          alert("Error: " + result.message);
+        }
+      } catch (error) {
+        console.error("Error updating order:", error);
+        alert("Failed to update order status.");
+      }
     }
 
     // Close modal
@@ -2498,10 +2525,11 @@ if (matchingOption) {
       if (!user || user.status === status) return;
 
       try {
+        const csrfToken = await getCsrfToken();
         const response = await fetch("api/update_user_status.php", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user_id: user.id, status }),
+          body: JSON.stringify({ user_id: user.id, status, csrf_token: csrfToken }),
         });
         const result = await response.json();
 
@@ -2834,10 +2862,11 @@ if (matchingOption) {
       if (!payment || payment.status === status) return;
 
       try {
+        const csrfToken = await getCsrfToken();
         const response = await fetch("api/update_payment_status.php", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ payment_id: payment.id, status }),
+          body: JSON.stringify({ payment_id: payment.id, status, csrf_token: csrfToken }),
         });
         const result = await response.json();
 
@@ -4085,7 +4114,7 @@ updateTotal();
 
         const isCustomerPage = window.location.pathname.toLowerCase().includes("customeritems.html");
         if (!isCustomerPage) {
-          window.location.href = "loginSignUp.html";
+          window.location.href = "loginSignUp.php";
           return;
         }
 
@@ -4129,7 +4158,7 @@ updateTotal();
         
         // If on items.html, redirect to login page
         if (!isCustomerPage) {
-          window.location.href = 'loginSignUp.html';
+          window.location.href = 'loginSignUp.php';
           return;
         }
         
@@ -4558,6 +4587,7 @@ updateTotal();
         try {
           placeOrderBtn.classList.add("is-loading");
           placeOrderBtn.style.pointerEvents = "none";
+          const csrfToken = await getCsrfToken();
 
           const response = await fetch("api/place_order.php", {
             method: "POST",
@@ -4571,6 +4601,7 @@ updateTotal();
               gcash_mobile: gcashMobile,
               delivery_fee: deliveryFee,
               items: payloadItems,
+              csrf_token: csrfToken,
             }),
           });
 

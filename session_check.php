@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once 'api/session_config.php';
 
 // This file will be used to check and maintain session
 header('Content-Type: application/json');

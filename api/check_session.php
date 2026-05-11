@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-session_start();
+require_once 'session_config.php';
 
 require_once 'db.php';
 
@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
     echo json_encode([
         'success' => false,
         'message' => 'Not logged in',
-        'redirect' => 'loginSignUp.html'
+        'redirect' => 'loginSignUp.php'
     ]);
     exit;
 }
@@ -28,7 +28,7 @@ try {
         echo json_encode([
             'success' => false,
             'message' => 'User not found or inactive',
-            'redirect' => 'loginSignUp.html'
+            'redirect' => 'loginSignUp.php'
         ]);
         exit;
     }
@@ -42,7 +42,7 @@ try {
     echo json_encode([
         'success' => false,
         'message' => 'Database error',
-        'redirect' => 'loginSignUp.html'
+        'redirect' => 'loginSignUp.php'
     ]);
 }
 ?>

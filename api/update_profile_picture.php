@@ -1,8 +1,9 @@
 <?php
 header('Content-Type: application/json');
-session_start();
+require_once 'session_config.php';
 
 require_once 'db.php';
+require_once 'csrf.php';
 
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
@@ -14,6 +15,8 @@ try {
     $user_id = $_SESSION['user_id'];
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        requireCsrfToken($_POST['csrf_token'] ?? null);
+
         // Handle file upload
         if (!isset($_FILES['profile_picture'])) {
             http_response_code(400);

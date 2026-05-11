@@ -374,14 +374,18 @@ goSignup.onclick = () => {
         setButtonState(signupSubmit, true, "SIGN UP", "CREATING...");
         signupFeedback.textContent = "";
 
-
         try {
+            // Fetch CSRF token first
+            const tokenRes = await fetch("api/get_csrf_token.php");
+            const tokenData = await tokenRes.json();
+            const csrfToken = tokenData.csrf_token || '';
+
             const response = await fetch("auth_signup.php", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ username, email, password }),
+                body: JSON.stringify({ username, email, password, csrf_token: csrfToken }),
             });
 
 
@@ -421,14 +425,18 @@ goSignup.onclick = () => {
         setButtonState(loginSubmit, true, "LOGIN", "CHECKING...");
         loginFeedback.textContent = "";
 
-
         try {
+            // Fetch CSRF token first
+            const tokenRes = await fetch("api/get_csrf_token.php");
+            const tokenData = await tokenRes.json();
+            const csrfToken = tokenData.csrf_token || '';
+
             const response = await fetch("auth_login.php", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ identifier, password }),
+                body: JSON.stringify({ identifier, password, csrf_token: csrfToken }),
             });
 
 

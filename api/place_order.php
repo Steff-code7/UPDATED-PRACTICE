@@ -1,9 +1,10 @@
 <?php
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
-session_start();
+require_once 'session_config.php';
 
 require_once 'db.php';
+require_once 'csrf.php';
 
 function ensurePaymentSchema(PDO $pdo): void
 {
@@ -36,7 +37,16 @@ try {
         throw new Exception('Invalid request payload.');
     }
 
-    $user_id = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : 1;
+    $user_id = isset($_SESSION['user_id']) ? (int)$_SESSION['user_id'] : null;
+
+    if (!$user_id) {
+        http_response_code(401);
+        echo json_encode(['success' => false, 'message' => 'You must be logged in to place an order.']);
+        exit;
+    }
+
+    requireCsrfToken($data['csrf_token'] ?? null);
+
     $order_type = $data['order_type'] ?? 'dine-in';
     $payment_method = $data['payment_method'] ?? 'cash_on_delivery';
     if ($payment_method === 'online_payment') {

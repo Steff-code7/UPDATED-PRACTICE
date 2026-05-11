@@ -2,11 +2,12 @@
 
 header('Content-Type: application/json');
 
-session_start();
+require_once 'api/session_config.php';
 
 
 
 require_once 'api/db.php';
+require_once 'api/csrf.php';
 
 require_once 'api/send_welcome_email.php';
 
@@ -16,7 +17,7 @@ try {
 
     $data = json_decode(file_get_contents('php://input'), true);
 
-
+    requireCsrfToken($data['csrf_token'] ?? null);
 
     $username = isset($data['username']) ? trim($data['username']) : '';
 

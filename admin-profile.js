@@ -7,6 +7,20 @@ const AdminProfile = (() => {
   // -------- helpers --------
   const qs = (sel, ctx = document) => ctx?.querySelector(sel) ?? null;
   const qsa = (sel, ctx = document) => ctx ? Array.from(ctx.querySelectorAll(sel)) : [];
+  let csrfTokenCache = window.__CSRF_TOKEN__ || '';
+
+  const getCsrfToken = async () => {
+    if (csrfTokenCache) return csrfTokenCache;
+
+    const resp = await fetch('api/get_csrf_token.php');
+    if (!resp.ok) {
+      throw new Error('Could not load security token.');
+    }
+
+    const data = await resp.json();
+    csrfTokenCache = data.csrf_token || '';
+    return csrfTokenCache;
+  };
 
   // -------- DOM references (populated on init) --------
   let elements = {};
@@ -235,13 +249,15 @@ const AdminProfile = (() => {
     submitBtn.textContent = 'Saving...';
 
     try {
+      const csrfToken = await getCsrfToken();
+
       // Update username
       const newUsername = elements.accountUsername ? elements.accountUsername.value.trim() : '';
       if (newUsername && adminData && newUsername !== adminData.username) {
         const resp = await fetch('api/update_account.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'update_username', username: newUsername })
+          body: JSON.stringify({ action: 'update_username', username: newUsername, csrf_token: csrfToken })
         });
         const data = await resp.json();
         if (!data.success) {
@@ -262,7 +278,8 @@ const AdminProfile = (() => {
             action: 'update_profile',
             full_name: newFullName || null,
             contact_number: adminData.contact_number || null,
-            date_of_birth: null
+            date_of_birth: null,
+            csrf_token: csrfToken
           })
         });
         const data = await resp.json();
@@ -279,6 +296,7 @@ const AdminProfile = (() => {
       if (fileInput && fileInput.files && fileInput.files[0]) {
         const formData = new FormData();
         formData.append('profile_picture', fileInput.files[0]);
+        formData.append('csrf_token', csrfToken);
         const resp = await fetch('api/update_profile_picture.php', {
           method: 'POST',
           body: formData
@@ -386,7 +404,7 @@ const AdminProfile = (() => {
           // Check if we're on an admin page and redirect to login
           if (window.location.pathname.includes('admin')) {
             console.log('Redirecting to login due to no session');
-            window.location.href = 'loginSignUp.html';
+            window.location.href = 'loginSignUp.php';
           } else {
             // Show error state
             updateUI({ username: 'Error', full_name: 'Session Error', role: 'error' });

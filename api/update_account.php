@@ -1,17 +1,13 @@
 <?php
 header('Content-Type: application/json');
-session_start();
+require_once 'session_config.php';
 
 require_once 'db.php';
-
-// Debug: Log session state
-error_log("Update Account - Session data: " . print_r($_SESSION, true));
-error_log("Update Account - Session ID: " . session_id());
+require_once 'csrf.php';
 
 if (!isset($_SESSION['user_id'])) {
-    error_log("Update Account - No user_id in session");
     http_response_code(401);
-    echo json_encode(['message' => 'Unauthorized', 'debug' => ['session_id' => session_id(), 'session_keys' => array_keys($_SESSION)]]);
+    echo json_encode(['message' => 'Unauthorized']);
     exit;
 }
 
@@ -21,6 +17,7 @@ try {
     $data = json_decode(file_get_contents('php://input'), true);
 
     if ($method === 'POST') {
+        requireCsrfToken($data['csrf_token'] ?? null);
         $action = $data['action'] ?? '';
 
         switch ($action) {

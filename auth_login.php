@@ -1,11 +1,14 @@
 <?php
 header('Content-Type: application/json');
-session_start();
+require_once 'api/session_config.php';
 
 require_once 'api/db.php';
+require_once 'api/csrf.php';
 
 try {
     $data = json_decode(file_get_contents('php://input'), true);
+
+    requireCsrfToken($data['csrf_token'] ?? null);
 
     $identifier = isset($data['identifier']) ? trim($data['identifier']) : '';
     $password   = isset($data['password'])   ? $data['password']          : '';
@@ -41,11 +44,12 @@ try {
 
     // Save session
     session_regenerate_id(true);
-    $_SESSION['user_id']     = $user['user_id'];
-    $_SESSION['username']    = $user['username'];
-    $_SESSION['role']        = $user['role'];
-    $_SESSION['full_name']   = $user['full_name'];
-    $_SESSION['profile_picture'] = $user['profile_picture'];
+    $_SESSION['user_id']          = $user['user_id'];
+    $_SESSION['username']         = $user['username'];
+    $_SESSION['role']             = $user['role'];
+    $_SESSION['full_name']        = $user['full_name'];
+    $_SESSION['profile_picture']  = $user['profile_picture'];
+    $_SESSION['last_activity']    = time();
 
     // Redirect based on role
     $redirect = in_array($user['role'], ['admin', 'staff']) ? 'adminDashboard.html' : 'customerHomePage.html';

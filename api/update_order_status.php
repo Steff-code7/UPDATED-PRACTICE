@@ -3,9 +3,11 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
 require_once 'db.php';
+require_once 'csrf.php';
 
 try {
     $data = json_decode(file_get_contents('php://input'), true);
+    requireCsrfToken($data['csrf_token'] ?? null);
     
     if (!isset($data['order_id']) || !isset($data['status'])) {
         http_response_code(400);

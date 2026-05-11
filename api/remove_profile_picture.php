@@ -1,8 +1,9 @@
 <?php
 header('Content-Type: application/json');
-session_start();
+require_once 'session_config.php';
 
 require_once 'db.php';
+require_once 'csrf.php';
 
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
@@ -13,6 +14,9 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 try {
+    $data = json_decode(file_get_contents('php://input'), true);
+    requireCsrfToken($data['csrf_token'] ?? null);
+
     // Get current profile picture path
     $stmt = $pdo->prepare("SELECT profile_picture FROM users WHERE user_id = :user_id");
     $stmt->execute(['user_id' => $user_id]);

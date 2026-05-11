@@ -1,6 +1,26 @@
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('DOM Content Loaded - Starting account module initialization');
-    
+
+    // ==================== CSRF HELPER ====================
+    const getCsrfToken = () => {
+        return window.__CSRF_TOKEN__ || '';
+    };
+
+    // ==================== SESSION EXPIRY HANDLER ====================
+    const handleResponse = async (response) => {
+        if (response.status === 401) {
+            window.location.href = 'loginSignUp.php';
+            throw new Error('Session expired');
+        }
+        return response.json();
+    };
+
+    // Central fetch wrapper — use this instead of raw fetch()
+    const apiFetch = async (url, options = {}) => {
+        const response = await fetch(url, options);
+        return handleResponse(response);
+    };
+
     // ==================== INITIALIZE PROFILE PICTURE & USERNAME ====================
     const profilePicPreview = document.getElementById('profilePicPreview');
     const navUsername = document.getElementById('navUsername');
@@ -51,14 +71,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const formData = new FormData();
             formData.append('profile_picture', file);
+            formData.append('csrf_token', getCsrfToken());
 
             try {
-                const response = await fetch('api/update_profile_picture.php', {
+                const data = await apiFetch('api/update_profile_picture.php', {
                     method: 'POST',
                     body: formData
                 });
-
-                const data = await response.json();
 
                 if (data.success) {
                     // Update all profile pictures
@@ -86,11 +105,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!confirm('Are you sure you want to remove your profile picture?')) return;
 
             try {
-                const response = await fetch('api/remove_profile_picture.php', {
-                    method: 'POST'
+                const data = await apiFetch('api/remove_profile_picture.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ csrf_token: getCsrfToken() })
                 });
-
-                const data = await response.json();
 
                 if (data.success) {
                     // Reset to default/placeholder
@@ -120,16 +139,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             const newUsername = document.getElementById('username').value;
 
             try {
-                const response = await fetch('api/update_account.php', {
+                const data = await apiFetch('api/update_account.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         action: 'update_username',
-                        username: newUsername
+                        username: newUsername,
+                        csrf_token: getCsrfToken()
                     })
                 });
-
-                const data = await response.json();
 
                 if (data.success) {
                     // Update localStorage and UI
@@ -169,18 +187,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             try {
-                const response = await fetch('api/update_account.php', {
+                const data = await apiFetch('api/update_account.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         action: 'change_password',
                         old_password: oldPassword,
                         new_password: newPassword,
-                        confirm_password: confirmPassword
+                        confirm_password: confirmPassword,
+                        csrf_token: getCsrfToken()
                     })
                 });
-
-                const data = await response.json();
 
                 if (data.success) {
                     alert('Password changed successfully!');
@@ -207,18 +224,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             try {
                 // Update profile info
-                let response = await fetch('api/update_account.php', {
+                let data = await apiFetch('api/update_account.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         action: 'update_profile',
                         full_name: fullName,
                         contact_number: contactNumber,
-                        date_of_birth: dateOfBirth
+                        date_of_birth: dateOfBirth,
+                        csrf_token: getCsrfToken()
                     })
                 });
 
-                let data = await response.json();
                 if (!data.success) {
                     alert('Error updating profile: ' + data.message);
                     return;
@@ -226,16 +243,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 // Update email if changed
                 if (email !== document.getElementById('email').defaultValue) {
-                    response = await fetch('api/update_account.php', {
+                    data = await apiFetch('api/update_account.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             action: 'update_email',
-                            email: email
+                            email: email,
+                            csrf_token: getCsrfToken()
                         })
                     });
-
-                    data = await response.json();
                     if (data.success) {
                         alert('Personal details updated! You will need to log in again with your new email if it was changed.');
                         window.location.href = 'index.html';
@@ -266,8 +282,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const container = document.getElementById('ordersContainer');
 
         try {
-            const response = await fetch('api/get_user_orders.php');
-            const data = await response.json();
+            const data = await apiFetch('api/get_user_orders.php');
 
             if (!data.success) {
                 container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>Error loading orders</p></div>';
@@ -420,17 +435,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                     address_line: compiledAddressLine,
                     landmark: document.getElementById('landmark').value,
                     delivery_instructions: document.getElementById('deliveryInstructions').value,
-                    is_primary: document.getElementById('isPrimary').checked ? 1 : 0
+                    is_primary: document.getElementById('isPrimary').checked ? 1 : 0,
+                    csrf_token: getCsrfToken()
                 };
 
                 try {
-                    const response = await fetch('api/manage_addresses.php', {
+                    const data = await apiFetch('api/manage_addresses.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
-
-                    const data = await response.json();
 
                     if (data.success) {
                         alert('Address ' + (action === 'add' ? 'added' : 'updated') + ' successfully!');
@@ -457,16 +471,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (!confirm('Are you sure you want to delete this address?')) return;
 
                 try {
-                    const response = await fetch('api/manage_addresses.php', {
+                    const data = await apiFetch('api/manage_addresses.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             action: 'delete',
-                            address_id: document.getElementById('addressId').value
+                            address_id: document.getElementById('addressId').value,
+                            csrf_token: getCsrfToken()
                         })
                     });
-
-                    const data = await response.json();
 
                     if (data.success) {
                         alert('Address deleted successfully!');
@@ -494,6 +507,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     body: JSON.stringify({ action: 'get_all' })
                 });
                 console.log('API response status:', response.status);
+
+                if (response.status === 401) {
+                    window.location.href = 'loginSignUp.php';
+                    return;
+                }
 
                 if (!response.ok) {
                     console.error(`HTTP error loading addresses: ${response.status}`);
@@ -545,13 +563,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         window.editAddress = async (addressId) => {
             try {
-                const response = await fetch('api/manage_addresses.php', {
+                const data = await apiFetch('api/manage_addresses.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'get_all' })
                 });
 
-                const data = await response.json();
                 const address = data.addresses.find(a => a.address_id == addressId);
 
                 if (address) {
@@ -577,16 +594,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         window.setAsPrimary = async (addressId) => {
             try {
-                const response = await fetch('api/manage_addresses.php', {
+                const data = await apiFetch('api/manage_addresses.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         action: 'set_primary',
-                        address_id: addressId
+                        address_id: addressId,
+                        csrf_token: getCsrfToken()
                     })
                 });
-
-                const data = await response.json();
 
                 if (data.success) {
                     alert('Primary address updated!');

@@ -3,6 +3,7 @@ if (!isset($activePage)) {
     $activePage = 'overview';
 }
 ?>
+<script>window.__CSRF_TOKEN__ = "<?php echo htmlspecialchars($csrfToken, ENT_QUOTES); ?>";</script>
 <header class="navbar">
     <div class="logo">
         <a href="customerHomePage.html"><img src="images/yas_logo.png" alt="YAS logo"></a>

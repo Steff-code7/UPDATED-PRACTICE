@@ -1,8 +1,9 @@
 <?php
 header('Content-Type: application/json');
-session_start();
+require_once 'session_config.php';
 
 require_once 'db.php';
+require_once 'csrf.php';
 
 if (!isset($_SESSION['user_id'])) {
     http_response_code(401);
@@ -14,6 +15,11 @@ try {
     $user_id = $_SESSION['user_id'];
     $data = json_decode(file_get_contents('php://input'), true);
     $action = $data['action'] ?? '';
+
+    // Validate CSRF token for all state-changing actions
+    if (in_array($action, ['add', 'update', 'delete', 'set_primary'])) {
+        requireCsrfToken($data['csrf_token'] ?? null);
+    }
 
     switch ($action) {
         case 'get_all':

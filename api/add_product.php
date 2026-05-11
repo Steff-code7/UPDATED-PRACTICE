@@ -3,9 +3,12 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
 require_once 'db.php';
+require_once 'csrf.php';
 
 try {
     $data         = json_decode(file_get_contents('php://input'), true);
+    requireCsrfToken($data['csrf_token'] ?? null);
+
     $category_id  = isset($data['category_id'])  ? intval($data['category_id'])   : 0;
     $product_name = isset($data['product_name']) ? trim($data['product_name'])     : '';
     $description  = isset($data['description'])  ? trim($data['description'])      : '';

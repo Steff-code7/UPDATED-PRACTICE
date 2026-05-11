@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-session_start();
+require_once 'session_config.php';
 
 // Debug: Log session state
 error_log("Session data: " . print_r($_SESSION, true));

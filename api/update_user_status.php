@@ -2,9 +2,10 @@
 declare(strict_types=1);
 
 header('Content-Type: application/json');
-session_start();
+require_once 'session_config.php';
 
 require_once 'db.php';
+require_once 'csrf.php';
 
 try {
     if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
@@ -17,6 +18,8 @@ try {
     }
 
     $data = json_decode(file_get_contents('php://input'), true);
+    requireCsrfToken($data['csrf_token'] ?? null);
+
     $userId = isset($data['user_id']) ? (int) $data['user_id'] : 0;
     $status = isset($data['status']) ? strtolower(trim((string) $data['status'])) : '';
     $validStatuses = ['active', 'inactive', 'pending'];

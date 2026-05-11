@@ -1,11 +1,12 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
-session_start();
+require_once 'api/session_config.php';
 
 require_once 'api/db.php';
+require_once 'api/csrf.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: loginSignUp.html');
+    header('Location: loginSignUp.php');
     exit;
 }
 
@@ -24,7 +25,7 @@ try {
     $user = $stmt->fetch();
 
     if (!$user) {
-        header('Location: loginSignUp.html');
+        header('Location: loginSignUp.php');
         exit;
     }
 
@@ -56,7 +57,9 @@ try {
     $profilePicture = $user['profile_picture'] ?: 'images/yas_logo.png';
     $memberSince = date('F j, Y', strtotime($user['created_at']));
 } catch (Exception $e) {
-    header('Location: loginSignUp.html');
+    header('Location: loginSignUp.php');
     exit;
 }
+
+$csrfToken = generateCsrfToken();
 ?>

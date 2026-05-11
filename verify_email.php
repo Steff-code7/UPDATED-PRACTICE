@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once 'api/session_config.php';
 require_once 'api/db.php';
 
 $token = isset($_GET['token']) ? trim($_GET['token']) : '';

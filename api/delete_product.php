@@ -3,9 +3,12 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 
 require_once 'db.php';
+require_once 'csrf.php';
 
 try {
     $data       = json_decode(file_get_contents('php://input'), true);
+    requireCsrfToken($data['csrf_token'] ?? null);
+
     $product_id = isset($data['product_id']) ? intval($data['product_id']) : 0;
     $status     = isset($data['status']) ? strtolower(trim($data['status'])) : 'archive';
     $status     = $status === 'active' ? 'active' : 'archive';

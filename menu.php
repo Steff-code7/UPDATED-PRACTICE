@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $conn = new mysqli("localhost", "root", "", "yas_milktea_house");
 
 if ($conn->connect_error) {
@@ -57,7 +57,7 @@ while ($row = $products->fetch_assoc()) {
             <a href="aboutUs.html">about</a>
             <a href="menu.php">menu</a>
         </nav>
-        <a class="order-btn" href="loginSignUp.html">ORDER NOW</a>
+        <a class="order-btn" href="loginSignUp.php">ORDER NOW</a>
         <div class="menu-toggle">&#9776;</div>
     </header>
 
