@@ -206,6 +206,7 @@ const AdminProfile = (() => {
     modal.hidden = false;
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
+    document.body.classList.add('modal-active');
   };
 
   /**
@@ -217,6 +218,7 @@ const AdminProfile = (() => {
     modal.hidden = true;
     modal.classList.remove('active');
     document.body.style.overflow = '';
+    document.body.classList.remove('modal-active');
   };
 
   /**
