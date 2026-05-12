@@ -2,6 +2,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // ===================== HELPER SELECTORS =====================
   const qs = (sel, ctx = document) => (ctx && ctx.querySelector ? ctx.querySelector(sel) : null);
   const qsa = (sel, ctx = document) => (ctx && ctx.querySelectorAll ? Array.from(ctx.querySelectorAll(sel)) : []);
+  const debugLog = (...args) => {
+    if (window.YAS_DEBUG) console.debug(...args);
+  };
   let csrfTokenCache = window.__CSRF_TOKEN__ || "";
 
   const getCsrfToken = async () => {
@@ -15,6 +18,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = await response.json();
     csrfTokenCache = data.csrf_token || "";
     return csrfTokenCache;
+  };
+  const hydrateSalesBars = (ctx = document) => {
+    qsa("[data-bar-width]", ctx).forEach((bar) => {
+      const width = Math.max(0, Math.min(100, Number(bar.dataset.barWidth || 0)));
+      bar.style.width = `${width}%`;
+    });
   };
 
   // ===================== PROFILE PICTURE & USERNAME SYNC =====================
@@ -57,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
           updateProfileUI(profilePic, username);
         }
       } catch (error) {
-        console.log('Could not fetch user data:', error);
+        debugLog('Could not fetch user data:', error);
         // Fallback to localStorage if server fails
         const profilePic = localStorage.getItem('userProfilePicture');
         const username = localStorage.getItem('userName');
@@ -104,7 +113,7 @@ document.addEventListener("DOMContentLoaded", () => {
       
       // If cache exists but doesn't match current session, clear it
       if (cachedUsername) {
-        console.log('Clearing potentially stale user cache');
+        debugLog('Clearing potentially stale user cache');
         localStorage.removeItem('userProfilePicture');
         localStorage.removeItem('userName');
         localStorage.removeItem('userId');
@@ -128,7 +137,11 @@ if (!menuToggle || !navLinks) return;
 
 
 
-const toggleNav = () => navLinks.classList.toggle("show");
+const toggleNav = () => {
+      const isOpen = navLinks.classList.toggle("show");
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      return isOpen;
+    };
     window.toggleMenu = toggleNav;
 
 
@@ -145,6 +158,7 @@ menuToggle.addEventListener("click", (event) => {
 document.addEventListener("click", (event) => {
       if (!navLinks.contains(event.target) && !menuToggle.contains(event.target)) {
         navLinks.classList.remove("show");
+        menuToggle.setAttribute("aria-expanded", "false");
       }
     });
   })();
@@ -351,17 +365,17 @@ document.addEventListener("click", (event) => {
                   <tr>
                     <td><strong>${index + 1}</strong></td>
                     <td>
-                      <div style="display: flex; align-items: center; gap: 8px;">
+                      <div class="ADMIN-PRODUCT-CELL">
                         <img src="${product.image || 'images/placeholder.png'}" alt="${product.product_name}" 
-                             style="width: 32px; height: 32px; border-radius: 4px; object-fit: cover;">
+                             class="ADMIN-PRODUCT-THUMB">
                         <span>${product.product_name || 'Unknown'}</span>
                       </div>
                     </td>
                     <td>
-                      <div style="display: flex; align-items: center; gap: 8px;">
+                      <div class="ADMIN-SALES-METER">
                         <span>${quantity}</span>
-                        <div style="width: 100px; height: 4px; background: #f0f0f0; border-radius: 2px; overflow: hidden;">
-                          <div style="height: 100%; background: #e91e63; width: ${barWidth}%;"></div>
+                        <div class="ADMIN-SALES-BAR">
+                          <div class="ADMIN-SALES-BAR-FILL" data-bar-width="${barWidth}"></div>
                         </div>
                       </div>
                     </td>
@@ -393,17 +407,17 @@ document.addEventListener("click", (event) => {
                   <tr>
                     <td><strong>${index + 1}</strong></td>
                     <td>
-                      <div style="display: flex; align-items: center; gap: 8px;">
+                      <div class="ADMIN-PRODUCT-CELL">
                         <img src="${product.image || 'images/placeholder.png'}" alt="${product.product_name}" 
-                             style="width: 32px; height: 32px; border-radius: 4px; object-fit: cover;">
+                             class="ADMIN-PRODUCT-THUMB">
                         <span>${product.product_name || 'Unknown'}</span>
                       </div>
                     </td>
                     <td>
-                      <div style="display: flex; align-items: center; gap: 8px;">
+                      <div class="ADMIN-SALES-METER">
                         <span>${quantity}</span>
-                        <div style="width: 100px; height: 4px; background: #f0f0f0; border-radius: 2px; overflow: hidden;">
-                          <div style="height: 100%; background: #e91e63; width: ${barWidth}%;"></div>
+                        <div class="ADMIN-SALES-BAR">
+                          <div class="ADMIN-SALES-BAR-FILL" data-bar-width="${barWidth}"></div>
                         </div>
                       </div>
                     </td>
@@ -414,6 +428,8 @@ document.addEventListener("click", (event) => {
               .join("");
           }
         }
+
+        hydrateSalesBars();
 
         if (recentOrdersBody) {
           const recentOrders = Array.isArray(result.recent_orders) ? result.recent_orders : [];
@@ -795,25 +811,13 @@ sortButton.setAttribute("aria-label", `Sort menu cards: ${current.label}`);
 
 const getCardImagePath = (card) => {
       const pic = qs(".menu-card-pic", card);
-
-
-
-
 if (!pic) return "";
+      const image = qs("img", pic);
+      if (image) return image.getAttribute("src") || "";
 
-
-
-
-const bg =
-        pic.style.backgroundImage ||
-        window.getComputedStyle(pic).backgroundImage ||
-        "";
+      const bg = window.getComputedStyle(pic).backgroundImage || "";
       const match = bg.match(/url\((['"]?)(.*?)\1\)/i);
-
-
-
-
-return match ? match[2] : "";
+      return match ? match[2] : "";
     };
 
 
@@ -2137,7 +2141,7 @@ if (matchingOption) {
         </div>
         <div class="ADMIN-MODAL-DETAIL">
           <div class="ADMIN-MODAL-DETAIL-LABEL">Status</div>
-          <div class="ADMIN-MODAL-DETAIL-VALUE" style="text-transform: capitalize; color: #007bff; font-weight: 700;">${order.status}</div>
+          <div class="ADMIN-MODAL-DETAIL-VALUE ADMIN-MODAL-STATUS-VALUE">${order.status}</div>
         </div>
         <div class="ADMIN-MODAL-DETAIL">
           <div class="ADMIN-MODAL-DETAIL-LABEL">Items</div>
@@ -2170,8 +2174,8 @@ if (matchingOption) {
       modalBody.innerHTML = modalContent;
 
       // Show/hide action buttons based on status
-      modalCancelBtn.style.display = order.status === "pending" ? "inline-flex" : "none";
-      modalNextBtn.style.display = order.status !== "completed" && order.status !== "cancelled" ? "inline-flex" : "none";
+      modalCancelBtn.classList.toggle("is-hidden", order.status !== "pending");
+      modalNextBtn.classList.toggle("is-hidden", order.status === "completed" || order.status === "cancelled");
 
       // Attach action handlers
       modalCancelBtn.onclick = () => cancelOrder(orderId);

@@ -52,21 +52,21 @@ try {
 
                 <section class="ACCOUNT-MODULE" id="addresses-module">
                     <h2>Your Addresses</h2>
-                    <button class="btn primary" id="addAddressBtn" style="margin-bottom: 20px;">+ Add New Address</button>
+                    <button class="btn primary account-add-address-btn" id="addAddressBtn">+ Add New Address</button>
                     <div id="addressesList">
                         <?php if (empty($addresses)): ?>
-                            <div style="text-align: center; padding: 40px;">
+                            <div class="empty-state">
                                 <p>No addresses found.</p>
                             </div>
                         <?php else: ?>
                             <?php foreach ($addresses as $address): ?>
                                 <article class="ACCOUNT-DETAIL-CARD">
                                     <div class="ACCOUNT-CARD-HEADER">
-                                        <h4><?php echo htmlspecialchars(ucfirst($address['address_type'])); ?><?php echo $address['is_primary'] ? ' <span style="color: #ff5eb3;">(Primary)</span>' : ''; ?></h4>
-                                        <div style="display: flex; gap: 10px;">
-                                            <button class="btn outline small" onclick="editAddress(<?php echo intval($address['address_id']); ?>)">EDIT</button>
+                                        <h4><?php echo htmlspecialchars(ucfirst($address['address_type'])); ?><?php echo $address['is_primary'] ? ' <span class="ACCOUNT-PRIMARY-LABEL">(Primary)</span>' : ''; ?></h4>
+                                        <div class="ACCOUNT-CARD-HEADER-ACTIONS">
+                                            <button type="button" class="btn outline small" data-address-action="edit" data-address-id="<?php echo intval($address['address_id']); ?>">EDIT</button>
                                             <?php if (!$address['is_primary']): ?>
-                                                <button type="button" class="btn outline small" onclick="setAsPrimary(<?php echo intval($address['address_id']); ?>)">SET AS PRIMARY</button>
+                                                <button type="button" class="btn outline small" data-address-action="primary" data-address-id="<?php echo intval($address['address_id']); ?>">SET AS PRIMARY</button>
                                             <?php endif; ?>
                                         </div>
                                     </div>
@@ -148,11 +148,11 @@ try {
                                         <span>Set as primary address</span>
                                     </label>
                                 </div>
-                                <p style="margin: 0 0 12px; font-size: 13px; color: #666;">Delivery is limited to these areas only.</p>
+                                <p class="ACCOUNT-MODAL-NOTE">Delivery is limited to these areas only.</p>
                                 <div class="form-actions">
                                     <button type="submit" class="btn primary">Save Address</button>
                                     <button type="button" class="btn outline" id="closeAddressModal">Cancel</button>
-                                    <button type="button" class="btn danger" id="deleteAddressBtn" style="display: none;">Delete</button>
+                                    <button type="button" class="btn danger is-hidden" id="deleteAddressBtn">Delete</button>
                                 </div>
                             </form>
                         </div>
@@ -199,7 +199,7 @@ try {
     </footer>
 
     <div class="BACK-TO-TOP" id="back-to-top" role="button" tabindex="0" aria-label="Back to top" title="Go to top">
-        <i class="fa-solid fa-circle-chevron-up" style="color: #ff5eb3;"></i>
+        <i class="fa-solid fa-circle-chevron-up"></i>
     </div>
 
     <script src="script.js?v=account-v1"></script>

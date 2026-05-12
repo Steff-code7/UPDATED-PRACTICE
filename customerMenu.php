@@ -77,7 +77,7 @@ while ($row = $products->fetch_assoc()) {
                 </div>
             </div>
         </div>
-        <div class="menu-toggle">&#9776;</div>
+        <button type="button" class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
     </header>
 
 
@@ -227,8 +227,8 @@ while ($row = $products->fetch_assoc()) {
 
         <div class="menu-drink-card" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-product-id="<?= (int)$product['product_id'] ?>">
 
-            <div class="menu-card-pic"
-                 style="background-image: url('<?= htmlspecialchars($product['image']) ?>'); background-position: center;">
+            <div class="menu-card-pic">
+                <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>">
             </div>
 
             <div class="menu-card-text">
@@ -264,8 +264,8 @@ while ($row = $products->fetch_assoc()) {
 
         <div class="menu-drink-card" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-product-id="<?= (int)$product['product_id'] ?>">
 
-            <div class="menu-card-pic"
-                 style="background-image: url('<?= htmlspecialchars($product['image']) ?>'); background-position: center;">
+            <div class="menu-card-pic">
+                <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>">
             </div>
 
             <div class="menu-card-text">
@@ -301,8 +301,8 @@ while ($row = $products->fetch_assoc()) {
 
         <div class="menu-drink-card" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-product-id="<?= (int)$product['product_id'] ?>">
 
-            <div class="menu-card-pic"
-                 style="background-image: url('<?= htmlspecialchars($product['image']) ?>'); background-position: center;">
+            <div class="menu-card-pic">
+                <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>">
             </div>
 
             <div class="menu-card-text">
@@ -332,9 +332,9 @@ while ($row = $products->fetch_assoc()) {
                 <?php if (!empty($productByCategory['fruit-milk'])): ?>
                     <?php foreach ($productByCategory['fruit-milk'] as $product): ?>
                         <div class="menu-drink-card" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-product-id="<?= (int)$product['product_id'] ?>">
-                            <div class="menu-card-pic"
-                                 style="background-image: url('<?= htmlspecialchars($product['image']) ?>'); background-position: center;">
-                            </div>
+                            <div class="menu-card-pic">
+                <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>">
+            </div>
                             <div class="menu-card-text">
                                 <h2><?= htmlspecialchars($product['product_name']) ?></h2>
                                 <p><?= htmlspecialchars($product['description']) ?></p>
@@ -361,9 +361,9 @@ while ($row = $products->fetch_assoc()) {
                 <?php if (!empty($productByCategory['fruit-tea'])): ?>
                     <?php foreach ($productByCategory['fruit-tea'] as $product): ?>
                         <div class="menu-drink-card" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-product-id="<?= (int)$product['product_id'] ?>">
-                            <div class="menu-card-pic"
-                                 style="background-image: url('<?= htmlspecialchars($product['image']) ?>'); background-position: center;">
-                            </div>
+                            <div class="menu-card-pic">
+                <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>">
+            </div>
                             <div class="menu-card-text">
                                 <h2><?= htmlspecialchars($product['product_name']) ?></h2>
                                 <p><?= htmlspecialchars($product['description']) ?></p>
@@ -401,9 +401,9 @@ while ($row = $products->fetch_assoc()) {
                 <?php if (!empty($productByCategory['takoyaki'])): ?>
                     <?php foreach ($productByCategory['takoyaki'] as $product): ?>
                         <div class="menu-drink-card" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-product-id="<?= (int)$product['product_id'] ?>">
-                            <div class="menu-card-pic"
-                                 style="background-image: url('<?= htmlspecialchars($product['image']) ?>'); background-position: center;">
-                            </div>
+                            <div class="menu-card-pic">
+                <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>">
+            </div>
                             <div class="menu-card-text">
                                 <h2><?= htmlspecialchars($product['product_name']) ?></h2>
                                 <p><?= htmlspecialchars($product['description']) ?></p>
@@ -430,9 +430,9 @@ while ($row = $products->fetch_assoc()) {
                 <?php if (!empty($productByCategory['shawarma'])): ?>
                     <?php foreach ($productByCategory['shawarma'] as $product): ?>
                         <div class="menu-drink-card" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-product-id="<?= (int)$product['product_id'] ?>">
-                            <div class="menu-card-pic"
-                                 style="background-image: url('<?= htmlspecialchars($product['image']) ?>'); background-position: center;">
-                            </div>
+                            <div class="menu-card-pic">
+                <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>">
+            </div>
                             <div class="menu-card-text">
                                 <h2><?= htmlspecialchars($product['product_name']) ?></h2>
                                 <p><?= htmlspecialchars($product['description']) ?></p>
@@ -459,9 +459,9 @@ while ($row = $products->fetch_assoc()) {
                 <?php if (!empty($productByCategory['chicken-wings-fries'])): ?>
                     <?php foreach ($productByCategory['chicken-wings-fries'] as $product): ?>
                         <div class="menu-drink-card" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-product-id="<?= (int)$product['product_id'] ?>">
-                            <div class="menu-card-pic"
-                                 style="background-image: url('<?= htmlspecialchars($product['image']) ?>'); background-position: center;">
-                            </div>
+                            <div class="menu-card-pic">
+                <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>">
+            </div>
                             <div class="menu-card-text">
                                 <h2><?= htmlspecialchars($product['product_name']) ?></h2>
                                 <p><?= htmlspecialchars($product['description']) ?></p>
@@ -488,9 +488,9 @@ while ($row = $products->fetch_assoc()) {
                 <?php if (!empty($productByCategory['burger'])): ?>
                     <?php foreach ($productByCategory['burger'] as $product): ?>
                         <div class="menu-drink-card" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-product-id="<?= (int)$product['product_id'] ?>">
-                            <div class="menu-card-pic"
-                                 style="background-image: url('<?= htmlspecialchars($product['image']) ?>'); background-position: center;">
-                            </div>
+                            <div class="menu-card-pic">
+                <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>">
+            </div>
                             <div class="menu-card-text">
                                 <h2><?= htmlspecialchars($product['product_name']) ?></h2>
                                 <p><?= htmlspecialchars($product['description']) ?></p>
@@ -517,9 +517,9 @@ while ($row = $products->fetch_assoc()) {
                 <?php if (!empty($productByCategory['fries'])): ?>
                     <?php foreach ($productByCategory['fries'] as $product): ?>
                         <div class="menu-drink-card" data-name="<?= htmlspecialchars($product['product_name']) ?>" data-product-id="<?= (int)$product['product_id'] ?>">
-                            <div class="menu-card-pic"
-                                 style="background-image: url('<?= htmlspecialchars($product['image']) ?>'); background-position: center;">
-                            </div>
+                            <div class="menu-card-pic">
+                <img src="<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['product_name']) ?>">
+            </div>
                             <div class="menu-card-text">
                                 <h2><?= htmlspecialchars($product['product_name']) ?></h2>
                                 <p><?= htmlspecialchars($product['description']) ?></p>
@@ -591,7 +591,7 @@ while ($row = $products->fetch_assoc()) {
 
 <!-- ==================== BACK TO TOP ======================== -->
     <div class="BACK-TO-TOP" id="back-to-top" role="button" tabindex="0" aria-label="Back to top" title="Go to top">
-        <i class="fa-solid fa-circle-chevron-up" style="color: #ff5eb3;"></i>
+        <i class="fa-solid fa-circle-chevron-up"></i>
     </div>
 
 
@@ -628,6 +628,7 @@ while ($row = $products->fetch_assoc()) {
     </script>
 </body>
 </html>
+
 
 
 

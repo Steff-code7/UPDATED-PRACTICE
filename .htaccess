@@ -1,0 +1,6 @@
+ErrorDocument 404 /YasMilkteaHouse_Clone/UPDATED-PRACTICE/404.html
+ErrorDocument 500 /YasMilkteaHouse_Clone/UPDATED-PRACTICE/500.html
+
+php_flag display_errors Off
+php_flag log_errors On
+php_value error_log php-errors.log

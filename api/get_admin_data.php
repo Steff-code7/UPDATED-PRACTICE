@@ -4,15 +4,10 @@ require_once 'session_config.php';
 
 require_once 'db.php';
 
-// Debug: Log session state
-error_log("Get Admin Data - Session data: " . print_r($_SESSION, true));
-error_log("Get Admin Data - Session ID: " . session_id());
-
 // Check if admin is logged in
 if (!isset($_SESSION['user_id'])) {
-    error_log("Get Admin Data - No user_id in session");
     http_response_code(401);
-    echo json_encode(['success' => false, 'message' => 'Unauthorized', 'debug' => ['session_id' => session_id(), 'session_keys' => array_keys($_SESSION)]]);
+    echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit;
 }
 

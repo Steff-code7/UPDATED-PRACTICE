@@ -148,11 +148,11 @@
 </section>
 
 <!-- VERIFICATION SUCCESS MODAL -->
-<div id="verificationModal" class="MODAL" style="display: none;">
+<div id="verificationModal" class="MODAL" hidden>
     <div class="MODAL-CONTENT">
         <div class="MODAL-HEADER">
             <h2>Check Your Email</h2>
-            <button class="MODAL-CLOSE" onclick="closeVerificationModal()">&times;</button>
+            <button class="MODAL-CLOSE" type="button" data-close-verification aria-label="Close verification message">&times;</button>
         </div>
         <div class="MODAL-BODY">
             <div class="MODAL-ICON">
@@ -166,137 +166,10 @@
             </p>
         </div>
         <div class="MODAL-FOOTER">
-            <button class="MODAL-BUTTON" onclick="closeVerificationModal()">Got it</button>
+            <button class="MODAL-BUTTON" type="button" data-close-verification>Got it</button>
         </div>
     </div>
 </div>
-
-<style>
-    .MODAL {
-        position: fixed;
-        z-index: 2000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.7);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .MODAL-CONTENT {
-        background-color: #1a1a1a;
-        border-radius: 12px;
-        border: 2px solid #ff4da6;
-        box-shadow: 0 0 30px #ff4da6aa, 0 0 60px #ff4da644;
-        max-width: 450px;
-        width: 90%;
-        padding: 0;
-        overflow: hidden;
-        animation: slideIn 0.3s ease-out;
-    }
-
-    @keyframes slideIn {
-        from {
-            transform: translateY(-50px);
-            opacity: 0;
-        }
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
-    .MODAL-HEADER {
-        background: linear-gradient(90deg, #ff4da6 0%, #d30077 100%);
-        color: white;
-        padding: 24px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .MODAL-HEADER h2 {
-        margin: 0;
-        font-size: 24px;
-        font-weight: 700;
-        font-family: "Poppins", sans-serif;
-    }
-
-    .MODAL-CLOSE {
-        background: none;
-        border: none;
-        color: white;
-        font-size: 28px;
-        cursor: pointer;
-        padding: 0;
-        width: 32px;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: transform 0.2s ease;
-    }
-
-    .MODAL-CLOSE:hover {
-        transform: scale(1.2);
-    }
-
-    .MODAL-BODY {
-        padding: 40px 30px;
-        text-align: center;
-    }
-
-    .MODAL-ICON {
-        font-size: 56px;
-        color: #ff4da6;
-        margin-bottom: 20px;
-        filter: drop-shadow(0 0 10px #ff4da6aa);
-    }
-
-    .MODAL-MESSAGE {
-        font-size: 18px;
-        font-weight: 700;
-        color: #ffffff;
-        margin-bottom: 12px;
-        margin: 0 0 12px 0;
-        font-family: "Poppins", sans-serif;
-    }
-
-    .MODAL-INSTRUCTION {
-        font-size: 15px;
-        color: rgba(255, 255, 255, 0.88);
-        line-height: 1.6;
-        margin: 0;
-        font-family: "Poppins", sans-serif;
-    }
-
-    .MODAL-FOOTER {
-        padding: 20px 30px;
-        background: #0d0d0d;
-        text-align: center;
-        border-top: 1px solid #333;
-    }
-
-    .MODAL-BUTTON {
-        background: linear-gradient(90deg, #ff4da6 0%, #d30077 100%);
-        color: white;
-        border: none;
-        padding: 12px 40px;
-        font-size: 16px;
-        font-weight: 600;
-        border-radius: 40px;
-        cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
-        font-family: "Poppins", sans-serif;
-    }
-
-    .MODAL-BUTTON:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 20px #ff4da6, 0 0 40px #ff4da6aa;
-    }
-</style>
 
 </section>
 
@@ -459,16 +332,19 @@ goSignup.onclick = () => {
 
     const showVerificationModal = () => {
         const modal = document.getElementById('verificationModal');
-        modal.style.display = 'flex';
+        modal.hidden = false;
     };
 
     const closeVerificationModal = () => {
         const modal = document.getElementById('verificationModal');
-        modal.style.display = 'none';
+        modal.hidden = true;
     };
 
     signupSubmit.onclick = attemptSignup;
     loginSubmit.onclick = attemptLogin;
+    document.querySelectorAll('[data-close-verification]').forEach((button) => {
+        button.addEventListener('click', closeVerificationModal);
+    });
 
     // Password show/hide toggles
     document.querySelectorAll('.password-toggle').forEach(btn => {

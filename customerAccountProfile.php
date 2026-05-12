@@ -24,16 +24,16 @@ $activePage = 'my-profile';
                         <div class="ACCOUNT-CARD-HEADER">
                             <h3>Profile Picture</h3>
                         </div>
-                        <div class="ACCOUNT-CARD-BODY" style="text-align: center;">
-                            <img id="profilePicPreview" src="<?php echo htmlspecialchars($profilePicture); ?>" alt="Profile Picture" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; margin-bottom: 15px;">
-                            <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
-                                <label class="btn outline" style="cursor: pointer; margin: 0;">
+                        <div class="ACCOUNT-CARD-BODY centered">
+                            <img id="profilePicPreview" class="ACCOUNT-PROFILE-AVATAR" src="<?php echo htmlspecialchars($profilePicture); ?>" alt="Profile Picture">
+                            <div class="ACCOUNT-INLINE-ACTIONS">
+                                <label class="btn outline ACCOUNT-FILE-LABEL">
                                     UPLOAD NEW PICTURE
-                                    <input type="file" id="profilePictureInput" accept="image/*" style="display: none;">
+                                    <input type="file" id="profilePictureInput" class="ACCOUNT-FILE-INPUT" accept="image/*">
                                 </label>
-                                <button type="button" id="removeProfilePicBtn" class="btn outline" style="margin: 0;">REMOVE PICTURE</button>
+                                <button type="button" id="removeProfilePicBtn" class="btn outline">REMOVE PICTURE</button>
                             </div>
-                            <small style="display: block; margin-top: 10px; color: #999;">JPG, PNG, GIF, or WebP (Max 5MB)</small>
+                            <small class="ACCOUNT-HELP-TEXT">JPG, PNG, GIF, or WebP (Max 5MB)</small>
                         </div>
                     </article>
 
@@ -116,7 +116,7 @@ $activePage = 'my-profile';
     </footer>
 
     <div class="BACK-TO-TOP" id="back-to-top" role="button" tabindex="0" aria-label="Back to top" title="Go to top">
-        <i class="fa-solid fa-circle-chevron-up" style="color: #ff5eb3;"></i>
+        <i class="fa-solid fa-circle-chevron-up"></i>
     </div>
 
     <script src="script.js?v=account-v1"></script>

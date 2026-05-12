@@ -2,9 +2,6 @@
 header('Content-Type: application/json');
 require_once 'session_config.php';
 
-// Debug: Log session state
-error_log("Session data: " . print_r($_SESSION, true));
-
 // Return session data directly without complex validation
 if (isset($_SESSION['user_id'])) {
     echo json_encode([
@@ -16,20 +13,12 @@ if (isset($_SESSION['user_id'])) {
             'role' => $_SESSION['role'] ?? 'unknown',
             'profile_picture' => $_SESSION['profile_picture'] ?? null,
             'email' => $_SESSION['email'] ?? ''
-        ],
-        'debug' => [
-            'session_id' => session_id(),
-            'session_keys' => array_keys($_SESSION)
         ]
     ]);
 } else {
     echo json_encode([
         'success' => false,
-        'message' => 'No session found',
-        'debug' => [
-            'session_id' => session_id(),
-            'session_keys' => array_keys($_SESSION)
-        ]
+        'message' => 'No session found'
     ]);
 }
 ?>

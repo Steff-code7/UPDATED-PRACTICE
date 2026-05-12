@@ -335,7 +335,7 @@
                 </div>
             </div>
         </div>
-        <div class="menu-toggle">&#9776;</div>
+        <button type="button" class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
     </header>
 
 <!-- ========================= CART CONTENT ========================= -->
@@ -359,7 +359,7 @@
         </table>
 
         <!-- Empty state (shown when cart is empty) -->
-        <div class="empty-cart" id="emptyCart" style="display:none;">
+        <div class="empty-cart is-hidden" id="emptyCart">
             <i class="fa-solid fa-cart-shopping"></i>
             <p>Your cart is empty. Start adding some items!</p>
             <a href="customerMenu.php" class="add-items-btn">Add Items</a>
@@ -389,7 +389,7 @@
                     <span>Total</span>
                     <span id="totalVal">₱0</span>
                 </div>
-                <button class="checkout-btn" onclick="proceedToCheckout()">PROCEED TO CHECKOUT</button>
+                <button class="checkout-btn" id="checkoutBtn" type="button">PROCEED TO CHECKOUT</button>
             </div>
         </div>
     </main>
@@ -435,15 +435,15 @@
             tbody.innerHTML = '';
 
             if (cart.length === 0) {
-                cartTable.style.display = 'none';
-                emptyCart.style.display = 'block';
-                cartBottom.style.display = 'none';
+                cartTable.classList.add('is-hidden');
+                emptyCart.classList.remove('is-hidden');
+                cartBottom.classList.add('is-hidden');
                 return;
             }
 
-            cartTable.style.display = 'table';
-            emptyCart.style.display = 'none';
-            cartBottom.style.display = 'flex';
+            cartTable.classList.remove('is-hidden');
+            emptyCart.classList.add('is-hidden');
+            cartBottom.classList.remove('is-hidden');
 
             let subtotal = 0;
 
@@ -516,14 +516,14 @@
                     <td class="col-price">&#8369;${basePrice}</td>
                     <td class="col-qty">
                         <div class="qty-control">
-                            <button class="qty-btn" onclick="changeQty(${index}, -1)">&#8722;</button>
-                            <input class="qty-value" type="number" value="${qty}" min="1" onchange="setQty(${index}, this.value)">
-                            <button class="qty-btn" onclick="changeQty(${index}, 1)">&#43;</button>
+                            <button class="qty-btn" type="button" data-cart-action="decrease" data-cart-index="${index}">&#8722;</button>
+                            <input class="qty-value" type="number" value="${qty}" min="1" data-cart-action="quantity" data-cart-index="${index}">
+                            <button class="qty-btn" type="button" data-cart-action="increase" data-cart-index="${index}">&#43;</button>
                         </div>
                     </td>
                     <td class="col-total">&#8369;${itemTotal}</td>
                     <td class="col-action">
-                        <button class="delete-btn" onclick="removeItem(${index})" aria-label="Remove item">
+                        <button class="delete-btn" type="button" data-cart-action="remove" data-cart-index="${index}" aria-label="Remove item">
                             <i class="fa-regular fa-trash-can"></i>
                         </button>
                     </td>
@@ -568,8 +568,29 @@
             window.location.href = 'confirmOrder.html';
         }
 
+        document.getElementById('checkoutBtn')?.addEventListener('click', proceedToCheckout);
+        document.getElementById('cartBody')?.addEventListener('click', (event) => {
+            const control = event.target.closest('[data-cart-action]');
+            if (!control) return;
+
+            const index = Number(control.dataset.cartIndex);
+            if (Number.isNaN(index)) return;
+
+            if (control.dataset.cartAction === 'decrease') changeQty(index, -1);
+            if (control.dataset.cartAction === 'increase') changeQty(index, 1);
+            if (control.dataset.cartAction === 'remove') removeItem(index);
+        });
+        document.getElementById('cartBody')?.addEventListener('change', (event) => {
+            const input = event.target.closest('[data-cart-action="quantity"]');
+            if (!input) return;
+
+            const index = Number(input.dataset.cartIndex);
+            if (!Number.isNaN(index)) setQty(index, input.value);
+        });
+
         // Initial render
         renderCart();
     </script>
 </body>
 </html>
+

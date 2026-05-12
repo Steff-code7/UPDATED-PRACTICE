@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('DOM Content Loaded - Starting account module initialization');
+    const debugLog = (...args) => {
+        if (window.YAS_DEBUG) console.debug(...args);
+    };
+    debugLog('DOM Content Loaded - Starting account module initialization');
 
     // ==================== CSRF HELPER ====================
     const getCsrfToken = () => {
@@ -44,18 +47,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     const navProfilePic = document.getElementById('navProfilePic');
     const overviewProfilePic = document.getElementById('overviewProfilePic');
 
-    console.log('Body classes:', document.body.className);
+    debugLog('Body classes:', document.body.className);
     const isOrdersPage = document.body.classList.contains('account-orders-page');
     const isAddressesPage = document.body.classList.contains('account-addresses-page');
-    console.log('Page detection:', { isOrdersPage, isAddressesPage });
+    debugLog('Page detection:', { isOrdersPage, isAddressesPage });
 
     if (isOrdersPage) {
-        console.log('Orders page detected');
+        debugLog('Orders page detected');
         loadOrderHistory();
     }
 
     if (isAddressesPage) {
-        console.log('Address page detected, calling loadAddresses...');
+        debugLog('Address page detected, calling loadAddresses...');
         // Small delay to ensure DOM is ready
         setTimeout(() => {
             loadAddresses();
@@ -285,12 +288,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await apiFetch('api/get_user_orders.php');
 
             if (!data.success) {
-                container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>Error loading orders</p></div>';
+                container.innerHTML = '<div class="empty-state"><p>Error loading orders</p></div>';
                 return;
             }
 
             if (data.orders.length === 0) {
-                container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>No orders found</p></div>';
+                container.innerHTML = '<div class="empty-state"><p>No orders found</p></div>';
                 return;
             }
 
@@ -315,7 +318,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             container.innerHTML = html;
 
         } catch (error) {
-            container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>Error loading orders: ' + error.message + '</p></div>';
+            container.innerHTML = '<div class="empty-state"><p>Error loading orders: ' + error.message + '</p></div>';
         }
     }
 
@@ -329,6 +332,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const closeAddressModal = document.getElementById('closeAddressModal');
         const deleteAddressBtn = document.getElementById('deleteAddressBtn');
         const completeAddressInput = document.getElementById('completeAddress');
+        const addressesList = document.getElementById('addressesList');
 
         // Function to format complete address from address object
         function formatCompleteAddress(address) {
@@ -367,8 +371,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Debug: Check if elements exist
-        console.log('Checking for address elements...');
-        console.log('Address elements:', {
+        debugLog('Checking for address elements...');
+        debugLog('Address elements:', {
             addressModal: !!addressModal,
             addressForm: !!addressForm,
             addAddressBtn: !!addAddressBtn,
@@ -376,10 +380,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             deleteAddressBtn: !!deleteAddressBtn
         });
 
-        if (addAddressBtn && addressForm && addressModal && closeAddressModal && deleteAddressBtn) {
-            console.log('All address elements found, setting up event listeners...');
+        if (addAddressBtn && addressForm && addressModal && closeAddressModal && deleteAddressBtn && addressesList) {
+            debugLog('All address elements found, setting up event listeners...');
             addAddressBtn.addEventListener('click', () => {
-                console.log('Add address button clicked');
+                debugLog('Add address button clicked');
                 currentAddressId = null;
                 const modalTitle = document.getElementById('addressModalTitle');
                 if (modalTitle) modalTitle.textContent = 'Add New Address';
@@ -387,7 +391,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (completeAddressInput) completeAddressInput.value = '';
                 const addressIdInput = document.getElementById('addressId');
                 if (addressIdInput) addressIdInput.value = '';
-                deleteAddressBtn.style.display = 'none';
+                deleteAddressBtn.classList.add('is-hidden');
                 addressModal.classList.add('show');
             });
 
@@ -492,21 +496,32 @@ document.addEventListener('DOMContentLoaded', async () => {
                     alert('Error: ' + error.message);
                 }
             });
+
+            addressesList.addEventListener('click', (event) => {
+                const button = event.target.closest('[data-address-action]');
+                if (!button) return;
+
+                const addressId = Number(button.dataset.addressId);
+                if (Number.isNaN(addressId)) return;
+
+                if (button.dataset.addressAction === 'edit') window.editAddress(addressId);
+                if (button.dataset.addressAction === 'primary') window.setAsPrimary(addressId);
+            });
         }
 
         async function loadAddresses() {
-            console.log('loadAddresses function called');
+            debugLog('loadAddresses function called');
             const container = document.getElementById('addressesList');
-            console.log('Container found:', !!container);
+            debugLog('Container found:', !!container);
 
             try {
-                console.log('Making API call to manage_addresses.php');
+                debugLog('Making API call to manage_addresses.php');
                 const response = await fetch('api/manage_addresses.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'get_all' })
                 });
-                console.log('API response status:', response.status);
+                debugLog('API response status:', response.status);
 
                 if (response.status === 401) {
                     window.location.href = 'loginSignUp.php';
@@ -526,21 +541,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
 
                 if (data.addresses.length === 0) {
-                    container.innerHTML = '<div style="text-align: center; padding: 40px;"><p>No addresses added yet. Click "Add New Address" to get started!</p></div>';
+                    container.innerHTML = '<div class="empty-state"><p>No addresses added yet. Click "Add New Address" to get started!</p></div>';
                     return;
                 }
 
                 let html = '';
                 data.addresses.forEach(address => {
                     const completeAddressDisplay = formatCompleteAddress(address);
-                    const isPrimaryBtn = address.is_primary ? '' : `<button type="button" class="btn outline small" onclick="setAsPrimary(${address.address_id})">SET AS PRIMARY</button>`;
+                    const isPrimaryBtn = address.is_primary ? '' : `<button type="button" class="btn outline small" data-address-action="primary" data-address-id="${address.address_id}">SET AS PRIMARY</button>`;
                     
                     html += `
                         <article class="ACCOUNT-DETAIL-CARD">
                             <div class="ACCOUNT-CARD-HEADER">
-                                <h4>${address.address_type.charAt(0).toUpperCase() + address.address_type.slice(1)}${address.is_primary ? ' <span style="color: #ff5eb3;">(Primary)</span>' : ''}</h4>
-                                <div style="display: flex; gap: 10px;">
-                                    <button class="btn outline small" onclick="editAddress(${address.address_id})">EDIT</button>
+                                <h4>${address.address_type.charAt(0).toUpperCase() + address.address_type.slice(1)}${address.is_primary ? ' <span class="ACCOUNT-PRIMARY-LABEL">(Primary)</span>' : ''}</h4>
+                                <div class="ACCOUNT-CARD-HEADER-ACTIONS">
+                                    <button type="button" class="btn outline small" data-address-action="edit" data-address-id="${address.address_id}">EDIT</button>
                                     ${isPrimaryBtn}
                                 </div>
                             </div>
@@ -584,7 +599,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     document.getElementById('deliveryInstructions').value = address.delivery_instructions || '';
                     document.getElementById('isPrimary').checked = address.is_primary;
                     updateCompleteAddress();
-                    deleteAddressBtn.style.display = 'block';
+                    deleteAddressBtn.classList.remove('is-hidden');
                     addressModal.classList.add('show');
                 }
             } catch (error) {
@@ -619,14 +634,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Some address elements are missing. Button functionality disabled.');
         // Fallback: Add basic click handler to add address button
         if (addAddressBtn) {
-            console.log('Setting up fallback button handler');
+            debugLog('Setting up fallback button handler');
             addAddressBtn.addEventListener('click', () => {
-                console.log('Fallback button clicked');
+                debugLog('Fallback button clicked');
                 // Try to manually set up modal
                 const modal = document.getElementById('addressModal');
                 const form = document.getElementById('addressForm');
                 if (modal && form) {
-                    console.log('Modal and form found, showing modal');
+                    debugLog('Modal and form found, showing modal');
                     form.reset();
                     modal.classList.add('show');
                 } else {
@@ -642,10 +657,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const modal = document.getElementById('addressModal');
         const form = document.getElementById('addressForm');
         if (btn && modal && form) {
-            console.log('Backup button setup triggered');
+            debugLog('Backup button setup triggered');
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
-                console.log('Backup button clicked');
+                debugLog('Backup button clicked');
                 form.reset();
                 modal.classList.add('show');
             });

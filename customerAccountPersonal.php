@@ -31,9 +31,9 @@ $activePage = 'personal-details';
                                     <input type="text" id="fullName" name="full_name" value="<?php echo htmlspecialchars($user['full_name'] ?: ''); ?>">
                                 </div>
                                 <div class="form-group">
-                                    <label for="email">Email Address <span style="color: #ff4da6;">*</span></label>
+                                    <label for="email">Email Address <span class="required-mark">*</span></label>
                                     <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user['email']); ?>" required>
-                                    <small style="color: #999;">You'll need to log in again if you change your email.</small>
+                                    <small class="muted-copy">You'll need to log in again if you change your email.</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="contactNumber">Contact Number</label>
@@ -89,7 +89,7 @@ $activePage = 'personal-details';
     </footer>
 
     <div class="BACK-TO-TOP" id="back-to-top" role="button" tabindex="0" aria-label="Back to top" title="Go to top">
-        <i class="fa-solid fa-circle-chevron-up" style="color: #ff5eb3;"></i>
+        <i class="fa-solid fa-circle-chevron-up"></i>
     </div>
 
     <script src="script.js?v=account-v1"></script>

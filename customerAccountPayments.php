@@ -21,10 +21,10 @@ $activePage = 'payment-methods';
                 <section class="ACCOUNT-MODULE" id="payment-methods-module">
                     <h2>Payment Methods</h2>
                     <article class="ACCOUNT-DETAIL-CARD">
-                        <div class="ACCOUNT-CARD-BODY" style="text-align: center; padding: 60px 20px;">
-                            <i class="fa-solid fa-wrench" style="font-size: 48px; color: #ccc; margin-bottom: 20px;"></i>
+                        <div class="ACCOUNT-CARD-BODY empty-state-lg">
+                            <i class="fa-solid fa-wrench muted-copy payment-placeholder-icon" aria-hidden="true"></i>
                             <h3>Payment Methods</h3>
-                            <p style="color: #999;">This feature is currently under development. Check back soon!</p>
+                            <p class="muted-copy">This feature is currently under development. Check back soon!</p>
                         </div>
                     </article>
                 </section>
@@ -69,7 +69,7 @@ $activePage = 'payment-methods';
     </footer>
 
     <div class="BACK-TO-TOP" id="back-to-top" role="button" tabindex="0" aria-label="Back to top" title="Go to top">
-        <i class="fa-solid fa-circle-chevron-up" style="color: #ff5eb3;"></i>
+        <i class="fa-solid fa-circle-chevron-up"></i>
     </div>
 
     <script src="script.js?v=account-v1"></script>

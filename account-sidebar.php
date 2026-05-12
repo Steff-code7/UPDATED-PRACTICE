@@ -20,7 +20,7 @@ if (!isset($activePage)) {
         <div class="CUSTOMER-USER-BUTTON">
             <span class="CUSTOMER-USER-INFO">
                 <span class="CUSTOMER-USER-ICON">
-                    <img id="navProfilePic" src="<?php echo htmlspecialchars($profilePicture); ?>" alt="Profile" style="width: 24px; height: 24px; border-radius: 50%; object-fit: cover;">
+                    <img id="navProfilePic" class="ACCOUNT-NAV-AVATAR" src="<?php echo htmlspecialchars($profilePicture); ?>" alt="Profile">
                 </span>
                 <span class="CUSTOMER-USER-LABEL" id="navUsername"><?php echo htmlspecialchars($user['username']); ?></span>
             </span>
@@ -33,7 +33,7 @@ if (!isset($activePage)) {
             </div>
         </div>
     </div>
-    <div class="menu-toggle">&#9776;</div>
+    <button type="button" class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">&#9776;</button>
 </header>
 
 <main class="ACCOUNT-PAGE">
@@ -60,3 +60,4 @@ if (!isset($activePage)) {
         </aside>
 
         <section class="ACCOUNT-MAIN">
+

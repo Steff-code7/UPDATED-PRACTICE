@@ -21,7 +21,7 @@ $activePage = 'order-history';
                 <section class="ACCOUNT-MODULE" id="order-history-module">
                     <h2>Order History</h2>
                     <div id="ordersContainer">
-                        <div style="text-align: center; padding: 40px;">
+                        <div class="empty-state">
                             <p>Loading orders...</p>
                         </div>
                     </div>
@@ -67,7 +67,7 @@ $activePage = 'order-history';
     </footer>
 
     <div class="BACK-TO-TOP" id="back-to-top" role="button" tabindex="0" aria-label="Back to top" title="Go to top">
-        <i class="fa-solid fa-circle-chevron-up" style="color: #ff5eb3;"></i>
+        <i class="fa-solid fa-circle-chevron-up"></i>
     </div>
 
     <script src="script.js?v=account-v1"></script>

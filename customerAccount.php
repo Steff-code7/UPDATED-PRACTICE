@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once 'account-common.php';
 $activePage = 'overview';
 ?>
@@ -21,10 +21,10 @@ $activePage = 'overview';
                 <section class="ACCOUNT-MODULE" id="overview-module">
                     <section class="ACCOUNT-HERO" id="overview">
                         <div class="ACCOUNT-HERO-IMAGE">
-                            <img id="overviewProfilePic" src="<?php echo htmlspecialchars($profilePicture); ?>" alt="Account profile image" style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover;">
+                            <img id="overviewProfilePic" class="ACCOUNT-OVERVIEW-AVATAR" src="<?php echo htmlspecialchars($profilePicture); ?>" alt="Account profile image">
                         </div>
                         <div class="ACCOUNT-HERO-CONTENT">
-                            <h1>Hi, <span id="overviewUsername"><?php echo htmlspecialchars($user['username']); ?></span>! <span>👋</span></h1>
+                            <h1>Hi, <span id="overviewUsername"><?php echo htmlspecialchars($user['username']); ?></span>!</h1>
                             <p>Welcome back! Here's your account overview.</p>
                             <div class="ACCOUNT-STATS">
                                 <div>
@@ -37,7 +37,7 @@ $activePage = 'overview';
                                 </div>
                                 <div>
                                     <span>Total Spent</span>
-                                    <strong id="totalSpentOverview">₱<?php echo number_format($stats['total_spent'], 2); ?></strong>
+                                    <strong id="totalSpentOverview">?<?php echo number_format($stats['total_spent'], 2); ?></strong>
                                 </div>
                             </div>
                         </div>
@@ -101,7 +101,7 @@ $activePage = 'overview';
                                     <span>#ORD-<?php echo str_pad($order['order_id'], 4, '0', STR_PAD_LEFT); ?></span>
                                     <span><?php echo date('M d, Y', strtotime($order['order_date'])); ?></span>
                                     <span><?php echo htmlspecialchars(substr($order['items'] ?? 'N/A', 0, 30)); ?>...</span>
-                                    <span>₱<?php echo number_format($order['total_amount'], 2); ?></span>
+                                    <span>?<?php echo number_format($order['total_amount'], 2); ?></span>
                                     <span class="ACCOUNT-STATUS <?php echo strtolower($order['status']); ?>"><?php echo ucfirst($order['status']); ?></span>
                                 </div>
                             <?php endforeach; ?>
@@ -149,7 +149,7 @@ $activePage = 'overview';
     </footer>
 
     <div class="BACK-TO-TOP" id="back-to-top" role="button" tabindex="0" aria-label="Back to top" title="Go to top">
-        <i class="fa-solid fa-circle-chevron-up" style="color: #ff5eb3;"></i>
+        <i class="fa-solid fa-circle-chevron-up"></i>
     </div>
 
     <script src="script.js?v=account-v1"></script>

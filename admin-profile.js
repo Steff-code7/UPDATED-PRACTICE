@@ -7,6 +7,9 @@ const AdminProfile = (() => {
   // -------- helpers --------
   const qs = (sel, ctx = document) => ctx?.querySelector(sel) ?? null;
   const qsa = (sel, ctx = document) => ctx ? Array.from(ctx.querySelectorAll(sel)) : [];
+  const debugLog = (...args) => {
+    if (window.YAS_DEBUG) console.debug(...args);
+  };
   let csrfTokenCache = window.__CSRF_TOKEN__ || '';
 
   const getCsrfToken = async () => {
@@ -34,44 +37,44 @@ const AdminProfile = (() => {
    */
   const fetchAdminData = async () => {
     try {
-      console.log('Fetching admin data from server...');
+      debugLog('Fetching admin data from server...');
       const resp = await fetch('api/get_admin_data.php');
-      console.log('Response status:', resp.status);
+      debugLog('Response status:', resp.status);
       
       if (!resp.ok) {
         throw new Error(`HTTP error! status: ${resp.status}`);
       }
       
       const data = await resp.json();
-      console.log('Server response:', data);
+      debugLog('Server response:', data);
 
       if (data.success && data.user) {
-        console.log('Admin data loaded successfully:', data.user);
+        debugLog('Admin data loaded successfully:', data.user);
         adminData = data.user;
         localStorage.setItem('adminData', JSON.stringify(data.user));
         return data.user;
       } else {
-        console.log('Server returned error:', data.message || 'Unknown error');
+        debugLog('Server returned error:', data.message || 'Unknown error');
       }
       
       // fallback
       const cached = localStorage.getItem('adminData');
       if (cached) {
-        console.log('Using cached data as fallback');
+        debugLog('Using cached data as fallback');
         adminData = JSON.parse(cached);
         return adminData;
       }
-      console.log('No cached data available');
+      debugLog('No cached data available');
       return null;
     } catch (err) {
       console.error('Error fetching admin data:', err);
       const cached = localStorage.getItem('adminData');
       if (cached) {
-        console.log('Using cached data due to error');
+        debugLog('Using cached data due to error');
         adminData = JSON.parse(cached);
         return adminData;
       }
-      console.log('No cached data available and error occurred');
+      debugLog('No cached data available and error occurred');
       return null;
     }
   };
@@ -81,15 +84,15 @@ const AdminProfile = (() => {
    */
   const getSessionFromAPI = async () => {
     try {
-      console.log('Fetching session data from session_check.php...');
+      debugLog('Fetching session data from session_check.php...');
       const resp = await fetch('session_check.php');
       const data = await resp.json();
       
       if (data.success && data.user) {
-        console.log('Session data fetched successfully:', data.user);
+        debugLog('Session data fetched successfully:', data.user);
         return data.user;
       } else {
-        console.log('Session API returned error:', data.message);
+        debugLog('Session API returned error:', data.message);
         return null;
       }
     } catch (err) {
@@ -122,8 +125,8 @@ const AdminProfile = (() => {
   const updateUI = (user) => {
     if (!user) return;
 
-    console.log('Updating UI with user data:', user);
-    console.log('Elements found:', {
+    debugLog('Updating UI with user data:', user);
+    debugLog('Elements found:', {
       adminUserName: elements.adminUserName?.length || 0,
       welcomeMsg: elements.welcomeMsg?.length || 0,
       sidebarName: elements.sidebarName?.length || 0,
@@ -138,7 +141,7 @@ const AdminProfile = (() => {
 
     // --- Top bar username (ADMIN-USER span) ---
     elements.adminUserName.forEach(el => { 
-      console.log('Updating username element:', el, 'to:', username);
+      debugLog('Updating username element:', el, 'to:', username);
       el.textContent = username; 
     });
 
@@ -390,7 +393,7 @@ const AdminProfile = (() => {
 
     // --- Fetch and display ---
     fetchAdminData().then(async user => {
-      console.log('Admin data fetched:', user);
+      debugLog('Admin data fetched:', user);
       if (user) {
         updateUI(user);
       } else {
@@ -403,7 +406,7 @@ const AdminProfile = (() => {
           console.error('No session data available either');
           // Check if we're on an admin page and redirect to login
           if (window.location.pathname.includes('admin')) {
-            console.log('Redirecting to login due to no session');
+            debugLog('Redirecting to login due to no session');
             window.location.href = 'loginSignUp.php';
           } else {
             // Show error state
