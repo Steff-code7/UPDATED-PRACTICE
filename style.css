@@ -4723,6 +4723,24 @@ footer {
     pointer-events: auto;
 }
 
+.AUTH-PANEL.forgot-panel {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: min(560px, calc(100% - 32px));
+    height: auto;
+    min-height: 430px;
+    padding: 70px 48px;
+    border-radius: 8px;
+}
+
+.AUTH-PANEL.forgot-panel .forgot-form {
+    position: static;
+    width: 100%;
+    opacity: 1;
+    pointer-events: auto;
+}
+
 /* BUTTON */
 .AUTH-OUTLINE {
     width: 320px;

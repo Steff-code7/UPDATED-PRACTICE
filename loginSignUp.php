@@ -138,7 +138,7 @@
 <p class="AUTH-LOGIN-FEEDBACK" id="loginFeedback" aria-live="polite"></p>
 
 
-<a href="index.html#footer" class="AUTH-FORGOT">Forgot Password</a>
+<a href="ForgotPassword.php" class="AUTH-FORGOT">Forgot Password</a>
         </div>
 
 

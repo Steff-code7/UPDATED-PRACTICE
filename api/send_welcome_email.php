@@ -110,6 +110,56 @@ function sendVerificationEmail(string $customerName, string $emailAddress, strin
     }
 }
 
+function sendPasswordResetEmail(string $customerName, string $emailAddress, string $resetToken): bool
+{
+    $businessName = 'YAS Milktea House';
+    $siteUrl = 'https://dress-quartered-showcase.ngrok-free.dev/UPDATED%20PRACTICE';
+    $resetLink = $siteUrl . '/ForgotPassConfirm.php?token=' . urlencode($resetToken);
+
+    try {
+        $mail = createMailer($businessName);
+        if (!$mail) {
+            return false;
+        }
+
+        $mail->addAddress($emailAddress, $customerName);
+
+        $safeName = htmlspecialchars($customerName, ENT_QUOTES, 'UTF-8');
+        $safeBusinessName = htmlspecialchars($businessName, ENT_QUOTES, 'UTF-8');
+
+        $mail->isHTML(true);
+        $mail->Subject = "Confirm your password reset for {$businessName}";
+        $mail->Body = "
+            <p>Hi {$safeName},</p>
+
+            <p>We received a request to reset the password for your {$safeBusinessName} account.</p>
+
+            <p>Please confirm this request by clicking the button below:</p>
+
+            <p><a href=\"{$resetLink}\" style=\"display:inline-block;padding:12px 24px;color:#ffffff;background-color:#333333;text-decoration:none;border-radius:4px;\">Confirm Password Reset</a></p>
+
+            <p>This link will expire in 1 hour.</p>
+
+            <p>If you did not request a password reset, you can ignore this email.</p>
+
+            <p>Best regards,<br>{$safeBusinessName} Team</p>
+        ";
+        $mail->AltBody = "Hi {$customerName},\n\n"
+            . "We received a request to reset the password for your {$businessName} account.\n\n"
+            . "Confirm this request by visiting the following link:\n\n"
+            . "{$resetLink}\n\n"
+            . "This link will expire in 1 hour.\n\n"
+            . "If you did not request a password reset, you can ignore this email.\n\n"
+            . "Best regards,\n{$businessName} Team";
+
+        $mail->send();
+        return true;
+    } catch (\Throwable $exception) {
+        error_log('Password reset email failed: ' . $exception->getMessage());
+        return false;
+    }
+}
+
 function sendAdminRoleEmail(string $customerName, string $emailAddress): bool
 {
     $businessName = 'YAS Milktea House';
