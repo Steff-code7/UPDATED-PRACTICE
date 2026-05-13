@@ -13,7 +13,7 @@ try {
             u.email,
             u.role,
             u.status,
-            u.email_verified,
+            (u.verified_at IS NOT NULL) AS email_verified,
             u.contact_number,
             u.profile_picture,
             u.created_at,

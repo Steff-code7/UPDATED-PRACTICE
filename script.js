@@ -2566,7 +2566,7 @@ if (matchingOption) {
             email: user.email || "N/A",
             role: String(user.role || "customer").toLowerCase(),
             status: normalizeStatus(user.status),
-            emailVerified: Number(user.email_verified) === 1,
+            emailVerified: user.verified_at !== null && user.verified_at !== undefined && user.verified_at !== '',
             contactNumber: user.contact_number || "",
             profilePicture: user.profile_picture || "images/yas_logo.png",
             createdAt: formatDate(user.created_at),

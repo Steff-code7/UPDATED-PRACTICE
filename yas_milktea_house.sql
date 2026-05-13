@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 11, 2026 at 08:41 PM
+-- Generation Time: May 13, 2026 at 01:49 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -276,7 +276,6 @@ CREATE TABLE `users` (
   `password_hash` varchar(255) NOT NULL,
   `role` enum('admin','customer','staff') NOT NULL,
   `status` enum('active','inactive','pending') NOT NULL DEFAULT 'pending',
-  `email_verified` tinyint(1) NOT NULL DEFAULT 0,
   `verification_token` varchar(255) DEFAULT NULL,
   `verified_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -291,14 +290,14 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `username`, `email`, `password_hash`, `role`, `status`, `email_verified`, `verification_token`, `verified_at`, `created_at`, `full_name`, `contact_number`, `date_of_birth`, `profile_picture`, `updated_at`) VALUES
-(21, 'Stef_admin', 'marekeyks101@gmail.com', '$2y$10$46yj/F93p7Gf3eJ0gEtOG.bYAkSg62LkejbqvkwW.4/4BpSXeLA6O', 'admin', 'active', 0, NULL, NULL, '2026-05-01 19:36:27', 'Stephanie Baltazar', NULL, NULL, 'images/profile_21_1778329893.jpg', '2026-05-09 12:31:33'),
-(27, 'testuser456', 'testuser456@example.com', '$2y$10$94OqRBmJyUjqWW5I69r.leBf7jwvCRpIxzS7Z.TnVtav/LbMewEe6', 'customer', 'inactive', 0, NULL, NULL, '2026-05-04 16:03:10', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-11 14:13:03'),
-(28, 'krisha_customer', 'narcisokrishaaudrey@gmail.com', '$2y$10$awo1Y7BwclbQEA0vQnJB3.ispUVF1lSKSZO1o9gkvZQWlrK8iXyNW', 'customer', 'active', 0, NULL, NULL, '2026-05-04 16:11:03', NULL, NULL, NULL, 'images/profile_28_1778251916.jpg', '2026-05-08 14:51:56'),
-(37, 'kirii', 'Kirigato.07@gmail.com', '$2y$10$V9ZYg08SOrjkw3S40Vnwle7Rl2OjQk23JZLocjUrf/dELPIbp7oUS', 'customer', 'active', 1, NULL, '2026-05-10 05:18:27', '2026-05-10 05:16:49', 'vkcd', '456', '2625-05-05', 'images/yas_logo.png', '2026-05-11 17:56:01'),
-(38, 'ayokona', 'chescamanding5@gmail.com', '$2y$10$a7JLBZH2xSAkwwHUnpfML.Eg4Y0p/7lr2XsmtiynD17c0iC466ci2', 'customer', 'active', 1, NULL, '2026-05-11 10:26:50', '2026-05-11 10:26:26', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-11 10:26:50'),
-(39, 'Krisha_staff', 'crazyy.icecreamm@gmail.com', '$2y$10$jB8xfyjhj/fLGK9Jtxv7Bec7HjPjzyLdLRG8NU62mXCRMk1es4Npa', 'staff', 'active', 1, NULL, '2026-05-11 11:34:59', '2026-05-11 11:33:46', 'Krisha Audrey Narciso', NULL, NULL, 'images/profile_39_1778508611.png', '2026-05-11 14:10:11'),
-(40, 'stifanny', 'sbaltazar.1012@umak.edu.ph', '$2y$10$SVV9QyKY4D05BVE3DZM1IOtxl0576.ud6kFLGVo.FavHo9gZs3eqa', 'customer', 'active', 1, NULL, '2026-05-11 11:35:55', '2026-05-11 11:35:09', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-11 11:35:55');
+INSERT INTO `users` (`user_id`, `username`, `email`, `password_hash`, `role`, `status`, `verification_token`, `verified_at`, `created_at`, `full_name`, `contact_number`, `date_of_birth`, `profile_picture`, `updated_at`) VALUES
+(21, 'Stef_admin', 'marekeyks101@gmail.com', '$2y$10$46yj/F93p7Gf3eJ0gEtOG.bYAkSg62LkejbqvkwW.4/4BpSXeLA6O', 'admin', 'active', NULL, NULL, '2026-05-01 19:36:27', 'Stephanie Baltazar', NULL, NULL, 'images/profile_21_1778329893.jpg', '2026-05-09 12:31:33'),
+(27, 'testuser456', 'testuser456@example.com', '$2y$10$94OqRBmJyUjqWW5I69r.leBf7jwvCRpIxzS7Z.TnVtav/LbMewEe6', 'customer', 'inactive', NULL, NULL, '2026-05-04 16:03:10', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-11 14:13:03'),
+(28, 'krisha_customer', 'narcisokrishaaudrey@gmail.com', '$2y$10$awo1Y7BwclbQEA0vQnJB3.ispUVF1lSKSZO1o9gkvZQWlrK8iXyNW', 'customer', 'active', NULL, NULL, '2026-05-04 16:11:03', NULL, NULL, NULL, 'images/profile_28_1778251916.jpg', '2026-05-08 14:51:56'),
+(37, 'kirii', 'Kirigato.07@gmail.com', '$2y$10$V9ZYg08SOrjkw3S40Vnwle7Rl2OjQk23JZLocjUrf/dELPIbp7oUS', 'customer', 'active', NULL, '2026-05-10 05:18:27', '2026-05-10 05:16:49', 'vkcd', '456', '2625-05-05', 'images/yas_logo.png', '2026-05-11 17:56:01'),
+(38, 'ayokona', 'chescamanding5@gmail.com', '$2y$10$a7JLBZH2xSAkwwHUnpfML.Eg4Y0p/7lr2XsmtiynD17c0iC466ci2', 'customer', 'active', NULL, '2026-05-11 10:26:50', '2026-05-11 10:26:26', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-11 10:26:50'),
+(39, 'Krisha_staff', 'crazyy.icecreamm@gmail.com', '$2y$10$jB8xfyjhj/fLGK9Jtxv7Bec7HjPjzyLdLRG8NU62mXCRMk1es4Npa', 'staff', 'active', NULL, '2026-05-11 11:34:59', '2026-05-11 11:33:46', 'Krisha Audrey Narciso', NULL, NULL, 'images/profile_39_1778508611.png', '2026-05-11 14:10:11'),
+(42, 'YuraShirota', 'sbaltazar.1012@umak.edu.ph', '$2y$10$iUL1IOA/lWFwsdoLpBr4c.I/A95qEqz1MFWOCfqJ/LpVVILyd1CYG', 'customer', 'pending', 'b52345e1bd4006343575f0da9e90ef8e8f9071dade2f7c16125cdc330ca990aa', NULL, '2026-05-13 11:45:39', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-13 11:45:39');
 
 --
 -- Indexes for dumped tables
@@ -414,7 +413,7 @@ ALTER TABLE `rewards`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- Constraints for dumped tables

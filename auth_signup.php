@@ -110,9 +110,9 @@ try {
 
     $stmt = $pdo->prepare("
 
-        INSERT INTO users (username, email, password_hash, role, status, verification_token, email_verified)
+        INSERT INTO users (username, email, password_hash, role, status, verification_token)
 
-        VALUES (:username, :email, :password_hash, 'customer', 'pending', :verification_token, 0)
+        VALUES (:username, :email, :password_hash, 'customer', 'pending', :verification_token)
 
     ");
 

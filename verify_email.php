@@ -30,7 +30,7 @@ try {
         exit;
     }
 
-    $stmt = $pdo->prepare('UPDATE users SET status = :activeStatus, email_verified = 1, verification_token = NULL, verified_at = NOW() WHERE user_id = :user_id');
+    $stmt = $pdo->prepare('UPDATE users SET status = :activeStatus, verification_token = NULL, verified_at = NOW() WHERE user_id = :user_id');
     $stmt->execute([
         'activeStatus' => 'active',
         'user_id' => $user['user_id'],
