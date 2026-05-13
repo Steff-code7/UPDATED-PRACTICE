@@ -31,23 +31,24 @@ try {
         ) os ON u.user_id = os.user_id
         LEFT JOIN (
             SELECT
-                user_id,
+                ad.user_id,
                 GROUP_CONCAT(
                     CONCAT_WS(
                         ' ',
-                        NULLIF(address_type, ''),
-                        NULLIF(house_no, ''),
-                        NULLIF(street, ''),
-                        NULLIF(barangay, ''),
-                        NULLIF(city, ''),
-                        NULLIF(province, ''),
-                        NULLIF(address_line, '')
+                        NULLIF(ad.address_type, ''),
+                        NULLIF(al.house_no, ''),
+                        NULLIF(al.street, ''),
+                        NULLIF(al.barangay, ''),
+                        NULLIF(al.city, ''),
+                        NULLIF(al.province, ''),
+                        NULLIF(al.address_line, '')
                     )
-                    ORDER BY is_primary DESC, created_at DESC
+                    ORDER BY ad.is_primary DESC, ad.created_at DESC
                     SEPARATOR '||'
                 ) AS addresses
-            FROM addresses
-            GROUP BY user_id
+            FROM address_details ad
+            JOIN address_locations al ON ad.location_id = al.location_id
+            GROUP BY ad.user_id
         ) al ON u.user_id = al.user_id
         ORDER BY u.created_at DESC
     ");

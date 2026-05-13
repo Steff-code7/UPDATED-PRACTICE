@@ -1,7 +1,6 @@
 <?php
 header('Content-Type: application/json');
 require_once 'session_config.php';
-
 require_once 'db.php';
 require_once 'csrf.php';
 
@@ -16,161 +15,209 @@ try {
     $data = json_decode(file_get_contents('php://input'), true);
     $action = $data['action'] ?? '';
 
-    // Validate CSRF token for all state-changing actions
     if (in_array($action, ['add', 'update', 'delete', 'set_primary'])) {
         requireCsrfToken($data['csrf_token'] ?? null);
     }
 
     switch ($action) {
+
         case 'get_all':
-            // Get all addresses
             $stmt = $pdo->prepare("
-                SELECT * FROM addresses 
-                WHERE user_id = :user_id
-                ORDER BY is_primary DESC, updated_at DESC
+                SELECT
+                    ad.address_details_id AS address_id,
+                    ad.user_id,
+                    ad.address_type,
+                    ad.landmark,
+                    ad.delivery_instructions,
+                    ad.is_primary,
+                    ad.created_at,
+                    ad.updated_at,
+                    al.location_id,
+                    al.house_no,
+                    al.street,
+                    al.barangay,
+                    al.city,
+                    al.province,
+                    al.address_line
+                FROM address_details ad
+                JOIN address_locations al ON ad.location_id = al.location_id
+                WHERE ad.user_id = :user_id
+                ORDER BY ad.is_primary DESC, ad.updated_at DESC
             ");
             $stmt->execute(['user_id' => $user_id]);
-            echo json_encode([
-                'success' => true,
-                'addresses' => $stmt->fetchAll()
-            ]);
+            echo json_encode(['success' => true, 'addresses' => $stmt->fetchAll()]);
             break;
 
         case 'add':
-            // Add new address
-            $stmt = $pdo->prepare("
-                INSERT INTO addresses (user_id, address_type, house_no, street, barangay, city, province, address_line, landmark, delivery_instructions, is_primary)
-                VALUES (:user_id, :type, :house_no, :street, :barangay, :city, :province, :address, :landmark, :instructions, :is_primary)
+            $houseNo     = $data['house_no']    ?? null;
+            $street      = $data['street']      ?? null;
+            $barangay    = $data['barangay']    ?? null;
+            $city        = $data['city']        ?? null;
+            $province    = $data['province']    ?? null;
+            $addressLine = $data['address_line'] ?? '';
+
+            // Reuse existing location if identical
+            $locStmt = $pdo->prepare("
+                SELECT location_id FROM address_locations
+                WHERE LOWER(house_no) <=> LOWER(:house_no)
+                  AND LOWER(street)   <=> LOWER(:street)
+                  AND LOWER(barangay) <=> LOWER(:barangay)
+                  AND LOWER(city)     <=> LOWER(:city)
+                  AND LOWER(province) <=> LOWER(:province)
+                LIMIT 1
             ");
-            $stmt->execute([
-                'user_id' => $user_id,
-                'type' => $data['address_type'] ?? 'home',
-                'house_no' => $data['house_no'] ?? null,
-                'street' => $data['street'] ?? null,
-                'barangay' => $data['barangay'] ?? null,
-                'city' => $data['city'] ?? null,
-                'province' => $data['province'] ?? null,
-                'address' => $data['address_line'] ?? '',
-                'landmark' => $data['landmark'] ?? null,
-                'instructions' => $data['delivery_instructions'] ?? null,
-                'is_primary' => $data['is_primary'] ?? 0
+            $locStmt->execute([
+                'house_no' => $houseNo, 'street' => $street,
+                'barangay' => $barangay, 'city' => $city, 'province' => $province,
             ]);
-            
-            // If this is primary, unset other addresses as primary
-            if ($data['is_primary']) {
-                $stmt = $pdo->prepare("
-                    UPDATE addresses 
-                    SET is_primary = FALSE 
-                    WHERE user_id = :user_id AND address_id != LAST_INSERT_ID()
-                ");
-                $stmt->execute(['user_id' => $user_id]);
+            $locationId = $locStmt->fetchColumn();
+
+            if (!$locationId) {
+                $pdo->prepare("
+                    INSERT INTO address_locations (house_no, street, barangay, city, province, address_line)
+                    VALUES (:house_no, :street, :barangay, :city, :province, :address_line)
+                ")->execute([
+                    'house_no' => $houseNo, 'street' => $street,
+                    'barangay' => $barangay, 'city' => $city,
+                    'province' => $province, 'address_line' => $addressLine,
+                ]);
+                $locationId = $pdo->lastInsertId();
             }
 
-            echo json_encode([
-                'success' => true,
-                'message' => 'Address added',
-                'address_id' => $pdo->lastInsertId()
+            $pdo->prepare("
+                INSERT INTO address_details (user_id, location_id, address_type, landmark, delivery_instructions, is_primary)
+                VALUES (:user_id, :location_id, :type, :landmark, :instructions, :is_primary)
+            ")->execute([
+                'user_id'      => $user_id,
+                'location_id'  => $locationId,
+                'type'         => $data['address_type'] ?? 'home',
+                'landmark'     => $data['landmark'] ?? null,
+                'instructions' => $data['delivery_instructions'] ?? null,
+                'is_primary'   => $data['is_primary'] ?? 0,
             ]);
+            $newId = $pdo->lastInsertId();
+
+            if (!empty($data['is_primary'])) {
+                $pdo->prepare("
+                    UPDATE address_details SET is_primary = FALSE
+                    WHERE user_id = :user_id AND address_details_id != :id
+                ")->execute(['user_id' => $user_id, 'id' => $newId]);
+            }
+
+            echo json_encode(['success' => true, 'message' => 'Address added', 'address_id' => $newId]);
             break;
 
         case 'update':
-            // Update address
             $addressId = $data['address_id'] ?? 0;
-            
-            // Verify address belongs to user
-            $verify = $pdo->prepare("SELECT user_id FROM addresses WHERE address_id = :id");
-            $verify->execute(['id' => $addressId]);
-            $address = $verify->fetch();
 
-            if (!$address || $address['user_id'] != $user_id) {
+            $verify = $pdo->prepare("SELECT user_id FROM address_details WHERE address_details_id = :id");
+            $verify->execute(['id' => $addressId]);
+            $existing = $verify->fetch();
+
+            if (!$existing || $existing['user_id'] != $user_id) {
                 http_response_code(403);
                 echo json_encode(['message' => 'Forbidden']);
                 exit;
             }
 
-            $stmt = $pdo->prepare("
-                UPDATE addresses 
-                SET address_type = :type,
-                    house_no = :house_no,
-                    street = :street,
-                    barangay = :barangay,
-                    city = :city,
-                    province = :province,
-                    address_line = :address,
+            $houseNo     = $data['house_no']    ?? null;
+            $street      = $data['street']      ?? null;
+            $barangay    = $data['barangay']    ?? null;
+            $city        = $data['city']        ?? null;
+            $province    = $data['province']    ?? null;
+            $addressLine = $data['address_line'] ?? '';
+
+            $locStmt = $pdo->prepare("
+                SELECT location_id FROM address_locations
+                WHERE LOWER(house_no) <=> LOWER(:house_no)
+                  AND LOWER(street)   <=> LOWER(:street)
+                  AND LOWER(barangay) <=> LOWER(:barangay)
+                  AND LOWER(city)     <=> LOWER(:city)
+                  AND LOWER(province) <=> LOWER(:province)
+                LIMIT 1
+            ");
+            $locStmt->execute([
+                'house_no' => $houseNo, 'street' => $street,
+                'barangay' => $barangay, 'city' => $city, 'province' => $province,
+            ]);
+            $locationId = $locStmt->fetchColumn();
+
+            if (!$locationId) {
+                $pdo->prepare("
+                    INSERT INTO address_locations (house_no, street, barangay, city, province, address_line)
+                    VALUES (:house_no, :street, :barangay, :city, :province, :address_line)
+                ")->execute([
+                    'house_no' => $houseNo, 'street' => $street,
+                    'barangay' => $barangay, 'city' => $city,
+                    'province' => $province, 'address_line' => $addressLine,
+                ]);
+                $locationId = $pdo->lastInsertId();
+            }
+
+            $pdo->prepare("
+                UPDATE address_details
+                SET location_id = :location_id,
+                    address_type = :type,
                     landmark = :landmark,
                     delivery_instructions = :instructions,
                     is_primary = :is_primary
-                WHERE address_id = :id
-            ");
-            $stmt->execute([
-                'type' => $data['address_type'] ?? 'home',
-                'house_no' => $data['house_no'] ?? null,
-                'street' => $data['street'] ?? null,
-                'barangay' => $data['barangay'] ?? null,
-                'city' => $data['city'] ?? null,
-                'province' => $data['province'] ?? null,
-                'address' => $data['address_line'] ?? '',
-                'landmark' => $data['landmark'] ?? null,
+                WHERE address_details_id = :id
+            ")->execute([
+                'location_id'  => $locationId,
+                'type'         => $data['address_type'] ?? 'home',
+                'landmark'     => $data['landmark'] ?? null,
                 'instructions' => $data['delivery_instructions'] ?? null,
-                'is_primary' => $data['is_primary'] ?? 0,
-                'id' => $addressId
+                'is_primary'   => $data['is_primary'] ?? 0,
+                'id'           => $addressId,
             ]);
 
-            // If this is primary, unset other addresses as primary
-            if ($data['is_primary']) {
-                $stmt = $pdo->prepare("
-                    UPDATE addresses 
-                    SET is_primary = FALSE 
-                    WHERE user_id = :user_id AND address_id != :id
-                ");
-                $stmt->execute(['user_id' => $user_id, 'id' => $addressId]);
+            if (!empty($data['is_primary'])) {
+                $pdo->prepare("
+                    UPDATE address_details SET is_primary = FALSE
+                    WHERE user_id = :user_id AND address_details_id != :id
+                ")->execute(['user_id' => $user_id, 'id' => $addressId]);
             }
 
             echo json_encode(['success' => true, 'message' => 'Address updated']);
             break;
 
         case 'delete':
-            // Delete address
             $addressId = $data['address_id'] ?? 0;
 
-            // Verify address belongs to user
-            $verify = $pdo->prepare("SELECT user_id FROM addresses WHERE address_id = :id");
+            $verify = $pdo->prepare("SELECT user_id FROM address_details WHERE address_details_id = :id");
             $verify->execute(['id' => $addressId]);
-            $address = $verify->fetch();
+            $existing = $verify->fetch();
 
-            if (!$address || $address['user_id'] != $user_id) {
+            if (!$existing || $existing['user_id'] != $user_id) {
                 http_response_code(403);
                 echo json_encode(['message' => 'Forbidden']);
                 exit;
             }
 
-            $stmt = $pdo->prepare("DELETE FROM addresses WHERE address_id = :id");
-            $stmt->execute(['id' => $addressId]);
+            $pdo->prepare("DELETE FROM address_details WHERE address_details_id = :id")
+                ->execute(['id' => $addressId]);
+
             echo json_encode(['success' => true, 'message' => 'Address deleted']);
             break;
 
         case 'set_primary':
-            // Set as primary address
             $addressId = $data['address_id'] ?? 0;
 
-            // Verify address belongs to user
-            $verify = $pdo->prepare("SELECT user_id FROM addresses WHERE address_id = :id");
+            $verify = $pdo->prepare("SELECT user_id FROM address_details WHERE address_details_id = :id");
             $verify->execute(['id' => $addressId]);
-            $address = $verify->fetch();
+            $existing = $verify->fetch();
 
-            if (!$address || $address['user_id'] != $user_id) {
+            if (!$existing || $existing['user_id'] != $user_id) {
                 http_response_code(403);
                 echo json_encode(['message' => 'Forbidden']);
                 exit;
             }
 
-            // Unset all other addresses as primary
-            $stmt = $pdo->prepare("UPDATE addresses SET is_primary = FALSE WHERE user_id = :user_id");
-            $stmt->execute(['user_id' => $user_id]);
+            $pdo->prepare("UPDATE address_details SET is_primary = FALSE WHERE user_id = :user_id")
+                ->execute(['user_id' => $user_id]);
 
-            // Set this as primary
-            $stmt = $pdo->prepare("UPDATE addresses SET is_primary = TRUE WHERE address_id = :id");
-            $stmt->execute(['id' => $addressId]);
+            $pdo->prepare("UPDATE address_details SET is_primary = TRUE WHERE address_details_id = :id")
+                ->execute(['id' => $addressId]);
 
             echo json_encode(['success' => true, 'message' => 'Primary address set']);
             break;
