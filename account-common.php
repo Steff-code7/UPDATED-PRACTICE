@@ -30,7 +30,22 @@ try {
     }
 
     $stmt = $pdo->prepare(
-        "SELECT * FROM addresses WHERE user_id = :user_id AND is_primary = TRUE LIMIT 1"
+        "SELECT
+            ad.address_details_id AS address_id,
+            ad.address_type,
+            ad.landmark,
+            ad.delivery_instructions,
+            ad.is_primary,
+            al.house_no,
+            al.street,
+            al.barangay,
+            al.city,
+            al.province,
+            al.address_line
+         FROM address_details ad
+         JOIN address_locations al ON ad.location_id = al.location_id
+         WHERE ad.user_id = :user_id AND ad.is_primary = TRUE
+         LIMIT 1"
     );
     $stmt->execute(['user_id' => $user_id]);
     $primaryAddress = $stmt->fetch();

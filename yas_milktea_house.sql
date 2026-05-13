@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 13, 2026 at 01:49 PM
+-- Generation Time: May 13, 2026 at 04:24 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,19 +24,14 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `addresses`
+-- Table structure for table `address_details`
 --
 
-CREATE TABLE `addresses` (
-  `address_id` int(10) UNSIGNED NOT NULL,
+CREATE TABLE `address_details` (
+  `address_details_id` int(10) UNSIGNED NOT NULL,
   `user_id` int(10) UNSIGNED NOT NULL,
+  `location_id` int(10) UNSIGNED NOT NULL,
   `address_type` enum('home','office','other') DEFAULT 'home',
-  `house_no` varchar(50) DEFAULT NULL,
-  `street` varchar(255) DEFAULT NULL,
-  `barangay` varchar(255) DEFAULT NULL,
-  `city` varchar(100) DEFAULT NULL,
-  `province` varchar(100) DEFAULT NULL,
-  `address_line` varchar(255) NOT NULL,
   `landmark` varchar(255) DEFAULT NULL,
   `delivery_instructions` text DEFAULT NULL,
   `is_primary` tinyint(1) DEFAULT 0,
@@ -44,13 +39,21 @@ CREATE TABLE `addresses` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
 --
--- Dumping data for table `addresses`
+-- Table structure for table `address_locations`
 --
 
-INSERT INTO `addresses` (`address_id`, `user_id`, `address_type`, `house_no`, `street`, `barangay`, `city`, `province`, `address_line`, `landmark`, `delivery_instructions`, `is_primary`, `created_at`, `updated_at`) VALUES
-(25, 28, 'home', '143', 'Yas', 'Tina', 'San Miguel', 'Surigao del Sur', '143 Yas street, Barangay Tina, San Miguel, Surigao del Sur', 'Sa Puso Mo', 'Kiss sa cheeks', 1, '2026-05-08 15:43:34', '2026-05-08 15:43:34'),
-(28, 37, 'home', 'blk 51 lot 10', 'duhat', 'Mahayag (Maitum)', 'San Miguel', 'Surigao del Sur', 'blk 51 lot 10 duhat street, Barangay Mahayag (Maitum), San Miguel, Surigao del Sur', 'near laundry shop', '', 0, '2026-05-11 17:50:11', '2026-05-11 17:50:11');
+CREATE TABLE `address_locations` (
+  `location_id` int(10) UNSIGNED NOT NULL,
+  `house_no` varchar(50) DEFAULT NULL,
+  `street` varchar(255) DEFAULT NULL,
+  `barangay` varchar(255) DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `province` varchar(100) DEFAULT NULL,
+  `address_line` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -289,6 +292,7 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
+<<<<<<< HEAD
 INSERT INTO `users` (`user_id`, `username`, `email`, `password_hash`, `role`, `status`, `verification_token`, `verified_at`, `created_at`, `full_name`, `contact_number`, `profile_picture`, `updated_at`) VALUES
 (21, 'Stef_admin', 'marekeyks101@gmail.com', '$2y$10$46yj/F93p7Gf3eJ0gEtOG.bYAkSg62LkejbqvkwW.4/4BpSXeLA6O', 'admin', 'active', NULL, NULL, '2026-05-01 19:36:27', 'Stephanie Baltazar', NULL, 'images/profile_21_1778329893.jpg', '2026-05-09 12:31:33'),
 (27, 'testuser456', 'testuser456@example.com', '$2y$10$94OqRBmJyUjqWW5I69r.leBf7jwvCRpIxzS7Z.TnVtav/LbMewEe6', 'customer', 'inactive', NULL, NULL, '2026-05-04 16:03:10', NULL, NULL, 'images/yas_logo.png', '2026-05-11 14:13:03'),
@@ -297,17 +301,33 @@ INSERT INTO `users` (`user_id`, `username`, `email`, `password_hash`, `role`, `s
 (38, 'ayokona', 'chescamanding5@gmail.com', '$2y$10$a7JLBZH2xSAkwwHUnpfML.Eg4Y0p/7lr2XsmtiynD17c0iC466ci2', 'customer', 'active', NULL, '2026-05-11 10:26:50', '2026-05-11 10:26:26', NULL, NULL, 'images/yas_logo.png', '2026-05-11 10:26:50'),
 (39, 'Krisha_staff', 'crazyy.icecreamm@gmail.com', '$2y$10$jB8xfyjhj/fLGK9Jtxv7Bec7HjPjzyLdLRG8NU62mXCRMk1es4Npa', 'staff', 'active', NULL, '2026-05-11 11:34:59', '2026-05-11 11:33:46', 'Krisha Audrey Narciso', NULL, 'images/profile_39_1778508611.png', '2026-05-11 14:10:11'),
 (42, 'YuraShirota', 'sbaltazar.1012@umak.edu.ph', '$2y$10$iUL1IOA/lWFwsdoLpBr4c.I/A95qEqz1MFWOCfqJ/LpVVILyd1CYG', 'customer', 'pending', 'b52345e1bd4006343575f0da9e90ef8e8f9071dade2f7c16125cdc330ca990aa', NULL, '2026-05-13 11:45:39', NULL, NULL, 'images/yas_logo.png', '2026-05-13 11:45:39');
+=======
+INSERT INTO `users` (`user_id`, `username`, `email`, `password_hash`, `role`, `status`, `verification_token`, `verified_at`, `created_at`, `full_name`, `contact_number`, `date_of_birth`, `profile_picture`, `updated_at`) VALUES
+(21, 'Stef_admin', 'marekeyks101@gmail.com', '$2y$10$46yj/F93p7Gf3eJ0gEtOG.bYAkSg62LkejbqvkwW.4/4BpSXeLA6O', 'admin', 'active', NULL, NULL, '2026-05-01 19:36:27', 'Stephanie Baltazar', NULL, NULL, 'images/profile_21_1778329893.jpg', '2026-05-09 12:31:33'),
+(27, 'testuser456', 'testuser456@example.com', '$2y$10$94OqRBmJyUjqWW5I69r.leBf7jwvCRpIxzS7Z.TnVtav/LbMewEe6', 'customer', 'inactive', NULL, NULL, '2026-05-04 16:03:10', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-11 14:13:03'),
+(28, 'krisha_customer', 'narcisokrishaaudrey@gmail.com', '$2y$10$awo1Y7BwclbQEA0vQnJB3.ispUVF1lSKSZO1o9gkvZQWlrK8iXyNW', 'customer', 'active', NULL, NULL, '2026-05-04 16:11:03', NULL, NULL, NULL, 'images/profile_28_1778251916.jpg', '2026-05-08 14:51:56'),
+(38, 'ayokona', 'chescamanding5@gmail.com', '$2y$10$a7JLBZH2xSAkwwHUnpfML.Eg4Y0p/7lr2XsmtiynD17c0iC466ci2', 'customer', 'active', NULL, '2026-05-11 10:26:50', '2026-05-11 10:26:26', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-11 10:26:50'),
+(39, 'Krisha_staff', 'crazyy.icecreamm@gmail.com', '$2y$10$jB8xfyjhj/fLGK9Jtxv7Bec7HjPjzyLdLRG8NU62mXCRMk1es4Npa', 'staff', 'active', NULL, '2026-05-11 11:34:59', '2026-05-11 11:33:46', 'Krisha Audrey Narciso', NULL, NULL, 'images/profile_39_1778508611.png', '2026-05-11 14:10:11'),
+(43, 'yurashirota', 'sbaltazar.1012@umak.edu.ph', '$2y$10$PCg44lOBOolprFCvk8/ONOSwNiOaUKMnd.yhM8aQMT900GbJTIIy2', 'customer', 'active', NULL, '2026-05-13 14:19:12', '2026-05-13 14:18:45', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-13 14:19:12');
+>>>>>>> a45c27787b5830c4c719368e78765338f455ea6b
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `addresses`
+-- Indexes for table `address_details`
 --
-ALTER TABLE `addresses`
-  ADD PRIMARY KEY (`address_id`),
-  ADD KEY `user_id` (`user_id`);
+ALTER TABLE `address_details`
+  ADD PRIMARY KEY (`address_details_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `location_id` (`location_id`);
+
+--
+-- Indexes for table `address_locations`
+--
+ALTER TABLE `address_locations`
+  ADD PRIMARY KEY (`location_id`);
 
 --
 -- Indexes for table `categories`
@@ -367,10 +387,16 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT for table `addresses`
+-- AUTO_INCREMENT for table `address_details`
 --
-ALTER TABLE `addresses`
-  MODIFY `address_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+ALTER TABLE `address_details`
+  MODIFY `address_details_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `address_locations`
+--
+ALTER TABLE `address_locations`
+  MODIFY `location_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `categories`
@@ -412,17 +438,18 @@ ALTER TABLE `rewards`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `addresses`
+-- Constraints for table `address_details`
 --
-ALTER TABLE `addresses`
-  ADD CONSTRAINT `addresses_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+ALTER TABLE `address_details`
+  ADD CONSTRAINT `address_details_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `address_details_ibfk_2` FOREIGN KEY (`location_id`) REFERENCES `address_locations` (`location_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `orders`

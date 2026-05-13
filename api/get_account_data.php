@@ -33,8 +33,21 @@ try {
 
     // Get user's primary address
     $stmt = $pdo->prepare("
-        SELECT * FROM addresses 
-        WHERE user_id = :user_id AND is_primary = TRUE
+        SELECT
+            ad.address_details_id AS address_id,
+            ad.address_type,
+            ad.landmark,
+            ad.delivery_instructions,
+            ad.is_primary,
+            al.house_no,
+            al.street,
+            al.barangay,
+            al.city,
+            al.province,
+            al.address_line
+        FROM address_details ad
+        JOIN address_locations al ON ad.location_id = al.location_id
+        WHERE ad.user_id = :user_id AND ad.is_primary = TRUE
         LIMIT 1
     ");
     $stmt->execute(['user_id' => $user_id]);
@@ -42,9 +55,23 @@ try {
 
     // Get all user addresses
     $stmt = $pdo->prepare("
-        SELECT * FROM addresses 
-        WHERE user_id = :user_id
-        ORDER BY is_primary DESC, updated_at DESC
+        SELECT
+            ad.address_details_id AS address_id,
+            ad.address_type,
+            ad.landmark,
+            ad.delivery_instructions,
+            ad.is_primary,
+            ad.updated_at,
+            al.house_no,
+            al.street,
+            al.barangay,
+            al.city,
+            al.province,
+            al.address_line
+        FROM address_details ad
+        JOIN address_locations al ON ad.location_id = al.location_id
+        WHERE ad.user_id = :user_id
+        ORDER BY ad.is_primary DESC, ad.updated_at DESC
     ");
     $stmt->execute(['user_id' => $user_id]);
     $allAddresses = $stmt->fetchAll();

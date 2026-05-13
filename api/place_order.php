@@ -77,7 +77,7 @@ try {
             throw new Exception('Please select a saved delivery address before placing a delivery order.');
         }
 
-        $addressStmt = $pdo->prepare("SELECT address_id FROM addresses WHERE address_id = :address_id AND user_id = :user_id");
+        $addressStmt = $pdo->prepare("SELECT address_details_id FROM address_details WHERE address_details_id = :address_id AND user_id = :user_id");
         $addressStmt->execute(['address_id' => $delivery_address_id, 'user_id' => $user_id]);
         if (!$addressStmt->fetchColumn()) {
             throw new Exception('Selected delivery address is invalid.');
