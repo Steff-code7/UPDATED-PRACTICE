@@ -581,15 +581,15 @@ window.addEventListener("scroll", updateNavbarState, { passive: true });
 
 
 
-// ===================== CUSTOMER PROMO ROUTE ======================
-  (function initCustomerPromoRoute() {
+// ===================== CUSTOMER ABOUT US CTA ======================
+  (function initCustomerAboutUsCTA() {
     const body = document.body;
     const path = window.location.pathname.toLowerCase();
 
     if (!body.classList.contains("home-page") || !path.endsWith("/customerhomepage.html")) return;
 
     qsa(".PROMO-BUTTON").forEach((button) => {
-      button.setAttribute("href", "customerPromotions.html");
+      button.setAttribute("href", "customerAboutUs.html");
     });
   })();
 
@@ -1803,6 +1803,34 @@ if (matchingOption) {
     }
   };
 
+  const deleteArchivedProduct = async (productId, productName) => {
+    if (!confirm(`Delete "${productName}" permanently? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      const csrfToken = await getCsrfToken();
+      const response = await fetch('api/delete_product.php', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ product_id: productId, status: 'delete', csrf_token: csrfToken })
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        alert(`"${productName}" was deleted permanently.`);
+        await window.fetchArchivedProducts();
+      } else {
+        alert(`Error deleting product: ${result.message}`);
+      }
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      alert('Failed to delete product. Please try again.');
+    }
+  };
+
   (function initAdminArchivePage() {
     const tableBody = qs("#admin-archive-products-body");
     const pagination = qs("#admin-archive-pagination");
@@ -1941,6 +1969,7 @@ if (matchingOption) {
                   <td>
                     <div class="ADMIN-TABLE-ACTIONS">
                       <button type="button" data-restore-id="${product.id}" aria-label="Restore ${product.name}"><i class="fa-solid fa-rotate-left"></i></button>
+                      <button type="button" data-delete-id="${product.id}" aria-label="Delete ${product.name}" class="danger"><i class="fa-solid fa-trash"></i></button>
                     </div>
                   </td>
                 </tr>
@@ -1960,6 +1989,14 @@ if (matchingOption) {
           const productId = Number(button.dataset.restoreId);
           const productName = archivedProducts.find((item) => item.id === productId)?.name || 'product';
           restoreProduct(productId, productName);
+        });
+      });
+
+      qsa("[data-delete-id]", tableBody).forEach((button) => {
+        button.addEventListener("click", () => {
+          const productId = Number(button.dataset.deleteId);
+          const productName = archivedProducts.find((item) => item.id === productId)?.name || 'product';
+          deleteArchivedProduct(productId, productName);
         });
       });
     };
@@ -4327,6 +4364,83 @@ updateTotal();
     const gcashQrButton = qs("#view-gcash-qr");
     const gcashQrModal = qs("#gcash-qr-modal");
     const gcashQrCloseButtons = qsa(".GCASH-QR-CLOSE, .GCASH-QR-DONE", gcashQrModal);
+    const deliveryAddressSection = qs("#delivery-address-section");
+    const deliveryAddressSelect = qs("#delivery-address-select");
+    const deliveryAddressMessage = qs("#delivery-address-message");
+
+    const formatDeliveryAddress = (address) => {
+      if (!address) return '';
+      const parts = [];
+      if (address.house_no) parts.push(address.house_no);
+      if (address.street) parts.push(`${address.street} street`);
+      if (address.barangay) parts.push(`Barangay ${address.barangay}`);
+      if (address.city) parts.push(address.city);
+      if (address.province) parts.push(address.province);
+      return parts.filter(Boolean).join(', ');
+    };
+
+    const updateDeliveryAddressVisibility = () => {
+      const isDelivery = getSelectedLocation() === "delivery";
+      if (deliveryAddressSection) {
+        deliveryAddressSection.hidden = !isDelivery;
+      }
+      if (!isDelivery) {
+        return;
+      }
+
+      const hasSaved = deliveryAddressSelect && deliveryAddressSelect.options.length > 0;
+      if (deliveryAddressMessage) {
+        deliveryAddressMessage.textContent = hasSaved
+          ? ''
+          : 'Delivery orders require a saved address. Please add one in your account page before placing your order.';
+      }
+      if (deliveryAddressSelect) {
+        deliveryAddressSelect.hidden = !hasSaved;
+        deliveryAddressSelect.disabled = !hasSaved;
+      }
+    };
+
+    const loadDeliveryAddresses = async () => {
+      if (!deliveryAddressSection || !deliveryAddressMessage) return;
+      if (deliveryAddressSelect) {
+        deliveryAddressSelect.innerHTML = '';
+        deliveryAddressSelect.hidden = true;
+        deliveryAddressSelect.disabled = true;
+      }
+      deliveryAddressMessage.textContent = 'Loading saved addresses...';
+
+      try {
+        const response = await fetch('api/manage_addresses.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'get_all' })
+        });
+        const data = await response.json();
+        if (response.ok && data.success && Array.isArray(data.addresses) && data.addresses.length) {
+          if (deliveryAddressSelect) {
+            deliveryAddressSelect.innerHTML = data.addresses.map((address) => {
+              const label = `${address.address_type || 'Address'} | ${formatDeliveryAddress(address)}${address.landmark ? ' • ' + address.landmark : ''}`;
+              return `<option value="${address.address_id}">${label}</option>`;
+            }).join('');
+            deliveryAddressSelect.hidden = false;
+            deliveryAddressSelect.disabled = false;
+          }
+          if (deliveryAddressMessage) {
+            deliveryAddressMessage.textContent = '';
+          }
+        } else {
+          if (deliveryAddressMessage) {
+            deliveryAddressMessage.textContent = 'No saved addresses found. Please add one in your account page before placing a delivery order.';
+          }
+        }
+      } catch (error) {
+        if (deliveryAddressMessage) {
+          deliveryAddressMessage.textContent = 'Unable to load addresses. Please refresh or manage addresses in your account page.';
+        }
+      } finally {
+        updateDeliveryAddressVisibility();
+      }
+    };
 
 
     const parseAddonEntries = (addonsValue) => {
@@ -4503,7 +4617,12 @@ updateTotal();
     updateOrderTotals();
 
     if (locationInputs.length) {
-      locationInputs.forEach((radio) => radio.addEventListener("change", updateOrderTotals));
+      locationInputs.forEach((radio) => {
+        radio.addEventListener("change", () => {
+          updateOrderTotals();
+          updateDeliveryAddressVisibility();
+        });
+      });
     }
 
     const toggleGcashFields = () => {
@@ -4520,6 +4639,8 @@ updateTotal();
       paymentInputs.forEach((radio) => radio.addEventListener("change", toggleGcashFields));
       toggleGcashFields();
     }
+
+    loadDeliveryAddresses();
 
     const openGcashQrModal = () => {
       if (!gcashQrModal) return;
@@ -4573,6 +4694,16 @@ updateTotal();
           return;
         }
 
+        let selectedAddressId = null;
+        if (selectedLocation === "delivery") {
+          selectedAddressId = deliveryAddressSelect?.value || null;
+          if (!selectedAddressId) {
+            alert("Please select a saved delivery address before placing a delivery order.");
+            deliveryAddressSelect?.focus();
+            return;
+          }
+        }
+
         const payloadItems = cart.map((item) => ({
           product_id: item.product_id || item.productId || null,
           product_name: item.name || "",
@@ -4604,7 +4735,8 @@ updateTotal();
               gcash_reference: gcashReference,
               gcash_mobile: gcashMobile,
               delivery_fee: deliveryFee,
-              items: payloadItems,
+                items: payloadItems,
+              delivery_address_id: selectedAddressId ? Number(selectedAddressId) : null,
               csrf_token: csrfToken,
             }),
           });

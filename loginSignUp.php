@@ -215,6 +215,11 @@ goSignup.onclick = () => {
             return true;
         }
 
+        if (password.length < 8) {
+            signupFeedback.textContent = "Password must be at least 8 characters.";
+            return false;
+        }
+
         if (password !== confirmPassword) {
             signupFeedback.textContent = "Passwords do not match.";
             return false;

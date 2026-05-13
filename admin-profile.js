@@ -196,7 +196,23 @@ const AdminProfile = (() => {
         elements.accountPreviewPlaceholder.style.display = 'flex';
       }
     }
+
+    hideUnauthorizedModules(user.role || 'admin');
   };
+
+  function hideUnauthorizedModules(role) {
+    const isStaff = String(role || '').toLowerCase() === 'staff';
+    qsa('a[href="adminCustomers.html"]').forEach((link) => {
+      link.hidden = isStaff;
+      if (isStaff) {
+        link.style.pointerEvents = 'none';
+      }
+    });
+
+    if (isStaff && window.location.pathname.toLowerCase().includes('admincustomers.html')) {
+      window.location.href = 'adminDashboard.html';
+    }
+  }
 
   /**
    * Open the account settings modal.

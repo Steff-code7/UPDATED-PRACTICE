@@ -76,6 +76,12 @@ try {
                 }
 
                 // Verify new password matches confirm
+                if (strlen($newPassword) < 8) {
+                    http_response_code(400);
+                    echo json_encode(['message' => 'New password must be at least 8 characters']);
+                    exit;
+                }
+
                 if ($newPassword !== $confirmPassword) {
                     http_response_code(400);
                     echo json_encode(['message' => 'New passwords do not match']);

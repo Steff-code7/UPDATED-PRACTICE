@@ -184,6 +184,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             const newPassword = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
 
+            if (newPassword.length < 8) {
+                alert('New password must be at least 8 characters.');
+                return;
+            }
+
             if (newPassword !== confirmPassword) {
                 alert('New passwords do not match!');
                 return;

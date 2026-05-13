@@ -37,7 +37,7 @@ $activePage = 'overview';
                                 </div>
                                 <div>
                                     <span>Total Spent</span>
-                                    <strong id="totalSpentOverview">?<?php echo number_format($stats['total_spent'], 2); ?></strong>
+                                    <strong id="totalSpentOverview">₱<?php echo number_format($stats['total_spent'], 2); ?></strong>
                                 </div>
                             </div>
                         </div>
@@ -101,7 +101,7 @@ $activePage = 'overview';
                                     <span>#ORD-<?php echo str_pad($order['order_id'], 4, '0', STR_PAD_LEFT); ?></span>
                                     <span><?php echo date('M d, Y', strtotime($order['order_date'])); ?></span>
                                     <span><?php echo htmlspecialchars(substr($order['items'] ?? 'N/A', 0, 30)); ?>...</span>
-                                    <span>?<?php echo number_format($order['total_amount'], 2); ?></span>
+                                    <span>₱<?php echo number_format($order['total_amount'], 2); ?></span>
                                     <span class="ACCOUNT-STATUS <?php echo strtolower($order['status']); ?>"><?php echo ucfirst($order['status']); ?></span>
                                 </div>
                             <?php endforeach; ?>

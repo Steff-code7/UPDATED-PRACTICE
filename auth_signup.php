@@ -53,11 +53,11 @@ try {
 
 
 
-    if (strlen($password) < 6) {
+    if (strlen($password) < 8) {
 
         http_response_code(400);
 
-        echo json_encode(['message' => 'Password must be at least 6 characters.']);
+        echo json_encode(['message' => 'Password must be at least 8 characters.']);
 
         exit;
 

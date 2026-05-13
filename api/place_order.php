@@ -52,6 +52,7 @@ try {
     if ($payment_method === 'online_payment') {
         $payment_method = 'gcash';
     }
+    $delivery_address_id = isset($data['delivery_address_id']) ? (int)$data['delivery_address_id'] : null;
     $gcash_reference = trim((string)($data['gcash_reference'] ?? ''));
     $gcash_mobile = trim((string)($data['gcash_mobile'] ?? ''));
     $items = $data['items'] ?? [];
@@ -69,6 +70,18 @@ try {
     // Validate payment method against schema enum
     if (!in_array($payment_method, ['cash_on_delivery', 'cash', 'gcash'])) {
         $payment_method = 'cash_on_delivery';
+    }
+
+    if ($order_type === 'delivery') {
+        if (!$delivery_address_id) {
+            throw new Exception('Please select a saved delivery address before placing a delivery order.');
+        }
+
+        $addressStmt = $pdo->prepare("SELECT address_id FROM addresses WHERE address_id = :address_id AND user_id = :user_id");
+        $addressStmt->execute(['address_id' => $delivery_address_id, 'user_id' => $user_id]);
+        if (!$addressStmt->fetchColumn()) {
+            throw new Exception('Selected delivery address is invalid.');
+        }
     }
 
     if ($payment_method === 'gcash' && $gcash_reference === '') {
