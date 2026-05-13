@@ -292,7 +292,6 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-<<<<<<< HEAD
 INSERT INTO `users` (`user_id`, `username`, `email`, `password_hash`, `role`, `status`, `verification_token`, `verified_at`, `created_at`, `full_name`, `contact_number`, `profile_picture`, `updated_at`) VALUES
 (21, 'Stef_admin', 'marekeyks101@gmail.com', '$2y$10$46yj/F93p7Gf3eJ0gEtOG.bYAkSg62LkejbqvkwW.4/4BpSXeLA6O', 'admin', 'active', NULL, NULL, '2026-05-01 19:36:27', 'Stephanie Baltazar', NULL, 'images/profile_21_1778329893.jpg', '2026-05-09 12:31:33'),
 (27, 'testuser456', 'testuser456@example.com', '$2y$10$94OqRBmJyUjqWW5I69r.leBf7jwvCRpIxzS7Z.TnVtav/LbMewEe6', 'customer', 'inactive', NULL, NULL, '2026-05-04 16:03:10', NULL, NULL, 'images/yas_logo.png', '2026-05-11 14:13:03'),
@@ -301,15 +300,6 @@ INSERT INTO `users` (`user_id`, `username`, `email`, `password_hash`, `role`, `s
 (38, 'ayokona', 'chescamanding5@gmail.com', '$2y$10$a7JLBZH2xSAkwwHUnpfML.Eg4Y0p/7lr2XsmtiynD17c0iC466ci2', 'customer', 'active', NULL, '2026-05-11 10:26:50', '2026-05-11 10:26:26', NULL, NULL, 'images/yas_logo.png', '2026-05-11 10:26:50'),
 (39, 'Krisha_staff', 'crazyy.icecreamm@gmail.com', '$2y$10$jB8xfyjhj/fLGK9Jtxv7Bec7HjPjzyLdLRG8NU62mXCRMk1es4Npa', 'staff', 'active', NULL, '2026-05-11 11:34:59', '2026-05-11 11:33:46', 'Krisha Audrey Narciso', NULL, 'images/profile_39_1778508611.png', '2026-05-11 14:10:11'),
 (42, 'YuraShirota', 'sbaltazar.1012@umak.edu.ph', '$2y$10$iUL1IOA/lWFwsdoLpBr4c.I/A95qEqz1MFWOCfqJ/LpVVILyd1CYG', 'customer', 'pending', 'b52345e1bd4006343575f0da9e90ef8e8f9071dade2f7c16125cdc330ca990aa', NULL, '2026-05-13 11:45:39', NULL, NULL, 'images/yas_logo.png', '2026-05-13 11:45:39');
-=======
-INSERT INTO `users` (`user_id`, `username`, `email`, `password_hash`, `role`, `status`, `verification_token`, `verified_at`, `created_at`, `full_name`, `contact_number`, `date_of_birth`, `profile_picture`, `updated_at`) VALUES
-(21, 'Stef_admin', 'marekeyks101@gmail.com', '$2y$10$46yj/F93p7Gf3eJ0gEtOG.bYAkSg62LkejbqvkwW.4/4BpSXeLA6O', 'admin', 'active', NULL, NULL, '2026-05-01 19:36:27', 'Stephanie Baltazar', NULL, NULL, 'images/profile_21_1778329893.jpg', '2026-05-09 12:31:33'),
-(27, 'testuser456', 'testuser456@example.com', '$2y$10$94OqRBmJyUjqWW5I69r.leBf7jwvCRpIxzS7Z.TnVtav/LbMewEe6', 'customer', 'inactive', NULL, NULL, '2026-05-04 16:03:10', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-11 14:13:03'),
-(28, 'krisha_customer', 'narcisokrishaaudrey@gmail.com', '$2y$10$awo1Y7BwclbQEA0vQnJB3.ispUVF1lSKSZO1o9gkvZQWlrK8iXyNW', 'customer', 'active', NULL, NULL, '2026-05-04 16:11:03', NULL, NULL, NULL, 'images/profile_28_1778251916.jpg', '2026-05-08 14:51:56'),
-(38, 'ayokona', 'chescamanding5@gmail.com', '$2y$10$a7JLBZH2xSAkwwHUnpfML.Eg4Y0p/7lr2XsmtiynD17c0iC466ci2', 'customer', 'active', NULL, '2026-05-11 10:26:50', '2026-05-11 10:26:26', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-11 10:26:50'),
-(39, 'Krisha_staff', 'crazyy.icecreamm@gmail.com', '$2y$10$jB8xfyjhj/fLGK9Jtxv7Bec7HjPjzyLdLRG8NU62mXCRMk1es4Npa', 'staff', 'active', NULL, '2026-05-11 11:34:59', '2026-05-11 11:33:46', 'Krisha Audrey Narciso', NULL, NULL, 'images/profile_39_1778508611.png', '2026-05-11 14:10:11'),
-(43, 'yurashirota', 'sbaltazar.1012@umak.edu.ph', '$2y$10$PCg44lOBOolprFCvk8/ONOSwNiOaUKMnd.yhM8aQMT900GbJTIIy2', 'customer', 'active', NULL, '2026-05-13 14:19:12', '2026-05-13 14:18:45', NULL, NULL, NULL, 'images/yas_logo.png', '2026-05-13 14:19:12');
->>>>>>> a45c27787b5830c4c719368e78765338f455ea6b
 
 --
 -- Indexes for dumped tables
