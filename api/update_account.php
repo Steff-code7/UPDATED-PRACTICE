@@ -22,18 +22,16 @@ try {
 
         switch ($action) {
             case 'update_profile':
-                // Update full name, contact number, date of birth
+                // Update full name and contact number
                 $stmt = $pdo->prepare("
                     UPDATE users 
                     SET full_name = :full_name,
-                        contact_number = :contact_number,
-                        date_of_birth = :date_of_birth
+                        contact_number = :contact_number
                     WHERE user_id = :user_id
                 ");
                 $stmt->execute([
                     'full_name' => $data['full_name'] ?? null,
                     'contact_number' => $data['contact_number'] ?? null,
-                    'date_of_birth' => $data['date_of_birth'] ?? null,
                     'user_id' => $user_id
                 ]);
                 echo json_encode(['success' => true, 'message' => 'Profile updated']);

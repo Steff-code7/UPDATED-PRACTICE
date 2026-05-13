@@ -17,7 +17,7 @@ try {
     // Get user basic info
     $stmt = $pdo->prepare("
         SELECT 
-            user_id, username, email, full_name, contact_number, date_of_birth, 
+            user_id, username, email, full_name, contact_number,
             profile_picture, role, created_at
         FROM users 
         WHERE user_id = :user_id

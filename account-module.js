@@ -228,7 +228,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             const fullName = document.getElementById('fullName').value;
             const email = document.getElementById('email').value;
             const contactNumber = document.getElementById('contactNumber').value;
-            const dateOfBirth = document.getElementById('dateOfBirth').value;
 
             try {
                 // Update profile info
@@ -239,7 +238,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                         action: 'update_profile',
                         full_name: fullName,
                         contact_number: contactNumber,
-                        date_of_birth: dateOfBirth,
                         csrf_token: getCsrfToken()
                     })
                 });
@@ -274,10 +272,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 document.getElementById('overviewFullName').textContent = fullName || 'Not set';
                 document.getElementById('overviewEmail').textContent = email;
                 document.getElementById('overviewContact').textContent = contactNumber || 'Not set';
-                if (dateOfBirth) {
-                    const date = new Date(dateOfBirth);
-                    document.getElementById('overviewDOB').textContent = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-                }
 
             } catch (error) {
                 alert('Error: ' + error.message);
@@ -677,7 +671,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (contactSupportBtn) {
         contactSupportBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            window.open('https://www.facebook.com/yas.elizalde.7', '_blank');
+            window.location.href = 'mailto:yasmilkteahouse@gmail.com';
         });
     }
 

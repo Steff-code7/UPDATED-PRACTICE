@@ -9,7 +9,7 @@ The customer account system is now fully functional with dynamic user profiles, 
 
 1. **api/account_setup.php**
    - Database schema initialization
-   - Adds new columns to users table: full_name, contact_number, date_of_birth, profile_picture, updated_at
+   - Adds new columns to users table: full_name, contact_number, profile_picture, updated_at
    - Creates addresses table for managing multiple delivery addresses
 
 2. **api/get_account_data.php**
@@ -145,7 +145,6 @@ The customer account system is now fully functional with dynamic user profiles, 
 ALTER TABLE users ADD COLUMN (
     full_name VARCHAR(150),
     contact_number VARCHAR(20),
-    date_of_birth DATE,
     profile_picture VARCHAR(255) DEFAULT 'images/default-avatar.png',
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )

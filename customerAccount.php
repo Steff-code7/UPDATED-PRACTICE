@@ -53,7 +53,6 @@ $activePage = 'overview';
                                 <div><span>Full Name</span><strong id="overviewFullName"><?php echo htmlspecialchars($user['full_name'] ?: 'Not set'); ?></strong></div>
                                 <div><span>Email Address</span><strong id="overviewEmail"><?php echo htmlspecialchars($user['email']); ?></strong></div>
                                 <div><span>Contact Number</span><strong id="overviewContact"><?php echo htmlspecialchars($user['contact_number'] ?: 'Not set'); ?></strong></div>
-                                <div><span>Date of Birth</span><strong id="overviewDOB"><?php echo $user['date_of_birth'] ? date('M d, Y', strtotime($user['date_of_birth'])) : 'Not set'; ?></strong></div>
                             </div>
                         </article>
 

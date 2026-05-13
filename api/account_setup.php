@@ -20,7 +20,6 @@ try {
             ALTER TABLE users ADD COLUMN (
                 full_name VARCHAR(150),
                 contact_number VARCHAR(20),
-                date_of_birth DATE,
                 profile_picture VARCHAR(255) DEFAULT 'images/yas_logo.png',
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             )

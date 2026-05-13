@@ -19,7 +19,7 @@ $user_id = $_SESSION['user_id'];
 
 try {
     $stmt = $pdo->prepare(
-        "SELECT user_id, username, email, full_name, contact_number, date_of_birth, profile_picture, created_at FROM users WHERE user_id = :user_id"
+        "SELECT user_id, username, email, full_name, contact_number, profile_picture, created_at FROM users WHERE user_id = :user_id"
     );
     $stmt->execute(['user_id' => $user_id]);
     $user = $stmt->fetch();

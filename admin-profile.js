@@ -297,7 +297,6 @@ const AdminProfile = (() => {
             action: 'update_profile',
             full_name: newFullName || null,
             contact_number: adminData.contact_number || null,
-            date_of_birth: null,
             csrf_token: csrfToken
           })
         });

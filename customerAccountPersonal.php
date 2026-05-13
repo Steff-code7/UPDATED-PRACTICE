@@ -39,10 +39,6 @@ $activePage = 'personal-details';
                                     <label for="contactNumber">Contact Number</label>
                                     <input type="tel" id="contactNumber" name="contact_number" value="<?php echo htmlspecialchars($user['contact_number'] ?: ''); ?>">
                                 </div>
-                                <div class="form-group">
-                                    <label for="dateOfBirth">Date of Birth</label>
-                                    <input type="date" id="dateOfBirth" name="date_of_birth" value="<?php echo $user['date_of_birth'] ?: ''; ?>">
-                                </div>
                                 <button type="submit" class="btn primary">Save Changes</button>
                             </form>
                         </div>

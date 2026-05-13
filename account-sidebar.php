@@ -55,7 +55,7 @@ if (!isset($activePage)) {
             <div class="ACCOUNT-SIDEBAR-HELP">
                 <span>Need help?</span>
                 <p>We're here for you!</p>
-                <a class="btn outline" id="contactSupportBtn">CONTACT SUPPORT</a>
+                <a class="btn outline" id="contactSupportBtn" href="mailto:yasmilkteahouse@gmail.com">CONTACT SUPPORT</a>
             </div>
         </aside>
 

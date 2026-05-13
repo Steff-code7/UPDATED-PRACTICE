@@ -71,7 +71,6 @@ The app is split into three major areas:
 - `index.html`: main landing page for customers.
 - `aboutUs.html`: brand story page.
 - `menu.php`: menu listing page.
-- `promotions.html`: promotions page.
 - `customerHomePage.html`: home page for logged-in customers.
 - `loginSignUp.php`: handles both login and signup UI and client-side logic.
 - `check_db.php`: optional utility to test database connectivity.
@@ -131,9 +130,6 @@ The app is split into three major areas:
 - Server-side menu page.
 - Likely fetches product categories and items from the backend.
 - Includes interactive filtering and search features.
-
-### `promotions.html`
-- Shows promotional items and current offers.
 
 ### `PrivacyPolicy.html` and `T&C.html`
 - Legal pages.
@@ -229,12 +225,6 @@ The admin pages are a set of HTML dashboards with consistent top bar/navigation 
 
 ### `adminPayments.html`
 - Payment status management page.
-
-### `adminPromos.html`
-- Promotions management page.
-
-### `adminRewards.html`
-- Rewards management page.
 
 ### `adminArchive.html`
 - Archive or historical data page.
@@ -462,7 +452,6 @@ Server-side logic that handles authentication, database access, and business rul
 - `aboutUs.html`: brand story.
 - `customerAboutUs.html`: alternate about page for logged-in users.
 - `menu.php`: menu browsing and product display.
-- `promotions.html`: promotions showcase.
 - `items.html`, `customerItems.html`: item listing pages.
 - `addToCart.html`: cart and checkout experience.
 - `confirmOrder.html`: order review and confirmation.
@@ -492,8 +481,6 @@ Server-side logic that handles authentication, database access, and business rul
 - `adminOrders.html`: order admin.
 - `adminCustomers.html`: customer admin.
 - `adminPayments.html`: payments admin.
-- `adminPromos.html`: promotions admin.
-- `adminRewards.html`: rewards admin.
 - `adminArchive.html`: archived data.
 
 ### Shared assets
