@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 14, 2026 at 03:56 PM
+-- Generation Time: May 14, 2026 at 06:37 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -257,19 +257,6 @@ INSERT INTO `products` (`product_id`, `category_id`, `product_name`, `price_16`,
 -- --------------------------------------------------------
 
 --
--- Table structure for table `rewards`
---
-
-CREATE TABLE `rewards` (
-  `reward_id` int(10) UNSIGNED NOT NULL,
-  `reward_name` varchar(150) NOT NULL,
-  `points_required` int(10) UNSIGNED NOT NULL DEFAULT 0,
-  `status` enum('active','inactive') NOT NULL DEFAULT 'active'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `users`
 --
 
@@ -297,16 +284,17 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `email`, `password_hash`, `role`, `status`, `verification_token`, `verified_at`, `password_reset_token`, `password_reset_expires_at`, `password_reset_confirmed_at`, `created_at`, `full_name`, `contact_number`, `profile_picture`, `updated_at`) VALUES
-(21, 'Stef_admin', 'marekeyks101@gmail.com', '$2y$10$46yj/F93p7Gf3eJ0gEtOG.bYAkSg62LkejbqvkwW.4/4BpSXeLA6O', 'admin', 'active', NULL, NULL, NULL, NULL, NULL, '2026-05-01 19:36:27', 'Stephanie Baltazar', NULL, 'images/profile_21_1778329893.jpg', '2026-05-09 12:31:33'),
-(27, 'testuser456', 'testuser456@example.com', '$2y$10$94OqRBmJyUjqWW5I69r.leBf7jwvCRpIxzS7Z.TnVtav/LbMewEe6', 'customer', 'inactive', NULL, NULL, NULL, NULL, NULL, '2026-05-04 16:03:10', NULL, NULL, 'images/yas_logo.png', '2026-05-11 14:13:03'),
-(28, 'krisha_customer', 'narcisokrishaaudrey@gmail.com', '$2y$10$awo1Y7BwclbQEA0vQnJB3.ispUVF1lSKSZO1o9gkvZQWlrK8iXyNW', 'customer', 'active', NULL, NULL, NULL, NULL, NULL, '2026-05-04 16:11:03', NULL, NULL, 'images/profile_28_1778762615.jpg', '2026-05-14 12:43:35'),
-(37, 'kirii', 'Kirigato.07@gmail.com', '$2y$10$V9ZYg08SOrjkw3S40Vnwle7Rl2OjQk23JZLocjUrf/dELPIbp7oUS', 'customer', 'active', NULL, '2026-05-10 05:18:27', '0b647a235c235ddc36ab4f35546cdd3ac6d72e53c98d8175f5bdf35153439353', '2026-05-14 22:47:20', NULL, '2026-05-10 05:16:49', 'vkcd', '456', 'images/yas_logo.png', '2026-05-14 13:47:20'),
+(21, 'Stef_admin', 'marekeyks101@gmail.com', '$2y$10$46yj/F93p7Gf3eJ0gEtOG.bYAkSg62LkejbqvkwW.4/4BpSXeLA6O', 'admin', 'active', NULL, '2026-05-06 14:31:51', NULL, NULL, NULL, '2026-05-01 19:36:27', 'Stephanie Baltazar', NULL, 'images/profile_21_1778329893.jpg', '2026-05-14 14:32:03'),
+(27, 'testuser456', 'testuser456@example.com', '$2y$10$94OqRBmJyUjqWW5I69r.leBf7jwvCRpIxzS7Z.TnVtav/LbMewEe6', 'customer', 'inactive', NULL, '2026-05-06 14:30:57', NULL, NULL, NULL, '2026-05-04 16:03:10', NULL, NULL, 'images/yas_logo.png', '2026-05-14 14:31:42'),
+(28, 'krisha_customer', 'narcisokrishaaudrey@gmail.com', '$2y$10$awo1Y7BwclbQEA0vQnJB3.ispUVF1lSKSZO1o9gkvZQWlrK8iXyNW', 'customer', 'active', NULL, '2026-05-06 14:29:13', NULL, NULL, NULL, '2026-05-04 16:11:03', NULL, NULL, 'images/profile_28_1778762615.jpg', '2026-05-14 14:29:38'),
+(37, 'kirii', 'Kirigato.07@gmail.com', '$2y$10$9dqv9PbDTwWHbem/zKuoauALhEckl0q8qxKs0lDCh04AgGLpmFlb6', 'customer', 'active', NULL, '2026-05-10 05:18:27', NULL, NULL, NULL, '2026-05-10 05:16:49', 'vkcd', '456', 'images/yas_logo.png', '2026-05-14 14:23:27'),
 (38, 'ayokona', 'chescamanding5@gmail.com', '$2y$10$a7JLBZH2xSAkwwHUnpfML.Eg4Y0p/7lr2XsmtiynD17c0iC466ci2', 'customer', 'active', NULL, '2026-05-11 10:26:50', NULL, NULL, NULL, '2026-05-11 10:26:26', NULL, NULL, 'images/yas_logo.png', '2026-05-11 10:26:50'),
 (39, 'Krisha_staff', 'crazyy.icecreamm@gmail.com', '$2y$10$jB8xfyjhj/fLGK9Jtxv7Bec7HjPjzyLdLRG8NU62mXCRMk1es4Npa', 'staff', 'active', NULL, '2026-05-11 11:34:59', NULL, NULL, NULL, '2026-05-11 11:33:46', 'Krisha Audrey Narciso', NULL, 'images/profile_39_1778508611.png', '2026-05-11 14:10:11'),
-(42, 'YuraShirota', 'sbaltazar.1012@umak.edu.ph', '$2y$10$iUL1IOA/lWFwsdoLpBr4c.I/A95qEqz1MFWOCfqJ/LpVVILyd1CYG', 'customer', 'pending', 'b52345e1bd4006343575f0da9e90ef8e8f9071dade2f7c16125cdc330ca990aa', NULL, NULL, NULL, NULL, '2026-05-13 11:45:39', NULL, NULL, 'images/yas_logo.png', '2026-05-13 11:45:39'),
 (44, 'Peter Paul', 'peterpaulsimonb@gmail.com', '$2y$10$NtGqHdOL9aJqV9dOS9IHQ.bpvoAq5riOw2XxH93J6SryAMtUsLiIS', 'customer', 'active', NULL, '2026-05-14 13:25:58', NULL, NULL, NULL, '2026-05-14 13:25:23', NULL, NULL, 'images/profile_44_1778765201.jpg', '2026-05-14 13:26:41'),
 (45, 'Ian', 'jeamian3@gmail.com', '$2y$10$D51SsJHw2zqnO8LQTx8fX.Kj5ba/Il1iFKGWzdK.RB26.DS5O0DZe', 'customer', 'active', NULL, '2026-05-14 13:30:58', NULL, NULL, NULL, '2026-05-14 13:30:35', NULL, NULL, 'images/profile_45_1778765546.jpg', '2026-05-14 13:32:26'),
-(46, 'Butchokoy', 'vankristoff02@gmail.com', '$2y$10$Y3TAu9.sRNFlJwVL.74nMeS4L5pGElipY/5U6hpmTsbBMfPpVjyKS', 'customer', 'active', NULL, '2026-05-14 13:41:25', NULL, NULL, NULL, '2026-05-14 13:40:33', NULL, NULL, 'images/yas_logo.png', '2026-05-14 13:44:11');
+(46, 'Butchokoy', 'vankristoff02@gmail.com', '$2y$10$Y3TAu9.sRNFlJwVL.74nMeS4L5pGElipY/5U6hpmTsbBMfPpVjyKS', 'customer', 'active', NULL, '2026-05-14 13:41:25', NULL, NULL, NULL, '2026-05-14 13:40:33', NULL, NULL, 'images/yas_logo.png', '2026-05-14 13:44:11'),
+(47, 'stephanie', 'sbaltazar.1012@umak.edu.ph', '$2y$10$PVbxCk2D8IccgW0k7pjdbOdlB83RCOuzABAHeTkq58vfuASYE56Xu', 'customer', 'active', NULL, '2026-05-14 14:10:55', NULL, NULL, NULL, '2026-05-14 14:10:42', NULL, NULL, 'images/profile_47_1778767910.jpg', '2026-05-14 14:15:08'),
+(48, 'Paulo', 'christopherpaulobaltazar@gmail.com', '$2y$10$uWfA39nh.tomwe85aYwWJ.ThA75wWA46UU3bQ9M8.yczwz0UllmLO', 'customer', 'active', NULL, '2026-05-14 14:25:58', NULL, NULL, NULL, '2026-05-14 14:25:05', NULL, NULL, 'images/profile_48_1778768789.jpg', '2026-05-14 14:26:29');
 
 --
 -- Indexes for dumped tables
@@ -366,12 +354,6 @@ ALTER TABLE `products`
   ADD KEY `idx_product_status` (`status`);
 
 --
--- Indexes for table `rewards`
---
-ALTER TABLE `rewards`
-  ADD PRIMARY KEY (`reward_id`);
-
---
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -426,16 +408,10 @@ ALTER TABLE `products`
   MODIFY `product_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
--- AUTO_INCREMENT for table `rewards`
---
-ALTER TABLE `rewards`
-  MODIFY `reward_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- Constraints for dumped tables
