@@ -49,7 +49,6 @@ if (!isset($activePage)) {
                 <a class="module-link <?php echo $activePage === 'personal-details' ? 'active' : ''; ?>" href="customerAccountPersonal.php">Personal Details</a>
                 <a class="module-link <?php echo $activePage === 'order-history' ? 'active' : ''; ?>" href="customerAccountOrders.php">Order History</a>
                 <a class="module-link <?php echo $activePage === 'addresses' ? 'active' : ''; ?>" href="customerAccountAddresses.php">Addresses</a>
-                <a class="module-link <?php echo $activePage === 'payment-methods' ? 'active' : ''; ?>" href="customerAccountPayments.php">Payment Methods</a>
                 <a class="module-link logout-link" href="logout.php">Log Out</a>
             </nav>
             <div class="ACCOUNT-SIDEBAR-HELP">

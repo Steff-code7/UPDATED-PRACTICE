@@ -3959,6 +3959,8 @@ updateTotal();
     const totalEl = qs("#confirm-item-total");
     const locationInputs = qsa("input[name='order_location']");
     const paymentInputs = qsa("input[name='payment_method']");
+    const codPaymentInput = qs("input[name='payment_method'][value='cash_on_delivery']");
+    const codPaymentOption = qs("#cod-payment-option");
     const gcashFields = qs("#gcash-payment-fields");
     const gcashReferenceInput = qs("#gcash-reference-number");
     const gcashMobileInput = qs("#gcash-mobile-number");
@@ -4217,15 +4219,6 @@ updateTotal();
     if (subtotalEl) subtotalEl.textContent = toPeso(subtotal);
     updateOrderTotals();
 
-    if (locationInputs.length) {
-      locationInputs.forEach((radio) => {
-        radio.addEventListener("change", () => {
-          updateOrderTotals();
-          updateDeliveryAddressVisibility();
-        });
-      });
-    }
-
     const toggleGcashFields = () => {
       const selectedPaymentInput = document.querySelector("input[name='payment_method']:checked");
       const isGcash = selectedPaymentInput?.value === "gcash";
@@ -4236,9 +4229,35 @@ updateTotal();
       }
     };
 
+    const updateCashOnDeliveryVisibility = () => {
+      const isDelivery = getSelectedLocation() === "delivery";
+      if (codPaymentOption) codPaymentOption.hidden = !isDelivery;
+
+      if (!isDelivery && codPaymentInput?.checked) {
+        const fallbackInput = document.querySelector("input[name='payment_method']:not([value='cash_on_delivery'])");
+        if (fallbackInput) fallbackInput.checked = true;
+      }
+
+      if (isDelivery && codPaymentInput && !document.querySelector("input[name='payment_method']:checked")) {
+        codPaymentInput.checked = true;
+      }
+
+      toggleGcashFields();
+    };
+
+    if (locationInputs.length) {
+      locationInputs.forEach((radio) => {
+        radio.addEventListener("change", () => {
+          updateCashOnDeliveryVisibility();
+          updateOrderTotals();
+          updateDeliveryAddressVisibility();
+        });
+      });
+    }
+
     if (paymentInputs.length) {
       paymentInputs.forEach((radio) => radio.addEventListener("change", toggleGcashFields));
-      toggleGcashFields();
+      updateCashOnDeliveryVisibility();
     }
 
     loadDeliveryAddresses();
@@ -4292,6 +4311,11 @@ updateTotal();
         if (paymentMethod === "gcash" && !gcashReference) {
           alert("Please enter your GCash reference number.");
           gcashReferenceInput?.focus();
+          return;
+        }
+
+        if (paymentMethod === "cash_on_delivery" && selectedLocation !== "delivery") {
+          alert("Cash on Delivery is only available for Delivery orders.");
           return;
         }
 
