@@ -22,7 +22,7 @@ try {
     $new_status = strtolower(trim($data['status']));
 
     // Valid statuses
-    $valid_statuses = ['pending', 'preparing', 'completed', 'cancelled'];
+    $valid_statuses = ['pending', 'preparing', 'completed', 'cancelled', 'refunded'];
     if (!in_array($new_status, $valid_statuses)) {
         http_response_code(400);
         echo json_encode([
@@ -52,8 +52,9 @@ try {
     $valid_transitions = [
         'pending' => ['preparing', 'cancelled'],
         'preparing' => ['completed'],
-        'completed' => [],
-        'cancelled' => []
+        'completed' => ['refunded'],
+        'cancelled' => [],
+        'refunded' => []
     ];
 
     if (!in_array($new_status, $valid_transitions[$current_status])) {

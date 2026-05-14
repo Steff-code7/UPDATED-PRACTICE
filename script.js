@@ -2020,6 +2020,7 @@ if (matchingOption) {
     const preparingBody = qs("#preparing-orders-body");
     const completedBody = qs("#completed-orders-body");
     const cancelledBody = qs("#cancelled-orders-body");
+    const refundedBody = qs("#refunded-orders-body");
     const searchInput = qs("#admin-order-search");
     const modal = qs("#order-details-modal");
     const modalBody = qs("#order-modal-body");
@@ -2027,6 +2028,7 @@ if (matchingOption) {
     const modalCloseBtnBottom = qs(".ADMIN-MODAL-CLOSE-BTN", modal);
     const modalCancelBtn = qs("#modal-cancel-btn");
     const modalNextBtn = qs("#modal-next-btn");
+    const modalRefundBtn = qs("#modal-refund-btn");
 
     if (!pendingBody || !preparingBody || !completedBody || !cancelledBody) return;
 
@@ -2039,6 +2041,7 @@ if (matchingOption) {
     const normalizeStatus = (status) => {
       const s = String(status || "pending").toLowerCase().trim();
       if (s === "cancelled" || s === "canceled") return "cancelled";
+      if (s === "refunded") return "refunded";
       return s;
     };
 
@@ -2129,12 +2132,13 @@ if (matchingOption) {
       }
     }
 
-    // Render all four tables
+    // Render all tables
     function renderAllTables() {
       renderTable("pending", pendingBody);
       renderTable("preparing", preparingBody);
       renderTable("completed", completedBody);
       renderTable("cancelled", cancelledBody);
+      if (refundedBody) renderTable("refunded", refundedBody);
       attachViewOrderHandlers();
     }
 
@@ -2212,11 +2216,17 @@ if (matchingOption) {
 
       // Show/hide action buttons based on status
       modalCancelBtn.classList.toggle("is-hidden", order.status !== "pending");
-      modalNextBtn.classList.toggle("is-hidden", order.status === "completed" || order.status === "cancelled");
+      modalNextBtn.classList.toggle("is-hidden", order.status === "completed" || order.status === "cancelled" || order.status === "refunded");
+      if (modalRefundBtn) {
+        modalRefundBtn.classList.toggle("is-hidden", order.status !== "completed");
+      }
 
       // Attach action handlers
       modalCancelBtn.onclick = () => cancelOrder(orderId);
       modalNextBtn.onclick = () => moveOrderToNextStatus(orderId);
+      if (modalRefundBtn) {
+        modalRefundBtn.onclick = () => refundOrder(orderId);
+      }
 
       // Show modal
       modal.hidden = false;
@@ -2253,6 +2263,12 @@ if (matchingOption) {
       updateOrderStatus(orderId, "cancelled");
     }
 
+    // Refund order
+    function refundOrder(orderId) {
+      if (!confirm("Are you sure you want to refund this order? This action cannot be undone.")) return;
+      updateOrderStatus(orderId, "refunded");
+    }
+
     // Update order status via API
     async function updateOrderStatus(orderId, newStatus) {
       try {
@@ -2271,7 +2287,7 @@ if (matchingOption) {
         const result = await response.json();
 
         if (result.success) {
-          alert(`Order ${newStatus === 'cancelled' ? 'cancelled' : 'moved to ' + newStatus} successfully!`);
+          alert(`Order ${newStatus === 'cancelled' ? 'cancelled' : newStatus === 'refunded' ? 'refunded' : 'moved to ' + newStatus} successfully!`);
           closeModal();
           loadOrders(); // Reload orders
         } else {
@@ -2688,7 +2704,14 @@ if (matchingOption) {
       },
     };
 
-    if (!searchInput || !modal || !modalBody || !Object.values(tableConfig).every((config) => config.body && config.count)) return;
+    const refundedBody = qs("#refunded-payments-body");
+    const refundedCount = qs("#refunded-payments-count");
+
+    if (
+      !searchInput || !modal || !modalBody ||
+      !Object.values(tableConfig).every((config) => config.body && config.count) ||
+      !refundedBody || !refundedCount
+    ) return;
 
     let payments = [];
 
@@ -2762,10 +2785,15 @@ if (matchingOption) {
         cash_on_delivery: [],
         cash: [],
         gcash: [],
+        refunded: [],
       };
 
       getFilteredPayments().forEach((payment) => {
-        buckets[payment.method].push(payment);
+        if (payment.status === "refunded") {
+          buckets.refunded.push(payment);
+        } else {
+          buckets[payment.method].push(payment);
+        }
       });
 
       return buckets;
@@ -2801,11 +2829,36 @@ if (matchingOption) {
           `;
     };
 
+    const renderRefundedRows = (refundedPayments) => {
+      refundedCount.textContent = refundedPayments.length;
+      refundedBody.innerHTML = refundedPayments.length
+        ? refundedPayments
+            .map(
+              (payment) => `
+                <tr>
+                  <td>${escapeHtml(payment.paymentId)}</td>
+                  <td>${escapeHtml(payment.orderId)}</td>
+                  <td>${escapeHtml(payment.methodLabel)}</td>
+                  <td>
+                    <div class="ADMIN-TABLE-ACTIONS">
+                      <button type="button" class="view-payment-btn" data-payment-id="${payment.id}" aria-label="View ${escapeHtml(payment.paymentId)}">
+                        <i class="fa-regular fa-eye"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              `
+            )
+            .join("")
+        : `<tr><td colspan="4" class="ADMIN-TABLE-EMPTY">No refunded payments.</td></tr>`;
+    };
+
     const renderTables = () => {
       const buckets = getBuckets();
       Object.keys(tableConfig).forEach((method) => {
         renderPaymentRows(method, buckets[method]);
       });
+      renderRefundedRows(buckets.refunded);
     };
 
     const getReceiptLabel = (payment) => {
@@ -2825,13 +2878,21 @@ if (matchingOption) {
 
     const buildPaymentStatusButtons = (payment) =>
       ["active", "paid", "unpaid", "refunded"]
-        .map(
-          (status) => `
-            <button type="button" class="ADMIN-USER-STATUS-BTN ${payment.status === status ? "active" : ""}" data-payment-status="${status}">
+        .map((status) => {
+          const isCurrent = payment.status === status;
+          // "Refunded" is only actionable when the current payment status is "paid"
+          const isRefundLocked = status === "refunded" && payment.status !== "paid";
+          const disabledAttr = isRefundLocked ? "disabled" : "";
+          const titleAttr = isRefundLocked
+            ? 'title="Only paid orders can be refunded"'
+            : "";
+          return `
+            <button type="button" class="ADMIN-USER-STATUS-BTN ${isCurrent ? "active" : ""} ${isRefundLocked ? "is-locked" : ""}"
+              data-payment-status="${status}" ${disabledAttr} ${titleAttr}>
               ${titleCase(status)}
             </button>
-          `
-        )
+          `;
+        })
         .join("");
 
     const openPaymentModal = (paymentId) => {
@@ -2902,6 +2963,12 @@ if (matchingOption) {
       const payment = payments.find((item) => item.id === Number(paymentId));
       if (!payment || payment.status === status) return;
 
+      // Only "paid" payments can be refunded
+      if (status === "refunded" && payment.status !== "paid") {
+        alert("Only payments with a status of \"Paid\" can be refunded.");
+        return;
+      }
+
       try {
         const csrfToken = await getCsrfToken();
         const response = await fetch("api/update_payment_status.php", {
@@ -2917,6 +2984,25 @@ if (matchingOption) {
 
         payment.status = normalizeStatus(result.status || status);
         payment.receiptInfo = result.receipt_info || payment.receiptInfo;
+
+        // When marked as refunded, also update the linked order status
+        if (payment.status === "refunded" && payment.rawOrderId) {
+          try {
+            const csrfToken2 = await getCsrfToken();
+            const orderRes = await fetch("api/update_order_status.php", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ order_id: payment.rawOrderId, status: "refunded", csrf_token: csrfToken2 }),
+            });
+            const orderResult = await orderRes.json();
+            if (!orderResult.success) {
+              console.warn("Payment refunded but order status update failed:", orderResult.message);
+            }
+          } catch (orderErr) {
+            console.warn("Could not update linked order status:", orderErr);
+          }
+        }
+
         renderTables();
         openPaymentModal(payment.id);
       } catch (error) {
@@ -2941,6 +3027,7 @@ if (matchingOption) {
             id: Number(payment.payment_id),
             paymentId: formatId("PAY", payment.payment_id),
             orderId: formatId("ORD", payment.order_id),
+            rawOrderId: Number(payment.order_id || 0),
             userId: payment.user_id || "",
             amount: Number(payment.amount || 0),
             method,
@@ -2963,14 +3050,19 @@ if (matchingOption) {
             </tr>
           `;
         });
+        refundedCount.textContent = "0";
+        refundedBody.innerHTML = `<tr><td colspan="4" class="ADMIN-TABLE-EMPTY">Unable to load payments.</td></tr>`;
       }
     };
 
-    Object.values(tableConfig).forEach((config) => {
-      config.body.addEventListener("click", (event) => {
-        const button = event.target.closest(".view-payment-btn");
-        if (!button) return;
-        openPaymentModal(button.dataset.paymentId);
+    // Attach click handlers to all table bodies (method tables + refunded table)
+    const allBodies = [...Object.values(tableConfig).map((c) => c.body), refundedBody];
+    allBodies.forEach((body) => {
+      body.addEventListener("click", (event) => {
+        const viewBtn = event.target.closest(".view-payment-btn");
+        if (viewBtn) {
+          openPaymentModal(viewBtn.dataset.paymentId);
+        }
       });
     });
 

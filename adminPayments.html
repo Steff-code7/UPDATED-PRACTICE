@@ -45,6 +45,10 @@
             <i class="fa-solid fa-clipboard-check"></i>
             <span>Orders</span>
           </a>
+          <a href="adminPayments.html" class="ADMIN-NAV-LINK active">
+            <i class="fa-solid fa-credit-card"></i>
+            <span>Payments</span>
+          </a>
           <a href="adminCustomers.html" class="ADMIN-NAV-LINK">
             <i class="fa-solid fa-users"></i>
             <span>Users</span>
@@ -163,6 +167,26 @@
                     </tr>
                   </thead>
                   <tbody id="gcash-payments-body"></tbody>
+                </table>
+              </div>
+            </section>
+
+            <section class="ADMIN-STATUS-TABLE-CARD ADMIN-PAYMENTS-TABLE-CARD">
+              <div class="ADMIN-STATUS-TABLE-HEADER">
+                <h3>Refunded</h3>
+                <span class="ADMIN-STATUS-BADGE refunded" id="refunded-payments-count">0</span>
+              </div>
+              <div class="ADMIN-STATUS-TABLE-WRAP">
+                <table class="ADMIN-TABLE ADMIN-STATUS-TABLE ADMIN-PAYMENTS-METHOD-TABLE">
+                  <thead>
+                    <tr>
+                      <th>Payment ID</th>
+                      <th>Order ID</th>
+                      <th>Method</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="refunded-payments-body"></tbody>
                 </table>
               </div>
             </section>

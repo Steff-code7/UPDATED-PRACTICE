@@ -43,6 +43,21 @@ try {
         exit;
     }
 
+    // Enforce: only "paid" payments can be refunded
+    if ($status === 'refunded') {
+        $checkStmt = $pdo->prepare("SELECT status FROM payments WHERE payment_id = :payment_id");
+        $checkStmt->execute(['payment_id' => $paymentId]);
+        $current = $checkStmt->fetch();
+        if (!$current || strtolower(trim($current['status'])) !== 'paid') {
+            http_response_code(422);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Only payments with a status of "Paid" can be refunded.',
+            ]);
+            exit;
+        }
+    }
+
     $receiptInfo = null;
     if ($status === 'paid') {
         $receiptInfo = 'Payment verified';

@@ -68,6 +68,8 @@ try {
             SUM(oi.quantity * oi.price) AS total_revenue
         FROM order_items oi
         JOIN products p ON oi.product_id = p.product_id
+        JOIN orders o ON oi.order_id = o.order_id
+        WHERE LOWER(TRIM(o.status)) != 'refunded'
         GROUP BY p.product_id, p.product_name, p.image
         ORDER BY total_quantity DESC
         LIMIT 5
@@ -83,6 +85,7 @@ try {
             COALESCE(SUM(oi.quantity * oi.price), 0) AS total_revenue
         FROM products p
         LEFT JOIN order_items oi ON p.product_id = oi.product_id
+        LEFT JOIN orders o ON oi.order_id = o.order_id AND LOWER(TRIM(o.status)) != 'refunded'
         WHERE p.status = 'active'
         GROUP BY p.product_id, p.product_name, p.image
         ORDER BY total_quantity ASC, p.product_id ASC

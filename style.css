@@ -2508,7 +2508,7 @@ footer {
 /* ===================== PAGE SHELL ===================== */
 .admin-dashboard-page {
     height: 100vh;
-    background: #f0eff4;
+    background: #0d0d0d;
     overflow: hidden;
 }
 
@@ -2524,7 +2524,7 @@ footer {
     grid-template-columns: 1fr;
     width: 100%;
     height: 100vh;
-    background: #f0eff4;
+    background: var(--bg);
     border: none;
     box-shadow: none;
 }
@@ -2541,8 +2541,8 @@ footer {
     width: 210px;
     overflow-y: auto;
     overflow-x: hidden;
-    background: #232323;
-    color: #fff;
+    background: var(--surface-strong);
+    color: var(--text);
     transform: translateX(-100%);
     transition: transform 0.3s ease;
 }
@@ -2648,7 +2648,7 @@ footer {
     flex-direction: column;
     height: 100vh;
     overflow: hidden;
-    background: #f0eff4;
+    background: var(--bg);
 }
 
 .ADMIN-TOPBAR {
@@ -2656,8 +2656,8 @@ footer {
     align-items: center;
     justify-content: space-between;
     padding: 14px 22px;
-    background: #faf9fc;
-    border-bottom: 1px solid #d7d7d7;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
     z-index: 5000;
     position: relative;
     flex-shrink: 0;
@@ -2677,14 +2677,14 @@ footer {
     height: 38px;
     border: 1px solid transparent;
     background: transparent;
-    color: #444;
+    color: var(--text-muted);
     font-size: 1rem;
     cursor: pointer;
     transition: color 0.2s ease;
 }
 
 .ADMIN-MENU-BUTTON:hover {
-    color: #ff4da6;
+    color: var(--primary);
 }
 
 .ADMIN-TOPBAR-ACTIONS {
@@ -2840,14 +2840,14 @@ footer {
 }
 
 .ADMIN-INTRO h2 {
-    color: #111;
+    color: var(--text);
     font-size: 1.8rem;
     font-weight: 700;
 }
 
 .ADMIN-INTRO p {
     margin-top: 2px;
-    color: #666;
+    color: var(--text-muted);
     font-family: "Nunito", sans-serif;
     font-size: 1rem;
 }
@@ -2861,19 +2861,19 @@ footer {
 
 .ADMIN-STAT-CARD {
     padding: 16px 16px;
-    border: 1px solid #d6d6d6;
+    border: 1px solid var(--border);
     border-radius: 8px;
-    background: #faf9fc;
+    background: var(--surface);
 }
 
 .ADMIN-STAT-ICON {
-    color: #2f2f2f;
+    color: var(--text-muted);
     font-size: 1.2rem;
 }
 
 .ADMIN-STAT-CARD h3 {
     margin-top: 10px;
-    color: #242424;
+    color: var(--text-muted);
     font-size: 0.96rem;
     font-weight: 500;
 }
@@ -2881,7 +2881,7 @@ footer {
 .ADMIN-STAT-CARD strong {
     display: block;
     margin-top: 2px;
-    color: #111;
+    color: var(--text);
     font-family: "Poppins", sans-serif;
     font-size: 1.8rem;
     line-height: 1;
@@ -2891,7 +2891,7 @@ footer {
 
 .ADMIN-STAT-CARD p {
     margin-top: 4px;
-    color: #646464;
+    color: var(--text-muted);
     font-family: "Nunito", sans-serif;
     font-size: 0.88rem;
 }
@@ -2910,7 +2910,7 @@ footer {
 }
 
 .ADMIN-TABLE-HEADER h3 {
-    color: #171717;
+    color: var(--text);
     font-size: 1.15rem;
     font-weight: 700;
 }
@@ -2921,10 +2921,10 @@ footer {
     justify-content: center;
     min-width: 90px;
     padding: 8px 14px;
-    border: 1px solid #cfcfcf;
+    border: 1px solid var(--border);
     border-radius: 8px;
-    color: #222;
-    background: #f0eff4;
+    color: var(--text);
+    background: var(--surface-muted);
     font-size: 0.9rem;
     font-weight: 500;
     text-decoration: none;
@@ -2932,9 +2932,9 @@ footer {
 
 .ADMIN-TABLE-WRAP {
     overflow-x: auto;
-    border: 1px solid #d8d8d8;
+    border: 1px solid var(--border);
     border-radius: 8px;
-    background: #faf9fc;
+    background: var(--surface);
 }
 
 .ADMIN-TABLE {
@@ -2948,14 +2948,14 @@ footer {
 }
 
 .ADMIN-TABLE thead {
-    background: #f1f1f1;
+    background: var(--surface-strong);
 }
 
 .ADMIN-TABLE th,
 .ADMIN-TABLE td {
     padding: 10px 14px;
-    border-bottom: 1px solid #e5e5e5;
-    color: #1b1b1b;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
     font-size: 0.9rem;
     text-align: left;
 }
@@ -3012,51 +3012,51 @@ footer {
 }
 
 .ADMIN-STATUS.pending {
-    color: #b36b00;
-    background: #fff2d8;
-    border: 1px solid #ffcf7b;
+    color: #ffc107;
+    background: rgba(255, 193, 7, 0.12);
+    border: 1px solid rgba(255, 193, 7, 0.35);
 }
 
 .ADMIN-STATUS.unpaid {
-    color: #b36b00;
-    background: #fff2d8;
-    border: 1px solid #ffcf7b;
+    color: #ffc107;
+    background: rgba(255, 193, 7, 0.12);
+    border: 1px solid rgba(255, 193, 7, 0.35);
 }
 
 .ADMIN-STATUS.preparing {
-    color: #0f8d62;
-    background: #dcfff0;
-    border: 1px solid #97e4c5;
+    color: #17a2b8;
+    background: rgba(23, 162, 184, 0.12);
+    border: 1px solid rgba(23, 162, 184, 0.35);
 }
 
 .ADMIN-STATUS.completed {
-    color: #2b7f32;
-    background: #e7f8df;
-    border: 1px solid #a6d497;
+    color: #28a745;
+    background: rgba(40, 167, 69, 0.12);
+    border: 1px solid rgba(40, 167, 69, 0.35);
 }
 
 .ADMIN-STATUS.active {
-    color: #2b7f32;
-    background: #e7f8df;
-    border: 1px solid #a6d497;
+    color: #28a745;
+    background: rgba(40, 167, 69, 0.12);
+    border: 1px solid rgba(40, 167, 69, 0.35);
 }
 
 .ADMIN-STATUS.inactive {
-    color: #7a7a7a;
-    background: #f0f0f0;
-    border: 1px solid #d7d7d7;
+    color: var(--text-muted);
+    background: var(--surface-muted);
+    border: 1px solid var(--border);
 }
 
 .ADMIN-STATUS.paid {
-    color: #2b7f32;
-    background: #e7f8df;
-    border: 1px solid #a6d497;
+    color: #28a745;
+    background: rgba(40, 167, 69, 0.12);
+    border: 1px solid rgba(40, 167, 69, 0.35);
 }
 
 .ADMIN-STATUS.refunded {
-    color: #c68000;
-    background: #fff2d8;
-    border: 1px solid #ffcf7b;
+    color: #a78bfa;
+    background: rgba(111, 66, 193, 0.15);
+    border: 1px solid rgba(111, 66, 193, 0.4);
 }
 
 .ADMIN-STATUS.scheduled {
@@ -4810,9 +4810,9 @@ footer {
 .confirm-order-page {
     min-height: 100vh;
     background:
-        radial-gradient(circle at 12% 18%, rgba(255, 77, 166, 0.12), transparent 28%),
-        radial-gradient(circle at 88% 82%, rgba(255, 77, 166, 0.16), transparent 30%),
-        #f7f5f9;
+        radial-gradient(circle at 12% 18%, rgba(255, 77, 166, 0.10), transparent 28%),
+        radial-gradient(circle at 88% 82%, rgba(255, 77, 166, 0.14), transparent 30%),
+        #0d0d0d;
 }
 
 .confirm-order-page .navbar,
@@ -4825,7 +4825,7 @@ footer {
     margin: 0 auto;
     min-height: 100vh;
     padding: 124px 0 0;
-    background: #f7f5f9;
+    background: transparent;
 }
 
 .CONFIRM-ORDER-CARD {
@@ -4851,13 +4851,13 @@ footer {
 
 .PAYMENT-METHODS {
     padding-left: 40px;
-    border-left: 2px solid rgba(13, 13, 13, 0.08);
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .ORDER-SUMMARY h2,
 .PAYMENT-METHODS h2 {
     margin-bottom: 14px;
-    color: #111;
+    color: #f5f1f8;
     font-size: 2rem;
     font-weight: 800;
     letter-spacing: 0.02em;
@@ -4865,7 +4865,7 @@ footer {
 
 .ORDER-COUNT {
     margin-bottom: 28px;
-    color: #2f2f2f;
+    color: rgba(245, 241, 248, 0.72);
     font-size: 1.15rem;
     font-weight: 600;
 }
@@ -4876,16 +4876,16 @@ footer {
     align-items: center;
     gap: 18px;
     padding: 18px 0 28px;
-    border-bottom: 2px solid rgba(13, 13, 13, 0.08);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .ORDER-ITEM-IMAGE {
     overflow: hidden;
     width: 96px;
     height: 96px;
-    border: 1px solid rgba(13, 13, 13, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 18px;
-    background: #fff;
+    background: #1f1f1f;
 }
 
 .ORDER-ITEM-IMAGE img {
@@ -4897,7 +4897,7 @@ footer {
 
 .ORDER-ITEM-DETAILS h3 {
     margin-bottom: 0;
-    color: #111;
+    color: #f5f1f8;
     font-size: 1.6rem;
     font-weight: 700;
     line-height: 1;
@@ -4911,7 +4911,7 @@ footer {
 }
 
 .ORDER-ITEM-CATEGORY {
-    color: #4c4c4c;
+    color: rgba(245, 241, 248, 0.6);
     font-family: "Nunito", sans-serif;
     font-size: 1rem;
     font-weight: 700;
@@ -4929,7 +4929,7 @@ footer {
     justify-content: space-between;
     align-items: baseline;
     gap: 16px;
-    color: #111;
+    color: #f5f1f8;
     font-family: "Courier New", monospace;
     font-size: 1.1rem;
     width: 100%;
@@ -4937,7 +4937,7 @@ footer {
 
 .ORDER-ITEM-BREAKDOWN-LABEL {
     margin-top: 2px;
-    color: #111;
+    color: #f5f1f8;
     font-family: "Courier New", monospace;
     font-size: 1.1rem;
     font-weight: 700;
@@ -4948,7 +4948,7 @@ footer {
 }
 
 .ORDER-ITEM-BREAKDOWN-ADDON span:last-child {
-    color: #999;
+    color: rgba(245, 241, 248, 0.5);
 }
 
 .ORDER-ITEM-BREAKDOWN-TOTAL {
@@ -4959,13 +4959,13 @@ footer {
 }
 
 .ORDER-ITEM-DETAILS p {
-    color: #444444;
+    color: rgba(245, 241, 248, 0.72);
     font-family: "Nunito", sans-serif;
     font-size: 1.08rem;
 }
 
 .ORDER-ITEM-PRICE {
-    color: #111;
+    color: #f5f1f8;
     font-size: 1.5rem;
 }
 
@@ -4978,7 +4978,7 @@ footer {
     justify-content: space-between;
     align-items: center;
     padding: 10px 0;
-    color: #222;
+    color: #f5f1f8;
     font-size: 1.15rem;
 }
 
@@ -4990,7 +4990,7 @@ footer {
 .GRAND-TOTAL {
     margin-top: 12px;
     padding-top: 22px;
-    border-top: 2px solid rgba(13, 13, 13, 0.08);
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
     font-size: 1.85rem;
 }
 
@@ -5011,9 +5011,14 @@ footer {
     gap: 16px;
     min-height: 92px;
     padding: 0 24px;
-    border: 1px solid rgba(13, 13, 13, 0.1);
-    background: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #181818;
     cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.PAYMENT-OPTION:hover {
+    background: #1f1f1f;
 }
 
 .PAYMENT-OPTION + .PAYMENT-OPTION {
@@ -5029,20 +5034,20 @@ footer {
 .PAYMENT-OPTION-CIRCLE {
     width: 28px;
     height: 28px;
-    border: 2px solid rgba(13, 13, 13, 0.28);
+    border: 2px solid rgba(255, 255, 255, 0.35);
     border-radius: 50%;
     flex: 0 0 28px;
 }
 
 .PAYMENT-OPTION-LABEL {
-    color: #111;
+    color: #f5f1f8;
     font-size: 1.15rem;
     font-weight: 600;
 }
 
 .PAYMENT-OPTION input:checked + .PAYMENT-OPTION-CIRCLE {
-    border-color: #111;
-    box-shadow: inset 0 0 0 6px #fff, inset 0 0 0 14px #111;
+    border-color: #ff4da6;
+    box-shadow: inset 0 0 0 6px #181818, inset 0 0 0 14px #ff4da6;
 }
 
 .PLACE-ORDER-BUTTON {
@@ -5200,16 +5205,17 @@ footer {
 .ADMIN-STATUS-TABLE-CARD {
     display: flex;
     flex-direction: column;
-    background: #faf9fc;
-    border-radius: 12px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    background: var(--surface);
+    border-radius: 8px;
+    box-shadow: none;
     overflow: hidden;
-    flex: 0 0 320px;
-    width: 320px;
-    min-width: 320px;
-    max-width: 320px;
-    min-height: 560px;
+    flex: 0 0 280px;
+    width: 280px;
+    min-width: 260px;
+    max-width: none;
+    min-height: 0;
     max-height: 100%;
+    border: 1px solid var(--border);
 }
 
 .ADMIN-STATUS-TABLE-HEADER {
@@ -5217,14 +5223,14 @@ footer {
     justify-content: space-between;
     align-items: center;
     padding: 16px 20px;
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
+    background: var(--surface-strong);
+    border-bottom: 1px solid var(--border);
 }
 
 .ADMIN-STATUS-TABLE-HEADER h3 {
     font-size: 1.05rem;
     font-weight: 700;
-    color: #2c3e50;
+    color: var(--text);
     margin: 0;
 }
 
@@ -5258,22 +5264,22 @@ footer {
     background-color: #dc3545;
 }
 
+.ADMIN-STATUS-BADGE.refunded {
+    background-color: #6f42c1;
+}
+
 /* Scrollable Table Wrapper */
 .ADMIN-STATUS-TABLE-WRAP {
     max-height: 520px;
     overflow-y: auto;
     overflow-x: hidden;
     flex: 1;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 .ADMIN-STATUS-TABLE-WRAP::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-}
-
-.ADMIN-STATUS-TABLE-WRAP {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    display: none;
 }
 
 .ADMIN-STATUS-TABLE {
@@ -5285,7 +5291,7 @@ footer {
 .ADMIN-STATUS-TABLE thead {
     position: sticky;
     top: 0;
-    background: #f8f9fa;
+    background: var(--surface-strong);
     z-index: 1;
 }
 
@@ -5293,18 +5299,18 @@ footer {
     padding: 12px 16px;
     text-align: left;
     font-weight: 600;
-    color: #495057;
-    border-bottom: 2px solid #dee2e6;
+    color: var(--text-muted);
+    border-bottom: 2px solid var(--border);
 }
 
 .ADMIN-STATUS-TABLE td {
     padding: 12px 16px;
-    border-bottom: 1px solid #dee2e6;
-    color: #212529;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
 }
 
 .ADMIN-STATUS-TABLE tbody tr:hover {
-    background-color: #f8f9fa;
+    background-color: var(--surface-muted);
 }
 
 .ADMIN-STATUS-TABLE tbody tr:last-child td {
@@ -5314,7 +5320,7 @@ footer {
 .ADMIN-TABLE-EMPTY {
     text-align: center;
     padding: 30px 16px;
-    color: #6c757d;
+    color: var(--text-muted);
     font-size: 0.9rem;
 }
 
@@ -5330,15 +5336,15 @@ footer {
     border: none;
     cursor: pointer;
     font-size: 1.1rem;
-    color: #007bff;
+    color: var(--primary);
     padding: 4px 8px;
     border-radius: 4px;
     transition: all 0.2s ease;
 }
 
 .ADMIN-TABLE-ACTIONS button:hover {
-    background-color: #e7f3ff;
-    color: #0056b3;
+    background-color: rgba(255, 77, 166, 0.12);
+    color: var(--primary-dark);
 }
 
 /* Modal Styles - Matching Admin Interface */
@@ -5349,7 +5355,7 @@ footer {
     display: grid;
     place-items: center;
     padding: 24px;
-    background: rgba(19, 19, 19, 0.28);
+    background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(2px);
 }
 
@@ -5359,10 +5365,10 @@ footer {
 
 .ADMIN-MODAL {
     width: min(500px, 100%);
-    background: #faf9fc;
-    border: 1px solid #cfcfcf;
+    background: var(--surface-strong);
+    border: 1px solid var(--border);
     border-radius: 8px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.16);
+    box-shadow: var(--shadow);
     max-height: 90vh;
     overflow-y: auto;
     animation: modalSlideIn 0.3s ease;
@@ -5384,11 +5390,11 @@ footer {
     align-items: center;
     justify-content: space-between;
     padding: 18px 18px 10px;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid var(--border);
 }
 
 .ADMIN-MODAL-HEADER h3 {
-    color: #1b1b1b;
+    color: var(--text);
     font-size: 1.25rem;
     font-weight: 700;
     margin: 0;
@@ -5402,7 +5408,7 @@ footer {
     height: 28px;
     border: none;
     background: transparent;
-    color: #6c6c6c;
+    color: var(--text-muted);
     font-size: 1rem;
     cursor: pointer;
     border-radius: 4px;
@@ -5410,8 +5416,8 @@ footer {
 }
 
 .ADMIN-MODAL-CLOSE:hover {
-    background: #f8f9fa;
-    color: #212529;
+    background: var(--surface-muted);
+    color: var(--text);
 }
 
 .ADMIN-MODAL-BODY {
@@ -5425,7 +5431,7 @@ footer {
 .ADMIN-MODAL-DETAIL-LABEL {
     font-size: 0.85rem;
     font-weight: 600;
-    color: #6c757d;
+    color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 4px;
@@ -5433,12 +5439,12 @@ footer {
 
 .ADMIN-MODAL-DETAIL-VALUE {
     font-size: 1rem;
-    color: #212529;
+    color: var(--text);
     font-weight: 500;
 }
 
 .ADMIN-MODAL-STATUS-VALUE {
-    color: #007bff;
+    color: var(--primary);
     font-weight: 700;
     text-transform: capitalize;
 }
@@ -5462,17 +5468,17 @@ footer {
     height: 4px;
     overflow: hidden;
     border-radius: 2px;
-    background: #f0f0f0;
+    background: var(--surface-muted);
 }
 
 .ADMIN-SALES-BAR-FILL {
     width: 0;
     height: 100%;
-    background: #e91e63;
+    background: var(--primary);
 }
 
 .ADMIN-MODAL-ITEMS-LIST {
-    background: #f8f9fa;
+    background: var(--surface-muted);
     border-radius: 8px;
     padding: 12px;
     margin-top: 8px;
@@ -5480,7 +5486,7 @@ footer {
 
 .ADMIN-MODAL-ITEM {
     padding: 8px 0;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid var(--border);
 }
 
 .ADMIN-MODAL-ITEM:last-child {
@@ -5489,13 +5495,13 @@ footer {
 
 .ADMIN-MODAL-ITEM-NAME {
     font-weight: 600;
-    color: #212529;
+    color: var(--text);
     font-size: 0.95rem;
 }
 
 .ADMIN-MODAL-ITEM-DETAILS {
     font-size: 0.85rem;
-    color: #6c757d;
+    color: var(--text-muted);
     margin-top: 2px;
 }
 
@@ -5503,13 +5509,14 @@ footer {
     display: flex;
     gap: 10px;
     padding: 16px 18px;
-    border-top: 1px solid #e9ecef;
+    border-top: 1px solid var(--border);
     justify-content: flex-end;
     flex-wrap: wrap;
 }
 
 .ADMIN-MODAL-CANCEL-BTN,
 .ADMIN-MODAL-NEXT-BTN,
+.ADMIN-MODAL-REFUND-BTN,
 .ADMIN-MODAL-CLOSE-BTN {
     min-width: 90px;
     height: 32px;
@@ -5522,13 +5529,13 @@ footer {
 }
 
 .ADMIN-MODAL-CANCEL-BTN {
-    border: 1px solid #cfcfcf;
-    background: #f0eff4;
-    color: #333;
+    border: 1px solid var(--border);
+    background: var(--surface-muted);
+    color: var(--text);
 }
 
 .ADMIN-MODAL-CANCEL-BTN:hover {
-    background-color: #e8e6ef;
+    background-color: var(--surface);
 }
 
 .ADMIN-MODAL-NEXT-BTN {
@@ -5541,14 +5548,24 @@ footer {
     background-color: #218838;
 }
 
+.ADMIN-MODAL-REFUND-BTN {
+    border: none;
+    background: #6f42c1;
+    color: #fff;
+}
+
+.ADMIN-MODAL-REFUND-BTN:hover {
+    background-color: #5a32a3;
+}
+
 .ADMIN-MODAL-CLOSE-BTN {
-    border: 1px solid #cfcfcf;
-    background: #f0eff4;
-    color: #333;
+    border: 1px solid var(--border);
+    background: var(--surface-muted);
+    color: var(--text);
 }
 
 .ADMIN-MODAL-CLOSE-BTN:hover {
-    background-color: #e8e6ef;
+    background-color: var(--surface);
 }
 
 /* Fixed viewport order board overrides */
@@ -5571,38 +5588,67 @@ footer {
     margin-top: 12px;
 }
 
+/* Orders board: single horizontal row of four cards */
 .ADMIN-ORDERS-GRID {
     flex: 1;
     min-height: 0;
     display: flex;
+    flex-direction: row;
     flex-wrap: nowrap;
     gap: 12px;
-    width: 100%;
     margin-top: 14px;
-    padding: 0;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 4px;
+}
+
+.ADMIN-ORDERS-GRID::-webkit-scrollbar {
+    height: 6px;
+}
+
+.ADMIN-ORDERS-GRID::-webkit-scrollbar-track {
+    background: var(--surface-muted);
+    border-radius: 3px;
+}
+
+.ADMIN-ORDERS-GRID::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 3px;
 }
 
 .ADMIN-STATUS-TABLE-CARD {
-    flex: 1 1 0;
+    flex: 1 1 auto;
     width: auto;
-    min-width: 0;
+    min-width: 260px;
     max-width: none;
     min-height: 0;
     height: 100%;
-    border: 1px solid #d8d8d8;
+    max-height: none;
+    border: 1px solid var(--border);
     border-radius: 8px;
     box-shadow: none;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
 }
 
 .ADMIN-STATUS-TABLE-HEADER {
     flex-shrink: 0;
     padding: 12px 14px;
+    background: var(--surface-strong);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px 8px 0 0;
 }
 
 .ADMIN-STATUS-TABLE-HEADER h3 {
     font-size: clamp(0.78rem, 1vw, 1.05rem);
     line-height: 1.25;
+    color: var(--text);
+    margin: 0;
+    font-weight: 700;
 }
 
 .ADMIN-STATUS-BADGE {
@@ -5610,6 +5656,33 @@ footer {
     height: 28px;
     padding: 0 8px;
     font-size: 0.78rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.ADMIN-STATUS-BADGE.pending {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.ADMIN-STATUS-BADGE.preparing {
+    background-color: #17a2b8;
+}
+
+.ADMIN-STATUS-BADGE.completed {
+    background-color: #28a745;
+}
+
+.ADMIN-STATUS-BADGE.cancelled {
+    background-color: #dc3545;
+}
+
+.ADMIN-STATUS-BADGE.refunded {
+    background-color: #6f42c1;
 }
 
 .ADMIN-STATUS-TABLE-WRAP {
@@ -5629,13 +5702,42 @@ footer {
 .ADMIN-STATUS-TABLE {
     table-layout: fixed;
     min-width: 0;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
 }
 
-.ADMIN-STATUS-TABLE th,
+.ADMIN-STATUS-TABLE thead {
+    position: sticky;
+    top: 0;
+    background: var(--surface-strong);
+    z-index: 1;
+}
+
+.ADMIN-STATUS-TABLE th {
+    padding: 10px 8px;
+    font-size: 0.82rem;
+    overflow-wrap: anywhere;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-muted);
+    border-bottom: 2px solid var(--border);
+}
+
 .ADMIN-STATUS-TABLE td {
     padding: 10px 8px;
     font-size: 0.82rem;
     overflow-wrap: anywhere;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+}
+
+.ADMIN-STATUS-TABLE tbody tr:hover {
+    background-color: var(--surface-muted);
+}
+
+.ADMIN-STATUS-TABLE tbody tr:last-child td {
+    border-bottom: none;
 }
 
 .ADMIN-STATUS-TABLE th:nth-child(1),
@@ -5793,9 +5895,9 @@ footer {
     gap: 14px;
     margin-bottom: 18px;
     padding: 12px;
-    border: 1px solid #e9ecef;
+    border: 1px solid var(--border);
     border-radius: 8px;
-    background: #f8f9fa;
+    background: var(--surface-muted);
 }
 
 .ADMIN-USER-MODAL-AVATAR {
@@ -5807,9 +5909,9 @@ footer {
     flex: 0 0 62px;
     overflow: hidden;
     border-radius: 50%;
-    border: 1px solid #d5d5d5;
-    background: #f0eff4;
-    color: #ff4da6;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--primary);
 }
 
 .ADMIN-USER-MODAL-AVATAR img,
@@ -5830,14 +5932,14 @@ footer {
 
 .ADMIN-USER-MODAL-PROFILE h4 {
     margin: 0;
-    color: #1b1b1b;
+    color: var(--text);
     font-size: 1.05rem;
     font-weight: 800;
 }
 
 .ADMIN-USER-MODAL-PROFILE p {
     margin: 2px 0 0;
-    color: #6c757d;
+    color: var(--text-muted);
     font-size: 0.9rem;
     font-weight: 700;
 }
@@ -5857,10 +5959,10 @@ footer {
 .ADMIN-USER-STATUS-BTN {
     min-width: 92px;
     height: 34px;
-    border: 1px solid #cfcfcf;
+    border: 1px solid var(--border);
     border-radius: 4px;
-    background: #f0eff4;
-    color: #333;
+    background: var(--surface-muted);
+    color: var(--text);
     font-size: 0.8rem;
     font-weight: 800;
     cursor: pointer;
@@ -5869,16 +5971,23 @@ footer {
 
 .ADMIN-USER-STATUS-BTN:hover,
 .ADMIN-USER-STATUS-BTN.active {
-    border-color: #ff4da6;
-    background: #ff4da6;
+    border-color: var(--primary);
+    background: var(--primary);
     color: #fff;
+}
+
+.ADMIN-USER-STATUS-BTN.is-locked,
+.ADMIN-USER-STATUS-BTN:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
 #user-details-modal .ADMIN-MODAL-CLOSE:focus-visible,
 #user-details-modal .ADMIN-MODAL-CLOSE-BTN:focus-visible,
 .view-user-btn:focus-visible,
 .ADMIN-USER-STATUS-BTN:focus-visible {
-    outline: 2px solid #ff4da6;
+    outline: 2px solid var(--primary);
     outline-offset: 2px;
 }
 
@@ -5905,24 +6014,44 @@ footer {
 .ADMIN-PAYMENTS-GRID {
     flex: 1;
     min-height: 0;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
     gap: 12px;
     margin-top: 14px;
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 4px;
+}
+
+.ADMIN-PAYMENTS-GRID::-webkit-scrollbar {
+    height: 6px;
+}
+
+.ADMIN-PAYMENTS-GRID::-webkit-scrollbar-track {
+    background: var(--surface-muted);
+    border-radius: 3px;
+}
+
+.ADMIN-PAYMENTS-GRID::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 3px;
 }
 
 .ADMIN-PAYMENTS-TABLE-CARD {
     flex: 1 1 auto;
     width: auto;
-    min-width: 0;
+    min-width: 260px;
     max-width: none;
     min-height: 0;
     height: 100%;
     max-height: none;
-    border: 1px solid #d8d8d8;
+    border: 1px solid var(--border);
     border-radius: 8px;
     box-shadow: none;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
 }
 
 .ADMIN-PAYMENTS-METHOD-TABLE {
@@ -6145,7 +6274,6 @@ footer {
     }
 
     .ADMIN-PAYMENTS-GRID {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 8px;
     }
 

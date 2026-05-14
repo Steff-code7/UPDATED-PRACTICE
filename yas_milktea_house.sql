@@ -95,7 +95,7 @@ CREATE TABLE `orders` (
   `order_date` datetime NOT NULL,
   `order_type` enum('dine-in','to-go','delivery') NOT NULL DEFAULT 'to-go',
   `total_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `status` enum('pending','preparing','completed','cancelled') NOT NULL DEFAULT 'pending'
+  `status` enum('pending','preparing','completed','cancelled', 'refunded') NOT NULL DEFAULT 'pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --

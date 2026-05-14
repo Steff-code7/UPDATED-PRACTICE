@@ -202,15 +202,36 @@ const AdminProfile = (() => {
 
   function hideUnauthorizedModules(role) {
     const isStaff = String(role || '').toLowerCase() === 'staff';
-    qsa('a[href="adminCustomers.html"]').forEach((link) => {
-      link.hidden = isStaff;
-      if (isStaff) {
-        link.style.pointerEvents = 'none';
-      }
+
+    // Modules staff cannot access
+    const restrictedHrefs = ['adminCustomers.html', 'adminPayments.html'];
+
+    restrictedHrefs.forEach((href) => {
+      qsa(`a[href="${href}"]`).forEach((link) => {
+        if (isStaff) {
+          // Don't hide — keep visible but intercept clicks with a popup
+          link.style.pointerEvents = '';
+          link.style.opacity = '0.5';
+          link.style.cursor = 'not-allowed';
+          // Remove any previously attached listener before adding a new one
+          if (!link._staffRestricted) {
+            link._staffRestricted = true;
+            link.addEventListener('click', function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              alert('Only admins can access this module.');
+            });
+          }
+        }
+      });
     });
 
-    if (isStaff && window.location.pathname.toLowerCase().includes('admincustomers.html')) {
-      window.location.href = 'adminDashboard.html';
+    // Hard redirect if staff somehow lands on a restricted page
+    if (isStaff) {
+      const path = window.location.pathname.toLowerCase();
+      if (path.includes('admincustomers.html') || path.includes('adminpayments.html')) {
+        window.location.href = 'adminDashboard.html';
+      }
     }
   }
 
