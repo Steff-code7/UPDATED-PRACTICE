@@ -359,7 +359,7 @@ textarea {
     height: 100%;
     object-fit: cover;
     display: block;
-    filter: blur(5px);
+    filter: blur(3px);
 }
 
 .overlay {
@@ -920,7 +920,7 @@ textarea {
     object-fit: cover;
     object-position: center 35%;
     display: block;
-    filter: blur(5px);
+    filter: blur(3px);
 }
 /* =====================================================
    HOME PAGE SECTIONS
