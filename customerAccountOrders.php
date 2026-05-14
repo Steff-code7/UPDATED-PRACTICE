@@ -31,6 +31,27 @@ $activePage = 'order-history';
         </div>
     </main>
 
+    <!-- ===================== ORDER DETAIL MODAL ===================== -->
+    <div class="ORDER-DETAIL-OVERLAY" id="order-detail-modal" hidden aria-modal="true" role="dialog" aria-labelledby="order-detail-title">
+        <div class="ORDER-DETAIL-DIALOG">
+            <div class="ORDER-DETAIL-HEADER">
+                <h3 id="order-detail-title">Order Details</h3>
+                <button type="button" class="ORDER-DETAIL-CLOSE" id="order-detail-close" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="ORDER-DETAIL-BODY" id="order-detail-body"></div>
+            <div class="ORDER-DETAIL-FOOTER">
+                <button type="button" class="ORDER-DETAIL-CANCEL-BTN" id="order-detail-cancel-btn" hidden>
+                    Cancel Order
+                </button>
+                <button type="button" class="ORDER-DETAIL-CLOSE-BTN" id="order-detail-close-btn">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
     <footer id="footer">
         <div class="FOOTER-CONTAINER">
             <div class="FOOTER-IMG-CONTAINER">

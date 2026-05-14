@@ -296,29 +296,177 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            let html = '<div class="ACCOUNT-ORDER-TABLE"><div class="ACCOUNT-ORDER-ROW ACCOUNT-ORDER-HEAD"><span>ORDER ID</span><span>DATE</span><span>ITEMS</span><span>TOTAL</span><span>STATUS</span></div>';
+            let html = `<div class="ACCOUNT-ORDER-TABLE">
+                <div class="ACCOUNT-ORDER-ROW ACCOUNT-ORDER-HEAD">
+                    <span>ORDER ID</span>
+                    <span>DATE</span>
+                    <span>ITEMS</span>
+                    <span>TOTAL</span>
+                    <span>STATUS</span>
+                </div>`;
 
             data.orders.forEach(order => {
                 if (!order.order_date || order.order_date === '0000-00-00 00:00:00') return;
-                
                 const statusClass = order.status.toLowerCase();
+                const displayId = order.order_display_id || order.order_id;
+                const itemsPreview = order.items
+                    ? order.items.substring(0, 40) + (order.items.length > 40 ? '...' : '')
+                    : 'N/A';
+                const total = '₱' + parseFloat(order.total_amount).toFixed(2);
+                const statusLabel = order.status.charAt(0).toUpperCase() + order.status.slice(1);
+
                 html += `
-                    <div class="ACCOUNT-ORDER-ROW">
-                        <span>${order.order_display_id || order.order_id}</span>
+                    <div class="ACCOUNT-ORDER-ROW ACCOUNT-ORDER-ROW--clickable"
+                         role="button" tabindex="0"
+                         data-order-id="${order.order_id}"
+                         data-order-display-id="${displayId}"
+                         data-order-date="${order.formatted_date}"
+                         data-order-items="${escapeAttr(order.items || 'N/A')}"
+                         data-order-total="${total}"
+                         data-order-status="${order.status}"
+                         aria-label="View details for order ${displayId}">
+                        <span>${displayId}</span>
                         <span>${order.formatted_date}</span>
-                        <span>${order.items ? order.items.substring(0, 40) + (order.items.length > 40 ? '...' : '') : 'N/A'}</span>
-                        <span>₱${parseFloat(order.total_amount).toFixed(2)}</span>
-                        <span class="ACCOUNT-STATUS ${statusClass}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span>
-                    </div>
-                `;
+                        <span>${itemsPreview}</span>
+                        <span>${total}</span>
+                        <span class="ACCOUNT-STATUS ${statusClass}">${statusLabel}</span>
+                    </div>`;
             });
 
             html += '</div>';
             container.innerHTML = html;
 
+            // Attach click + keyboard handlers to each row
+            container.querySelectorAll('.ACCOUNT-ORDER-ROW--clickable').forEach(row => {
+                row.addEventListener('click', () => openOrderDetail(row));
+                row.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        openOrderDetail(row);
+                    }
+                });
+            });
+
         } catch (error) {
             container.innerHTML = '<div class="empty-state"><p>Error loading orders: ' + error.message + '</p></div>';
         }
+    }
+
+    // Escape special chars for data attributes
+    function escapeAttr(str) {
+        return String(str ?? '').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+    }
+
+    // ==================== ORDER DETAIL MODAL ====================
+    const orderDetailModal   = document.getElementById('order-detail-modal');
+    const orderDetailBody    = document.getElementById('order-detail-body');
+    const orderDetailClose   = document.getElementById('order-detail-close');
+    const orderDetailCloseBtn = document.getElementById('order-detail-close-btn');
+    const orderDetailCancelBtn = document.getElementById('order-detail-cancel-btn');
+
+    let activeOrderId = null;
+
+    function openOrderDetail(row) {
+        if (!orderDetailModal) return;
+
+        activeOrderId = row.dataset.orderId;
+        const displayId = row.dataset.orderDisplayId;
+        const date      = row.dataset.orderDate;
+        const items     = row.dataset.orderItems;
+        const total     = row.dataset.orderTotal;
+        const status    = row.dataset.orderStatus;
+        const statusClass = status.toLowerCase();
+        const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
+
+        // Build items list
+        const itemLines = items !== 'N/A'
+            ? items.split(', ').map(i => `<li>${i}</li>`).join('')
+            : '<li>N/A</li>';
+
+        orderDetailBody.innerHTML = `
+            <div class="ORDER-DETAIL-ROW">
+                <span class="ORDER-DETAIL-LABEL">Order ID</span>
+                <span class="ORDER-DETAIL-VALUE">${displayId}</span>
+            </div>
+            <div class="ORDER-DETAIL-ROW">
+                <span class="ORDER-DETAIL-LABEL">Date</span>
+                <span class="ORDER-DETAIL-VALUE">${date}</span>
+            </div>
+            <div class="ORDER-DETAIL-ROW">
+                <span class="ORDER-DETAIL-LABEL">Status</span>
+                <span class="ORDER-DETAIL-VALUE"><span class="ACCOUNT-STATUS ${statusClass}">${statusLabel}</span></span>
+            </div>
+            <div class="ORDER-DETAIL-ROW">
+                <span class="ORDER-DETAIL-LABEL">Total</span>
+                <span class="ORDER-DETAIL-VALUE">${total}</span>
+            </div>
+            <div class="ORDER-DETAIL-ROW ORDER-DETAIL-ROW--items">
+                <span class="ORDER-DETAIL-LABEL">Items</span>
+                <ul class="ORDER-DETAIL-ITEMS">${itemLines}</ul>
+            </div>
+        `;
+
+        // Show Cancel button only for pending orders
+        if (orderDetailCancelBtn) {
+            orderDetailCancelBtn.hidden = status.toLowerCase() !== 'pending';
+        }
+
+        orderDetailModal.hidden = false;
+        orderDetailModal.classList.add('active');
+        document.body.classList.add('modal-active');
+        orderDetailModal.querySelector('.ORDER-DETAIL-DIALOG').focus();
+    }
+
+    function closeOrderDetail() {
+        if (!orderDetailModal) return;
+        orderDetailModal.classList.remove('active');
+        orderDetailModal.hidden = true;
+        document.body.classList.remove('modal-active');
+        activeOrderId = null;
+    }
+
+    if (orderDetailClose)    orderDetailClose.addEventListener('click', closeOrderDetail);
+    if (orderDetailCloseBtn) orderDetailCloseBtn.addEventListener('click', closeOrderDetail);
+    if (orderDetailModal) {
+        orderDetailModal.addEventListener('click', e => {
+            if (e.target === orderDetailModal) closeOrderDetail();
+        });
+    }
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && orderDetailModal && !orderDetailModal.hidden) closeOrderDetail();
+    });
+
+    if (orderDetailCancelBtn) {
+        orderDetailCancelBtn.addEventListener('click', async () => {
+            if (!activeOrderId) return;
+            if (!confirm('Are you sure you want to cancel this order?')) return;
+
+            orderDetailCancelBtn.disabled = true;
+            orderDetailCancelBtn.textContent = 'Cancelling…';
+
+            try {
+                const csrfToken = getCsrfToken();
+                const res = await fetch('api/update_order_status.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ order_id: activeOrderId, status: 'cancelled', csrf_token: csrfToken })
+                });
+                const result = await res.json();
+
+                if (result.success) {
+                    closeOrderDetail();
+                    await loadOrderHistory(); // Refresh the list
+                } else {
+                    alert('Could not cancel order: ' + (result.message || 'Unknown error.'));
+                    orderDetailCancelBtn.disabled = false;
+                    orderDetailCancelBtn.textContent = 'Cancel Order';
+                }
+            } catch (err) {
+                alert('Error cancelling order: ' + err.message);
+                orderDetailCancelBtn.disabled = false;
+                orderDetailCancelBtn.textContent = 'Cancel Order';
+            }
+        });
     }
 
     // ==================== ADDRESSES ====================
