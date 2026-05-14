@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 13, 2026 at 04:24 PM
+-- Generation Time: May 14, 2026 at 02:53 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -110,7 +110,8 @@ INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `order_type`, `total_
 (29, 37, '2026-05-11 23:20:34', 'dine-in', 120.00, 'pending'),
 (30, 37, '2026-05-12 01:29:44', 'delivery', 115.00, 'pending'),
 (31, 37, '2026-05-12 01:30:05', 'dine-in', 125.00, 'completed'),
-(32, 37, '2026-05-12 01:52:08', 'dine-in', 90.00, 'preparing');
+(32, 37, '2026-05-12 01:52:08', 'dine-in', 90.00, 'preparing'),
+(33, 37, '2026-05-14 01:13:25', 'to-go', 90.00, 'pending');
 
 -- --------------------------------------------------------
 
@@ -146,7 +147,7 @@ INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `location`
 (32, 29, 22, 'Dine In', '16oz', '25%', 'Oreo (₱20), Nata (₱15), White Pearl (₱20)', NULL, NULL, NULL, 1, 120.00),
 (33, 30, 3, 'Delivery', '16oz', '25%', 'None', NULL, NULL, NULL, 1, 90.00),
 (34, 31, 1, 'Dine In', '16oz', '100%', 'White Pearl (₱20), Fruit Jelly (₱15)', NULL, NULL, NULL, 1, 125.00),
-(35, 32, 53, 'Dine In', '16oz', '25%', 'None', NULL, NULL, NULL, 1, 90.00);
+(36, 33, 2, 'To Go', '16oz', '25%', 'None', NULL, NULL, NULL, 1, 90.00);
 
 -- --------------------------------------------------------
 
@@ -178,7 +179,8 @@ INSERT INTO `payments` (`payment_id`, `order_id`, `amount`, `method`, `status`, 
 (19, 29, 120.00, 'gcash', 'unpaid', 'Awaiting payment', 'xs', 'jhxs,a', '2026-05-11 15:20:34'),
 (20, 30, 115.00, 'cash_on_delivery', 'unpaid', 'Unofficial receipt pending', NULL, NULL, '2026-05-11 17:29:45'),
 (21, 31, 125.00, 'cash_on_delivery', 'paid', 'Payment verified', NULL, NULL, '2026-05-11 17:30:05'),
-(22, 32, 90.00, 'gcash', 'unpaid', 'Awaiting payment', '1', '15', '2026-05-11 17:52:08');
+(22, 32, 90.00, 'gcash', 'unpaid', 'Awaiting payment', '1', '15', '2026-05-11 17:52:08'),
+(23, 33, 90.00, 'cash_on_delivery', 'unpaid', 'Unofficial receipt pending', NULL, NULL, '2026-05-13 17:13:25');
 
 -- --------------------------------------------------------
 
@@ -248,7 +250,6 @@ INSERT INTO `products` (`product_id`, `category_id`, `product_name`, `price_16`,
 (43, 9, 'Double Burger', 75.00, 0.00, 'A bigger burger option with placeholder menu copy while you finish the descriptions.', 100, 'images/b-double.png', 'active'),
 (44, 9, 'Special Burger', 80.00, 0.00, 'A loaded burger pick with placeholder notes that you can replace with your final text later.', 100, 'images/b-special.png', 'active'),
 (45, 10, 'Fries', 30.00, 100.00, 'Crispy fries with placeholder description text while the final details are still being prepared.', 100, 'images/f-medium.png', 'active'),
-(53, 1, 'agshjgas', 51.00, 562.00, 'csax', 100, 'https://wallup.net/wp-content/uploads/2018/10/06/708149-kittens-kitten-cat-cats-baby-cute-s.jpg', 'archive'),
 (54, 1, 'agshjgasbvtrec', 51.00, 562.00, 'vcsxs', 100, 'https://tse1.mm.bing.net/th/id/OIP.OQ9bpEwoLCZvpwV7-XjZ9AHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3', 'archive'),
 (55, 1, 'ArchiveTest', 67.00, 67.00, 'vdc', 100, 'https://tse1.mm.bing.net/th/id/OIP.OQ9bpEwoLCZvpwV7-XjZ9AHaE8?r=0&rs=1&pid=ImgDetMain&o=7&rm=3', 'archive'),
 (56, 2, 'Test Product', 1000.00, 5000.00, 'BARBEI', 100, 'https://i.pinimg.com/736x/59/b3/ac/59b3ac35dd06ede9530bcea7951e7f87.jpg', 'archive');
@@ -401,19 +402,19 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `order_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `order_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `payment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `products`
