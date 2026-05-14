@@ -236,6 +236,7 @@ textarea {
     background: #ff4da6;
     color: #fff;
     border: none;
+    box-shadow: 0 0 10px #ff4da6aa;
 }
 
 .pink:hover,
@@ -7004,7 +7005,8 @@ footer {
 .btn.outline {
     background: transparent;
     border: 2px solid #ff4da6;
-    color: #ff4da6;
+    color: #ffffff;
+    box-shadow: 0 0 10px #ff4da6aa;
 }
 
 .btn.outline:hover {
