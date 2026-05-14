@@ -359,6 +359,7 @@ textarea {
     height: 100%;
     object-fit: cover;
     display: block;
+    filter: blur(5px);
 }
 
 .overlay {
@@ -832,9 +833,6 @@ textarea {
 .hero-content .Right-Content {
     padding: 18px 28px;
     border-radius: 16px;
-    background: rgba(13, 13, 13, 0.35);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
 }
 
 .hero-content h1 {
@@ -882,11 +880,7 @@ textarea {
     color: white;
     text-align: center;
     transform: translateX(-50%);
-    background: rgba(13, 13, 13, 0.38);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .ABOUT-US-TEXT h1 {
@@ -926,6 +920,7 @@ textarea {
     object-fit: cover;
     object-position: center 35%;
     display: block;
+    filter: blur(5px);
 }
 /* =====================================================
    HOME PAGE SECTIONS
@@ -986,6 +981,7 @@ textarea {
     object-position: center;
     display: block;
     opacity: 0.9;
+    filter: blur(5px);
 }
 
 /* ===================== FEATURE TEXT ===================== */
@@ -1450,6 +1446,7 @@ textarea {
     object-fit: cover;
     display: block;
     opacity: 0.5;
+    filter: blur(5px);
 }
 
 /* ==================== SERVE CONTENT ==================== */
@@ -1467,11 +1464,7 @@ textarea {
     padding: 28px 36px;
     text-align: center;
     transform: translate(-50%, -50%);
-    background: rgba(13, 13, 13, 0.42);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .WE-SERVE-CONTENT h1 {
