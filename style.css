@@ -113,9 +113,7 @@ h6 {
 p,
 label,
 li,
-span {
-    color: var(--text-muted);
-}
+
 
 strong,
 button,
@@ -3331,6 +3329,31 @@ footer {
     vertical-align: middle;
 }
 
+.ADMIN-PRODUCTS-TABLE {
+    table-layout: fixed;
+}
+
+.ADMIN-PRODUCTS-TABLE th:nth-child(1),
+.ADMIN-PRODUCTS-TABLE td:nth-child(1) { width: 80px; }   /* Image */
+
+.ADMIN-PRODUCTS-TABLE th:nth-child(2),
+.ADMIN-PRODUCTS-TABLE td:nth-child(2) { width: 30%; }    /* Name */
+
+.ADMIN-PRODUCTS-TABLE th:nth-child(3),
+.ADMIN-PRODUCTS-TABLE td:nth-child(3) { width: 20%; }    /* Category */
+
+.ADMIN-PRODUCTS-TABLE th:nth-child(4),
+.ADMIN-PRODUCTS-TABLE td:nth-child(4) { width: 25%; }    /* Price */
+
+.ADMIN-PRODUCTS-TABLE th:nth-child(5),
+.ADMIN-PRODUCTS-TABLE td:nth-child(5) { width: 100px; }  /* Actions */
+
+.ADMIN-PRODUCTS-TABLE td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .ADMIN-PRODUCT-THUMB {
     display: grid;
     place-items: center;
@@ -3475,7 +3498,6 @@ footer {
 
 .ADMIN-FORM-LABEL,
 .ADMIN-FIELD span {
-    color: #222;
     font-size: 0.8rem;
     font-weight: 600;
 }
@@ -3691,7 +3713,6 @@ footer {
 .ADMIN-FORM-LABEL {
     font-size: 0.78rem;
     font-weight: 600;
-    color: #555;
     margin: 0;
 }
 
@@ -5347,6 +5368,11 @@ footer {
     color: var(--primary-dark);
 }
 
+/* Products & Archive pages — left-align action icons */
+.ADMIN-TABLE--no-center-actions .ADMIN-TABLE-ACTIONS {
+    justify-content: flex-start;
+}
+
 /* Modal Styles - Matching Admin Interface */
 .ADMIN-MODAL-OVERLAY {
     position: fixed;
@@ -5588,7 +5614,7 @@ footer {
 }
 
 .ADMIN-ORDERS-TOOLS {
-    grid-template-columns: minmax(220px, 460px);
+    grid-template-columns: minmax(220px, 420px);
     margin-top: 12px;
 }
 

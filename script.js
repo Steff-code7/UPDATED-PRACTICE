@@ -2917,10 +2917,6 @@ if (matchingOption) {
             ${buildPaymentStatusButtons(payment)}
           </div>
         </div>
-        <div class="ADMIN-MODAL-DETAIL">
-          <div class="ADMIN-MODAL-DETAIL-LABEL">Receipt Info</div>
-          <div class="ADMIN-MODAL-DETAIL-VALUE">${escapeHtml(getReceiptLabel(payment))}</div>
-        </div>
         ${payment.method === "gcash" ? `
           <div class="ADMIN-MODAL-DETAIL">
             <div class="ADMIN-MODAL-DETAIL-LABEL">GCash Reference Number</div>
