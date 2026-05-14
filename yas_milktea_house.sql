@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 14, 2026 at 08:06 PM
+-- Generation Time: May 14, 2026 at 10:19 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -111,7 +111,8 @@ INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `order_type`, `total_
 (30, 37, '2026-05-12 01:29:44', 'delivery', 115.00, 'pending'),
 (31, 37, '2026-05-12 01:30:05', 'dine-in', 125.00, 'completed'),
 (32, 37, '2026-05-12 01:52:08', 'dine-in', 90.00, 'preparing'),
-(33, 37, '2026-05-14 01:13:25', 'to-go', 90.00, 'pending');
+(33, 37, '2026-05-14 01:13:25', 'to-go', 90.00, 'pending'),
+(34, 37, '2026-05-15 02:18:24', 'dine-in', 180.00, 'pending');
 
 -- --------------------------------------------------------
 
@@ -147,7 +148,9 @@ INSERT INTO `order_items` (`order_item_id`, `order_id`, `product_id`, `location`
 (32, 29, 22, 'Dine In', '16oz', '25%', 'Oreo (₱20), Nata (₱15), White Pearl (₱20)', NULL, NULL, NULL, 1, 120.00),
 (33, 30, 3, 'Delivery', '16oz', '25%', 'None', NULL, NULL, NULL, 1, 90.00),
 (34, 31, 1, 'Dine In', '16oz', '100%', 'White Pearl (₱20), Fruit Jelly (₱15)', NULL, NULL, NULL, 1, 125.00),
-(36, 33, 2, 'To Go', '16oz', '25%', 'None', NULL, NULL, NULL, 1, 90.00);
+(36, 33, 2, 'To Go', '16oz', '25%', 'None', NULL, NULL, NULL, 1, 90.00),
+(37, 34, 2, 'Dine In', '16oz', '25%', 'None', NULL, NULL, NULL, 1, 90.00),
+(38, 34, 3, 'Dine In', '16oz', '25%', 'None', NULL, NULL, NULL, 1, 90.00);
 
 -- --------------------------------------------------------
 
@@ -180,7 +183,8 @@ INSERT INTO `payments` (`payment_id`, `order_id`, `amount`, `method`, `status`, 
 (20, 30, 115.00, 'cash_on_delivery', 'unpaid', 'Unofficial receipt pending', NULL, NULL, '2026-05-11 17:29:45'),
 (21, 31, 125.00, 'cash_on_delivery', 'paid', 'Payment verified', NULL, NULL, '2026-05-11 17:30:05'),
 (22, 32, 90.00, 'gcash', 'unpaid', 'Awaiting payment', '1', '15', '2026-05-11 17:52:08'),
-(23, 33, 90.00, 'cash_on_delivery', 'unpaid', 'Unofficial receipt pending', NULL, NULL, '2026-05-13 17:13:25');
+(23, 33, 90.00, 'cash_on_delivery', 'unpaid', 'Unofficial receipt pending', NULL, NULL, '2026-05-13 17:13:25'),
+(24, 34, 180.00, 'cash', 'unpaid', 'No receipt yet', NULL, NULL, '2026-05-14 18:18:24');
 
 -- --------------------------------------------------------
 
@@ -283,17 +287,34 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `email`, `password_hash`, `role`, `status`, `verification_token`, `verified_at`, `password_reset_token`, `password_reset_expires_at`, `password_reset_confirmed_at`, `created_at`, `full_name`, `contact_number`, `profile_picture`) VALUES
-(21, 'Stef_admin', 'marekeyks101@gmail.com', '$2y$10$46yj/F93p7Gf3eJ0gEtOG.bYAkSg62LkejbqvkwW.4/4BpSXeLA6O', 'admin', 'active', NULL, '2026-05-06 14:31:51', NULL, NULL, NULL, '2026-05-01 19:36:27', 'Stephanie Baltazar', NULL, 'images/profile_21_1778329893.jpg'),
+(21, 'Stef_admin', 'marekeyks101@gmail.com', '$2y$10$46yj/F93p7Gf3eJ0gEtOG.bYAkSg62LkejbqvkwW.4/4BpSXeLA6O', 'admin', 'active', NULL, '2026-05-04 20:03:02', NULL, NULL, NULL, '2026-05-04 19:36:27', 'Stephanie Baltazar', NULL, 'images/profile_21_1778329893.jpg'),
 (27, 'testuser456', 'testuser456@example.com', '$2y$10$94OqRBmJyUjqWW5I69r.leBf7jwvCRpIxzS7Z.TnVtav/LbMewEe6', 'customer', 'inactive', NULL, '2026-05-06 14:30:57', NULL, NULL, NULL, '2026-05-04 16:03:10', NULL, NULL, 'images/yas_logo.png'),
 (28, 'krisha_customer', 'narcisokrishaaudrey@gmail.com', '$2y$10$awo1Y7BwclbQEA0vQnJB3.ispUVF1lSKSZO1o9gkvZQWlrK8iXyNW', 'customer', 'active', NULL, '2026-05-06 14:29:13', NULL, NULL, NULL, '2026-05-04 16:11:03', NULL, NULL, 'images/profile_28_1778762615.jpg'),
-(37, 'kirii', 'Kirigato.07@gmail.com', '$2y$10$9dqv9PbDTwWHbem/zKuoauALhEckl0q8qxKs0lDCh04AgGLpmFlb6', 'customer', 'active', NULL, '2026-05-10 05:18:27', NULL, NULL, NULL, '2026-05-10 05:16:49', 'vkcd', '456', 'images/yas_logo.png'),
-(38, 'ayokona', 'chescamanding5@gmail.com', '$2y$10$a7JLBZH2xSAkwwHUnpfML.Eg4Y0p/7lr2XsmtiynD17c0iC466ci2', 'customer', 'active', NULL, '2026-05-11 10:26:50', NULL, NULL, NULL, '2026-05-11 10:26:26', NULL, NULL, 'images/yas_logo.png'),
-(39, 'Krisha_staff', 'crazyy.icecreamm@gmail.com', '$2y$10$jB8xfyjhj/fLGK9Jtxv7Bec7HjPjzyLdLRG8NU62mXCRMk1es4Npa', 'staff', 'active', NULL, '2026-05-11 11:34:59', NULL, NULL, NULL, '2026-05-11 11:33:46', 'Krisha Audrey Narciso', NULL, 'images/profile_39_1778508611.png'),
-(44, 'Peter Paul', 'peterpaulsimonb@gmail.com', '$2y$10$NtGqHdOL9aJqV9dOS9IHQ.bpvoAq5riOw2XxH93J6SryAMtUsLiIS', 'customer', 'active', NULL, '2026-05-14 13:25:58', NULL, NULL, NULL, '2026-05-14 13:25:23', NULL, NULL, 'images/profile_44_1778765201.jpg'),
-(45, 'Ian', 'jeamian3@gmail.com', '$2y$10$D51SsJHw2zqnO8LQTx8fX.Kj5ba/Il1iFKGWzdK.RB26.DS5O0DZe', 'customer', 'active', NULL, '2026-05-14 13:30:58', NULL, NULL, NULL, '2026-05-14 13:30:35', NULL, NULL, 'images/profile_45_1778765546.jpg'),
-(46, 'Butchokoy', 'vankristoff02@gmail.com', '$2y$10$Y3TAu9.sRNFlJwVL.74nMeS4L5pGElipY/5U6hpmTsbBMfPpVjyKS', 'customer', 'active', NULL, '2026-05-14 13:41:25', NULL, NULL, NULL, '2026-05-14 13:40:33', NULL, NULL, 'images/yas_logo.png'),
-(47, 'stephanie', 'sbaltazar.1012@umak.edu.ph', '$2y$10$PVbxCk2D8IccgW0k7pjdbOdlB83RCOuzABAHeTkq58vfuASYE56Xu', 'customer', 'active', NULL, '2026-05-14 14:10:55', NULL, NULL, NULL, '2026-05-14 14:10:42', NULL, NULL, 'images/profile_47_1778767910.jpg'),
-(48, 'Paulo', 'christopherpaulobaltazar@gmail.com', '$2y$10$uWfA39nh.tomwe85aYwWJ.ThA75wWA46UU3bQ9M8.yczwz0UllmLO', 'customer', 'active', NULL, '2026-05-14 14:25:58', NULL, NULL, NULL, '2026-05-14 14:25:05', NULL, NULL, 'images/profile_48_1778768789.jpg');
+(37, 'kirii', 'Kirigato.07@gmail.com', '$2y$10$9dqv9PbDTwWHbem/zKuoauALhEckl0q8qxKs0lDCh04AgGLpmFlb6', 'customer', 'active', NULL, '2026-05-07 05:18:27', NULL, NULL, NULL, '2026-05-07 05:16:49', 'vkcd', '456', 'images/yas_logo.png'),
+(38, 'ayokona', 'chescamanding5@gmail.com', '$2y$10$a7JLBZH2xSAkwwHUnpfML.Eg4Y0p/7lr2XsmtiynD17c0iC466ci2', 'customer', 'active', NULL, '2026-05-07 10:26:50', NULL, NULL, NULL, '2026-05-07 10:26:26', NULL, NULL, 'images/yas_logo.png'),
+(39, 'Krisha_staff', 'crazyy.icecreamm@gmail.com', '$2y$10$jB8xfyjhj/fLGK9Jtxv7Bec7HjPjzyLdLRG8NU62mXCRMk1es4Npa', 'staff', 'active', NULL, '2026-05-07 11:34:59', NULL, NULL, NULL, '2026-05-07 11:33:46', 'Krisha Audrey Narciso', NULL, 'images/profile_39_1778508611.png'),
+(44, 'Peter Paul', 'peterpaulsimonb@gmail.com', '$2y$10$NtGqHdOL9aJqV9dOS9IHQ.bpvoAq5riOw2XxH93J6SryAMtUsLiIS', 'customer', 'active', NULL, '2026-05-08 13:25:58', NULL, NULL, NULL, '2026-05-08 13:25:23', NULL, NULL, 'images/profile_44_1778765201.jpg'),
+(45, 'Ian', 'jeamian3@gmail.com', '$2y$10$D51SsJHw2zqnO8LQTx8fX.Kj5ba/Il1iFKGWzdK.RB26.DS5O0DZe', 'staff', 'active', NULL, '2026-05-08 13:30:58', NULL, NULL, NULL, '2026-05-08 13:30:35', NULL, NULL, 'images/profile_45_1778765546.jpg'),
+(46, 'Butchokoy', 'vankristoff02@gmail.com', '$2y$10$Y3TAu9.sRNFlJwVL.74nMeS4L5pGElipY/5U6hpmTsbBMfPpVjyKS', 'customer', 'active', NULL, '2026-05-09 13:41:25', NULL, NULL, NULL, '2026-05-09 13:40:33', NULL, NULL, 'images/yas_logo.png'),
+(47, 'stephanie', 'sbaltazar.1012@umak.edu.ph', '$2y$10$PVbxCk2D8IccgW0k7pjdbOdlB83RCOuzABAHeTkq58vfuASYE56Xu', 'staff', 'active', NULL, '2026-05-09 14:10:55', NULL, NULL, NULL, '2026-05-09 14:10:42', NULL, NULL, 'images/profile_47_1778767910.jpg'),
+(48, 'Paulo', 'christopherpaulobaltazar@gmail.com', '$2y$10$uWfA39nh.tomwe85aYwWJ.ThA75wWA46UU3bQ9M8.yczwz0UllmLO', 'customer', 'active', NULL, '2026-05-09 14:25:58', NULL, NULL, NULL, '2026-05-09 14:25:05', NULL, NULL, 'images/profile_48_1778768789.jpg'),
+(49, 'Felicy', 'felicyfeline@gmail.com', '$2y$10$l4RqVekvJ4QsarwOUdOrUexvS2.0lJxE6QJwETCU/UbxfMNp9XLKa', 'staff', 'active', NULL, '2026-05-08 19:36:01', NULL, NULL, NULL, '2026-05-08 19:36:01', NULL, NULL, 'images/yas_logo.png'),
+(50, 'James', 'jamesBartolay@gmail.com', '$2y$10$hCYEw3XetXP1T2uIVvm1puIZiItVVhyFuiJ/BDOQlwfATK.TQx7WC', 'staff', 'active', NULL, '2026-05-09 19:37:58', NULL, NULL, NULL, '2026-05-09 19:37:58', NULL, NULL, 'images/yas_logo.png'),
+(51, 'Sidney', 'sidneyduhh@gmail.com', '$2y$10$hCYEw3XetXP1T2uIVvm1puIZiItVVhyFuiJ/BDOQlwfATK.TQx7WC', 'customer', 'active', NULL, '2026-05-10 19:39:11', NULL, NULL, NULL, '2026-05-10 19:39:11', NULL, NULL, 'images/profile_51_1778788811.jpg'),
+(52, 'Samantha Nicole', 'samanthaBaltaar@gmail.com', '$2y$10$QkK.2vumC9TCz3HJFNtLo./syU2cSVxz2Ga6rji0pzUshm9A0QT8.', 'customer', 'active', NULL, '2026-05-10 19:40:02', NULL, NULL, NULL, '2026-05-10 19:40:02', NULL, NULL, 'images/yas_logo.png'),
+(53, 'Christopher Sherman', 'shermanchristopher@gmail.com', '$2y$10$Xl9waw7XVGk84oujdiq.hOTUW5ZNXDwMiQRL9bmQDH/5lZUix7c3i', 'customer', 'active', NULL, '2026-05-10 19:41:28', NULL, NULL, NULL, '2026-05-10 19:41:28', NULL, NULL, 'images/yas_logo.png'),
+(54, 'Rhea Tuazon', 'rheatuazon@gmail.com', '$2y$10$04cWytfL00A0WwEfNAKLY.xwi3rn8MTLff6cWjyu3yX5v6zUurywu', 'customer', 'active', NULL, '2026-05-11 19:42:16', NULL, NULL, NULL, '2026-05-11 19:42:16', NULL, NULL, 'images/yas_logo.png'),
+(55, 'Nicole Alcantara', 'jasminenicolealcantara@gmail.com', '$2y$10$cM9j5QcpjatSwF0P7FjK.OA.dMLpgECpRAd6cN7466cA4n0wJ178G', 'customer', 'active', NULL, '2026-05-11 19:43:12', NULL, NULL, NULL, '2026-05-11 19:43:12', NULL, NULL, 'images/yas_logo.png'),
+(56, 'Gumball', 'jessamae@gmail.com', '$2y$10$/PW6Mtz8YkOfvXtEUYh2wOvr9tSyQAEj2/qyJB4irViCrwsA2zJ6u', 'customer', 'active', NULL, '2026-05-11 19:44:36', NULL, NULL, NULL, '2026-05-11 19:44:36', NULL, NULL, 'images/yas_logo.png'),
+(58, 'Jax Digital', 'amazingdigitalcircus@gmail.com', '$2y$10$mzh23.E0QH.KJb.QdFBN3u5e7P6Fwsnytz762vsKAX14Za6SqLae.', 'customer', 'active', NULL, '2026-05-11 19:46:23', NULL, NULL, NULL, '2026-05-11 19:46:23', NULL, NULL, 'images/yas_logo.png'),
+(59, 'Pomni Pomegrenate', 'cactuscircus@gmail.com', '$2y$10$avS8zuRrbogzzqgS5SAIZe.U7ntdJ63PtLbFQptBhNHkRz4eUDPc6', 'customer', 'active', NULL, '2026-05-12 19:47:36', NULL, NULL, NULL, '2026-05-12 19:47:36', NULL, NULL, 'images/yas_logo.png'),
+(60, 'Samson Jaxon', 'samsongonzales@gmail.com', '$2y$10$qwh94ivk6RX2bXswZwiis.nzRjemZEBWdUUXuB6pp7P3gvF0BMfnS', 'customer', 'active', NULL, '2026-05-12 19:48:18', NULL, NULL, NULL, '2026-05-12 19:48:18', NULL, NULL, 'images/yas_logo.png'),
+(61, 'Maria Gonzaga', 'gonzagaM@gmail.com', '$2y$10$HlIipzwNbTRLPBdXGgHY8.JT3HpQ9famoTSSWlwL0MAT9Pweb5oHK', 'customer', 'active', NULL, '2026-05-12 19:49:02', NULL, NULL, NULL, '2026-05-12 19:49:02', NULL, NULL, 'images/yas_logo.png'),
+(62, 'Hello Kitty', 'jasminekatecruz@gmail.com', '$2y$10$tpdr9ecSia4MorSkX.D6t.RzfLBDSwpwnVPnpV2YWqEIAldeCBPX2', 'customer', 'active', NULL, '2026-05-13 19:50:09', NULL, NULL, NULL, '2026-05-13 19:50:09', NULL, NULL, 'images/yas_logo.png'),
+(63, 'Ayanokoji', 'markjacobtan2@gmail.com', '$2y$10$MlZwTZQoEBJwUhUvuEcYuugPar8AGPM3L/13686fkXtqIy0cNRmAK', 'customer', 'active', NULL, '2026-05-13 19:51:57', NULL, NULL, NULL, '2026-05-13 19:51:57', NULL, NULL, 'images/yas_logo.png'),
+(64, 'Bratt365', 'dhaynnedelrosario@gmail.com', '$2y$10$TWRLSlmvJomZ/s5oDu/.5O1ya1gU.yTtt12w/ht8pOCFj5TR6f68K', 'customer', 'active', NULL, '2026-05-13 19:54:33', NULL, NULL, NULL, '2026-05-13 19:54:33', NULL, NULL, 'images/yas_logo.png'),
+(65, 'someone', 'ferdnandbaltazar16@gmail.com', '$2y$10$qfGUSC.rC96M.oal8afYx.tC/AqJZ//EBKpMzQAnrhdJob6HCKNbC', 'customer', 'active', NULL, '2026-05-14 19:55:47', NULL, NULL, NULL, '2026-05-14 19:55:47', NULL, NULL, 'images/yas_logo.png'),
+(66, 'carlcool', 'carlobaltaza2@gmail.com', '$2y$10$9u1giLHLRG2Rb4N0IbNm2ePCtFAP/0HN3AqRApOWf4xPaq382/b5W', 'customer', 'active', NULL, '2026-05-14 19:57:21', NULL, NULL, NULL, '2026-05-14 19:57:21', NULL, NULL, 'images/yas_logo.png');
 
 --
 -- Indexes for dumped tables
@@ -386,19 +407,19 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `order_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `order_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `order_item_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `payment_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -410,7 +431,7 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- Constraints for dumped tables
