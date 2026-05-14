@@ -6084,7 +6084,7 @@ footer {
 
 .ADMIN-PAYMENTS-METHOD-TABLE th:nth-child(4),
 .ADMIN-PAYMENTS-METHOD-TABLE td:nth-child(4) {
-    width: 16%;
+    width: 20%;
     text-align: center;
 }
 
