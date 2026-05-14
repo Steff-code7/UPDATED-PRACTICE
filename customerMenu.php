@@ -73,7 +73,7 @@ while ($row = $products->fetch_assoc()) {
                 </a>
                 <div class="CUSTOMER-USER-DROPDOWN" id="userDropdown">
                     <a href="customerAccount.php">Account</a>
-                    <a href="index.html">Log Out</a>
+                    <a href="logout.php">Log Out</a>
                 </div>
             </div>
         </div>

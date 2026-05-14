@@ -61,7 +61,7 @@ function createMailer(string $businessName)
 function sendVerificationEmail(string $customerName, string $emailAddress, string $verificationToken): bool
 {
     $businessName = 'YAS Milktea House';
-    $siteUrl = 'https://dress-quartered-showcase.ngrok-free.dev/UPDATED%20PRACTICE';
+    $siteUrl = 'https://glass-reflux-unmixed.ngrok-free.dev/UPDATED%20PRACTICE';
     $verificationLink = $siteUrl . '/verify_email.php?token=' . urlencode($verificationToken);
 
     try {
@@ -113,7 +113,7 @@ function sendVerificationEmail(string $customerName, string $emailAddress, strin
 function sendPasswordResetEmail(string $customerName, string $emailAddress, string $resetToken): bool
 {
     $businessName = 'YAS Milktea House';
-    $siteUrl = 'https://dress-quartered-showcase.ngrok-free.dev/UPDATED%20PRACTICE';
+    $siteUrl = 'https://glass-reflux-unmixed.ngrok-free.dev/UPDATED%20PRACTICE';
     $resetLink = $siteUrl . '/ForgotPassConfirm.php?token=' . urlencode($resetToken);
 
     try {

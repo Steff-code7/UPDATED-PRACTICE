@@ -29,7 +29,7 @@ if (!isset($activePage)) {
             </a>
             <div class="CUSTOMER-USER-DROPDOWN" id="userDropdown">
                 <a href="customerAccount.php">Account</a>
-                <a href="index.html">Log Out</a>
+                <a href="logout.php">Log Out</a>
             </div>
         </div>
     </div>
@@ -50,7 +50,7 @@ if (!isset($activePage)) {
                 <a class="module-link <?php echo $activePage === 'order-history' ? 'active' : ''; ?>" href="customerAccountOrders.php">Order History</a>
                 <a class="module-link <?php echo $activePage === 'addresses' ? 'active' : ''; ?>" href="customerAccountAddresses.php">Addresses</a>
                 <a class="module-link <?php echo $activePage === 'payment-methods' ? 'active' : ''; ?>" href="customerAccountPayments.php">Payment Methods</a>
-                <a class="module-link logout-link" href="index.html">Log Out</a>
+                <a class="module-link logout-link" href="logout.php">Log Out</a>
             </nav>
             <div class="ACCOUNT-SIDEBAR-HELP">
                 <span>Need help?</span>
