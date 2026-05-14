@@ -5095,6 +5095,54 @@ footer {
     box-shadow: 0 14px 28px rgba(255, 47, 147, 0.28);
 }
 
+/* ===================== DELIVERY ADDRESS ===================== */
+.DELIVERY-ADDRESS-SECTION {
+    margin-top: 18px;
+}
+
+.DELIVERY-ADDRESS-SECTION h2 {
+    margin-bottom: 14px;
+}
+
+.DELIVERY-ADDRESS-CONTENT {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.DELIVERY-ADDRESS-MESSAGE {
+    color: #f5f1f8;
+    font-size: 0.95rem;
+}
+
+.DELIVERY-ADDRESS-SELECT {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(255, 77, 166, 0.3);
+    border-radius: 8px;
+    background: #1f1f1f;
+    color: #f5f1f8;
+    font-size: 0.95rem;
+    font-family: "Poppins", sans-serif;
+    cursor: pointer;
+    outline: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+.DELIVERY-ADDRESS-SELECT:focus {
+    border-color: #ff4da6;
+}
+
+.DELIVERY-ADDRESS-MANAGE {
+    align-self: flex-start;
+    font-size: 0.9rem;
+    padding: 8px 18px;
+}
+
 /* =====================================================
    ORDER SUCCESS
 ===================================================== */
