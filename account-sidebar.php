@@ -40,7 +40,7 @@ if (!isset($activePage)) {
     <div class="ACCOUNT-GRID">
         <aside class="ACCOUNT-SIDEBAR">
             <div class="ACCOUNT-SIDEBAR-HEADER">
-                <h2>Overview</h2>
+                <h2>Your Account</h2>
                 <p>Manage your profile, orders, and saved details from one place.</p>
             </div>
             <nav class="ACCOUNT-SIDEBAR-NAV" aria-label="Account navigation">
@@ -53,9 +53,12 @@ if (!isset($activePage)) {
                 <a class="module-link logout-link" href="logout.php">Log Out</a>
             </nav>
             <div class="ACCOUNT-SIDEBAR-HELP">
-                <span>Need help?</span>
-                <p>We're here for you!</p>
-                <a class="btn outline" id="contactSupportBtn" href="mailto:yasmilkteahouse@gmail.com">CONTACT SUPPORT</a>
+                <h3>Need help? We're here for you!</h3>
+                <p>
+                    Email or call us here:<br>
+                    yasmilkteahouse@gmail.com<br>
+                    +639073954150
+                </p>
             </div>
         </aside>
 
