@@ -30,22 +30,17 @@ if (isset($_SESSION['user_id'])) {
     $lastActivity = $_SESSION['last_activity'] ?? null;
 
     if ($lastActivity !== null && (time() - $lastActivity) > SESSION_TIMEOUT) {
-        // Session has expired — destroy it and signal the client
+        // Session has expired — silently destroy it.
+        // The calling script is responsible for detecting the missing session
+        // and returning its own appropriate response (401, redirect, etc.).
         session_unset();
         session_destroy();
-        if (!headers_sent()) {
-            http_response_code(401);
-            header('Content-Type: application/json');
-        }
-        echo json_encode([
-            'success'  => false,
-            'message'  => 'Session expired. Please log in again.',
-            'redirect' => 'loginSignUp.php',
-        ]);
-        exit;
+        // Restart a clean empty session so subsequent session_start() calls
+        // in the same request don't fail.
+        session_start();
+    } else {
+        // Refresh the activity timestamp on every valid request
+        $_SESSION['last_activity'] = time();
     }
-
-    // Refresh the activity timestamp on every valid request
-    $_SESSION['last_activity'] = time();
 }
 ?>
