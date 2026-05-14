@@ -3414,12 +3414,13 @@ footer {
 .ADMIN-MODAL-BACKDROP {
     position: fixed;
     inset: 0;
-    z-index: 4000;
+    z-index: 5500;
     display: grid;
     place-items: center;
-    padding: 24px;
+    padding: 80px 24px 24px;
     background: rgba(19, 19, 19, 0.28);
     backdrop-filter: blur(2px);
+    overflow-y: auto;
 }
 
 .ADMIN-MODAL-BACKDROP[hidden] {
@@ -5351,12 +5352,15 @@ footer {
 .ADMIN-MODAL-OVERLAY {
     position: fixed;
     inset: 0;
-    z-index: 4000;
+    z-index: 5500;
     display: grid;
     place-items: center;
-    padding: 24px;
+    /* Push content below the topbar (~67px) with extra breathing room */
+    padding: 80px 24px 24px;
     background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(2px);
+    /* Allow the overlay itself to scroll if the modal is taller than the viewport */
+    overflow-y: auto;
 }
 
 .ADMIN-MODAL-OVERLAY.active {
@@ -5369,7 +5373,8 @@ footer {
     border: 1px solid var(--border);
     border-radius: 8px;
     box-shadow: var(--shadow);
-    max-height: 90vh;
+    /* Cap height so it never overflows the padded overlay area */
+    max-height: calc(100vh - 104px);
     overflow-y: auto;
     animation: modalSlideIn 0.3s ease;
 }

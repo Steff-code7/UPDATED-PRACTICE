@@ -2028,7 +2028,6 @@ if (matchingOption) {
     const modalCloseBtnBottom = qs(".ADMIN-MODAL-CLOSE-BTN", modal);
     const modalCancelBtn = qs("#modal-cancel-btn");
     const modalNextBtn = qs("#modal-next-btn");
-    const modalRefundBtn = qs("#modal-refund-btn");
 
     if (!pendingBody || !preparingBody || !completedBody || !cancelledBody) return;
 
@@ -2217,16 +2216,10 @@ if (matchingOption) {
       // Show/hide action buttons based on status
       modalCancelBtn.classList.toggle("is-hidden", order.status !== "pending");
       modalNextBtn.classList.toggle("is-hidden", order.status === "completed" || order.status === "cancelled" || order.status === "refunded");
-      if (modalRefundBtn) {
-        modalRefundBtn.classList.toggle("is-hidden", order.status !== "completed");
-      }
 
       // Attach action handlers
       modalCancelBtn.onclick = () => cancelOrder(orderId);
       modalNextBtn.onclick = () => moveOrderToNextStatus(orderId);
-      if (modalRefundBtn) {
-        modalRefundBtn.onclick = () => refundOrder(orderId);
-      }
 
       // Show modal
       modal.hidden = false;
@@ -2261,12 +2254,6 @@ if (matchingOption) {
     function cancelOrder(orderId) {
       if (!confirm("Are you sure you want to cancel this order?")) return;
       updateOrderStatus(orderId, "cancelled");
-    }
-
-    // Refund order
-    function refundOrder(orderId) {
-      if (!confirm("Are you sure you want to refund this order? This action cannot be undone.")) return;
-      updateOrderStatus(orderId, "refunded");
     }
 
     // Update order status via API
