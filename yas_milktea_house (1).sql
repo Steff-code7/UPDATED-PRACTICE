@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 14, 2026 at 02:53 AM
+-- Generation Time: May 14, 2026 at 02:56 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -106,7 +106,7 @@ INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `order_type`, `total_
 (14, 28, '2026-05-05 13:28:19', 'delivery', 260.00, 'completed'),
 (26, 38, '2026-05-11 18:50:34', 'delivery', 245.00, 'pending'),
 (27, 28, '2026-05-11 22:46:34', 'delivery', 335.00, 'completed'),
-(28, 28, '2026-05-11 23:05:58', 'dine-in', 170.00, 'pending'),
+(28, 28, '2026-05-11 23:05:58', 'dine-in', 170.00, 'cancelled'),
 (29, 37, '2026-05-11 23:20:34', 'dine-in', 120.00, 'pending'),
 (30, 37, '2026-05-12 01:29:44', 'delivery', 115.00, 'pending'),
 (31, 37, '2026-05-12 01:30:05', 'dine-in', 125.00, 'completed'),
@@ -299,7 +299,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `username`, `email`, `password_hash`, `role`, `status`, `verification_token`, `verified_at`, `password_reset_token`, `password_reset_expires_at`, `password_reset_confirmed_at`, `created_at`, `full_name`, `contact_number`, `profile_picture`, `updated_at`) VALUES
 (21, 'Stef_admin', 'marekeyks101@gmail.com', '$2y$10$46yj/F93p7Gf3eJ0gEtOG.bYAkSg62LkejbqvkwW.4/4BpSXeLA6O', 'admin', 'active', NULL, NULL, NULL, NULL, NULL, '2026-05-01 19:36:27', 'Stephanie Baltazar', NULL, 'images/profile_21_1778329893.jpg', '2026-05-09 12:31:33'),
 (27, 'testuser456', 'testuser456@example.com', '$2y$10$94OqRBmJyUjqWW5I69r.leBf7jwvCRpIxzS7Z.TnVtav/LbMewEe6', 'customer', 'inactive', NULL, NULL, NULL, NULL, NULL, '2026-05-04 16:03:10', NULL, NULL, 'images/yas_logo.png', '2026-05-11 14:13:03'),
-(28, 'krisha_customer', 'narcisokrishaaudrey@gmail.com', '$2y$10$awo1Y7BwclbQEA0vQnJB3.ispUVF1lSKSZO1o9gkvZQWlrK8iXyNW', 'customer', 'active', NULL, NULL, NULL, NULL, NULL, '2026-05-04 16:11:03', NULL, NULL, 'images/profile_28_1778251916.jpg', '2026-05-08 14:51:56'),
+(28, 'krisha_customer', 'narcisokrishaaudrey@gmail.com', '$2y$10$awo1Y7BwclbQEA0vQnJB3.ispUVF1lSKSZO1o9gkvZQWlrK8iXyNW', 'customer', 'active', NULL, NULL, NULL, NULL, NULL, '2026-05-04 16:11:03', NULL, NULL, 'images/profile_28_1778762615.jpg', '2026-05-14 12:43:35'),
 (37, 'kirii', 'Kirigato.07@gmail.com', '$2y$10$V9ZYg08SOrjkw3S40Vnwle7Rl2OjQk23JZLocjUrf/dELPIbp7oUS', 'customer', 'active', NULL, '2026-05-10 05:18:27', NULL, NULL, NULL, '2026-05-10 05:16:49', 'vkcd', '456', 'images/yas_logo.png', '2026-05-11 17:56:01'),
 (38, 'ayokona', 'chescamanding5@gmail.com', '$2y$10$a7JLBZH2xSAkwwHUnpfML.Eg4Y0p/7lr2XsmtiynD17c0iC466ci2', 'customer', 'active', NULL, '2026-05-11 10:26:50', NULL, NULL, NULL, '2026-05-11 10:26:26', NULL, NULL, 'images/yas_logo.png', '2026-05-11 10:26:50'),
 (39, 'Krisha_staff', 'crazyy.icecreamm@gmail.com', '$2y$10$jB8xfyjhj/fLGK9Jtxv7Bec7HjPjzyLdLRG8NU62mXCRMk1es4Npa', 'staff', 'active', NULL, '2026-05-11 11:34:59', NULL, NULL, NULL, '2026-05-11 11:33:46', 'Krisha Audrey Narciso', NULL, 'images/profile_39_1778508611.png', '2026-05-11 14:10:11'),
