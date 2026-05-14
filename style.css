@@ -638,7 +638,6 @@ textarea {
 }
 
 .CUSTOMER-USER-LABEL {
-    text-transform: lowercase;
     transition: color 0.2s ease;
 }
 

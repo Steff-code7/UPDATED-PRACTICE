@@ -19,8 +19,8 @@ try {
         exit;
     }
 
-    // Find user by username OR email
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :identifier OR email = :identifier LIMIT 1");
+    // Find user by username (case-sensitive) OR email (case-insensitive)
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE BINARY username = :identifier OR LOWER(email) = LOWER(:identifier) LIMIT 1");
     $stmt->execute(['identifier' => $identifier]);
     $user = $stmt->fetch();
 
