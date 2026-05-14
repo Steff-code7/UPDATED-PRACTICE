@@ -210,7 +210,7 @@ try {
             </div>
         </div>
         <div class="FOOTER-COPYRIGHT">
-            <p>&copy; 2020 Yas Milktea House &nbsp;|&nbsp; <a href="T&C.html">Terms &amp; Conditions</a> &nbsp;|&nbsp; <a href="PrivacyPolicy.html">Privacy Policy</a></p>
+            <p>&copy; 2020 Yas Milktea House &nbsp;|&nbsp; <a href="customerThref="T&C.html"C.html">Terms &amp; Conditions</a> &nbsp;|&nbsp; <a href="customerPrivacyPolicy.html">Privacy Policy</a></p>
         </div>
     </footer>
 
