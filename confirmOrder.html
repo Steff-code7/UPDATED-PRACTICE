@@ -18,8 +18,17 @@
 <body class="confirm-order-page menu-page">
     <a id="top"></a>
 
-    <header class="navbar">
-        <div class="logo">
+    <!-- ============= PROFILE INCOMPLETE BANNER ============= -->
+    <div class="PROFILE-WARNING-BANNER" id="profile-warning-banner" hidden>
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span id="profile-warning-text">Please complete your profile before placing an order.</span>
+        <a href="customerAccount.php" class="PROFILE-WARNING-LINK">Go to Account Settings</a>
+        <button type="button" class="PROFILE-WARNING-CLOSE" id="profile-warning-close" aria-label="Dismiss">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+    <header class="navbar">        <div class="logo">
             <a href="customerHomePage.html"><img src="images/yas_logo.png" alt="YAS logo"></a>
         </div>
         <nav class="nav-links">

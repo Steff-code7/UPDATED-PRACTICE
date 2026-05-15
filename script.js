@@ -3876,6 +3876,47 @@ updateTotal();
     const orderSummary = qs(".ORDER-SUMMARY");
     if (!orderSummary) return;
 
+    // ---- Profile completeness check ----
+    const profileWarningBanner = qs("#profile-warning-banner");
+    const profileWarningText   = qs("#profile-warning-text");
+    const profileWarningClose  = qs("#profile-warning-close");
+    let profileIncomplete      = false;
+    let profileMissingList     = [];
+
+    const showProfileWarning = (missingFields) => {
+      if (!profileWarningBanner) return;
+      if (profileWarningText) {
+        profileWarningText.textContent =
+          `Please add your ${missingFields.join(" and ")} in your profile before placing an order.`;
+      }
+      profileWarningBanner.hidden = false;
+      profileWarningBanner.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+
+    if (profileWarningClose) {
+      profileWarningClose.addEventListener("click", () => {
+        if (profileWarningBanner) profileWarningBanner.hidden = true;
+      });
+    }
+
+    (async () => {
+      try {
+        const res  = await fetch("api/get_account_data.php");
+        const data = await res.json();
+        if (data.success && data.user) {
+          const missing = [];
+          if (!data.user.full_name)      missing.push("full name");
+          if (!data.user.contact_number) missing.push("contact number");
+          if (missing.length) {
+            profileIncomplete  = true;
+            profileMissingList = missing;
+          }
+        }
+      } catch (_) {
+        // silently ignore — don't block checkout on network error
+      }
+    })();
+
 
     // Checkout source rules:
     // - If URL has item params, this is direct checkout from customerItems.html
@@ -4290,6 +4331,11 @@ updateTotal();
     if (placeOrderBtn) {
       placeOrderBtn.addEventListener("click", async (event) => {
         event.preventDefault();
+
+        if (profileIncomplete) {
+          showProfileWarning(profileMissingList);
+          return;
+        }
 
         if (!cart.length) {
           alert("Your order is empty.");
